@@ -12,7 +12,7 @@ model User {
   name       String @db.VarChar(100)
   email      String @unique @db.VarChar(100)
   identifier String @unique @db.VarChar(25)
-  password   String @db.VarChar(50)
+  password   String
   leads      Lead[]
 
   @@map("users")
@@ -23,8 +23,8 @@ model Lead {
   name      String @db.VarChar(80)
   telephone String @db.VarChar(20)
   email     String @unique @db.VarChar(70)
-  userId String @db.Uuid()
-  user   User   @relation(fields: [userId], references: [id])
+  userId    String @db.Uuid()
+  user      User   @relation(fields: [userId], references: [id])
 
   @@map("leads")
 }
