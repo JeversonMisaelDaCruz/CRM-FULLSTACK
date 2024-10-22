@@ -1,5 +1,5 @@
-export class Lead {
-  id: number;
+export class LeadEntity {
+  id: string;
   name: string;
   phone: string;
   email: string;

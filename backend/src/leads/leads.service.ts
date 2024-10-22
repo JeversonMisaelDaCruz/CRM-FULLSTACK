@@ -5,7 +5,7 @@ import { UpdateLeadDto } from './dto/update-lead.dto';
 @Injectable()
 export class LeadsService {
   create(createLeadDto: CreateLeadDto) {
-    return 'This action adds a new lead';
+    return await this.leadRepository.create(createLeadDto);
   }
 
   findAll() {

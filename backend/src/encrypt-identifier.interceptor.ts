@@ -12,7 +12,6 @@ import * as crypto from 'crypto';
 export class EncryptIdentifierInterceptor implements NestInterceptor {
   private readonly algorithm = 'aes-256-cbc';
   private readonly passphrase = 'my_super_secret_key';
-
   private getKey(): Buffer {
     return crypto.createHash('sha256').update(this.passphrase).digest();
   }
