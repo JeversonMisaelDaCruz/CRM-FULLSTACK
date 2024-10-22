@@ -8,14 +8,14 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
-  name     String
-  identifier String   @unique
-  email    String   @unique
-  password String
-  created_at   DateTime @default(now())
-  updated_at   DateTime @default(now()) @updatedAt
-  tokens       Token[]
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  name       String   @db.VarChar(100)
+  identifier String   @unique @db.VarChar(12)
+  email      String   @unique @db.VarChar(60)
+  password   String   @db.VarChar(200)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  tokens     Token[]
 
   @@map("users")
 }
