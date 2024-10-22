@@ -5,6 +5,7 @@ import { ConflictInterception } from './common/errors/interceptors/conflict.inte
 import { DatabaseInterception } from './common/errors/interceptors/database.interceptors';
 import { UnauthorizedInterception } from './common/errors/interceptors/unauthorized.interceptor';
 import { NotFoundInterception } from './common/errors/interceptors/notFound.interceptors';
+import { EncryptIdentifierInterceptor } from './encrypt-identifier.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -20,6 +21,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new DatabaseInterception());
   app.useGlobalInterceptors(new UnauthorizedInterception());
   app.useGlobalInterceptors(new NotFoundInterception());
+  app.useGlobalInterceptors(new EncryptIdentifierInterceptor());
 
   const port = process.env.PORT || 3001;
   await app.listen(port);

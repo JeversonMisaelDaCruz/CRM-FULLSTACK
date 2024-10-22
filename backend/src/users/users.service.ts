@@ -9,16 +9,13 @@ export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
   async create(createUserDto: CreateUserDto) {
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 0);
     console.log('Hashed Password:', hashedPassword);
 
-    const newUser = await this.userRepository.create({
+    return await this.userRepository.create({
       ...createUserDto,
       password: hashedPassword,
     });
-
-    const { password, ...dataUser } = newUser;
-    return dataUser;
   }
 
   async findAll() {

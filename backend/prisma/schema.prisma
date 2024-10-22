@@ -15,6 +15,7 @@ model User {
   password   String   @db.VarChar(200)
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
+  leads      Lead[]
   tokens     Token[]
 
   @@map("users")
@@ -31,4 +32,16 @@ model Token {
   type         String   @default("login")
 
   @@map("tokens")
+}
+
+model Lead {
+  id        String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  name      String   @db.VarChar(100)
+  phone     String   @db.VarChar(20)
+  email     String   @db.VarChar(60)
+  status    String   @db.VarChar(30)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?  @db.Uuid()
 }
