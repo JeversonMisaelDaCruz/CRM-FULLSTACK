@@ -1,10 +1,4 @@
-import {
-  Injectable,
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler, UnauthorizedException } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { UnauthorizedError } from '../types/unauthorizedError';
@@ -15,11 +9,11 @@ export class UnauthorizedInterception implements NestInterceptor {
     return next.handle().pipe(
       catchError((error) => {
         if (error instanceof UnauthorizedError) {
-          throw new UnauthorizedException(error.message);
+          throw new UnauthorizedException(error.message)
         } else {
           throw error;
         }
-      }),
-    );
+      })
+    )
   }
 }

@@ -1,10 +1,4 @@
-import {
-  Injectable,
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler, NotFoundException } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { NotFoundError } from '../types/notFoundError';
@@ -15,11 +9,11 @@ export class NotFoundInterception implements NestInterceptor {
     return next.handle().pipe(
       catchError((error) => {
         if (error instanceof NotFoundError) {
-          throw new NotFoundException(error.message);
+          throw new NotFoundException(error.message)
         } else {
           throw error;
         }
-      }),
-    );
+      })
+    )
   }
 }

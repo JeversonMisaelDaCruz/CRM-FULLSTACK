@@ -1,10 +1,4 @@
-import {
-  Injectable,
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler,
-  ConflictException,
-} from '@nestjs/common';
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler, ConflictException } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ConflictError } from '../types/conflictError';
@@ -15,11 +9,11 @@ export class ConflictInterception implements NestInterceptor {
     return next.handle().pipe(
       catchError((error) => {
         if (error instanceof ConflictError) {
-          throw new ConflictException(error.message);
+          throw new ConflictException(error.message)
         } else {
           throw error;
         }
-      }),
-    );
+      })
+    )
   }
 }

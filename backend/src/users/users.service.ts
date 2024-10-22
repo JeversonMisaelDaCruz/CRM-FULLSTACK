@@ -1,59 +1,39 @@
-import { NotFoundError } from 'src/common/errors/types/notFoundError';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { CreateUserDto } from './dto/create-user.dto';
 import { Injectable } from '@nestjs/common';
-import { UsersRepository } from './repositories/user.repository';
-import { PrismaService } from 'src/prisma/prisma.service';
-import * as bcrypt from 'bcrypt';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UserRepository } from './repositories/user.repository';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
-export class UsersService {
-  constructor(
-    private prisma: PrismaService,
-    readonly usersRepository: UsersRepository,
-  ) {}
+export class UserService {
+  constructor(private readonly userRepository: UserRepository) {}
 
   async create(createUserDto: CreateUserDto) {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-    const newUser = await this.usersRepository.create({
+    console.log('Hashed Password:', hashedPassword);
+
+    const newUser = await this.userRepository.create({
       ...createUserDto,
       password: hashedPassword,
     });
-    return newUser;
-  }
-  async findAll() {
-    return await this.usersRepository.findAll();
+
+    const { password, ...dataUser } = newUser;
+    return dataUser;
   }
 
-  async findByEmail(email: string) {
-    const user = await this.usersRepository.findByEmail(email, 'password');
-    if (!user) {
-      throw new NotFoundError(`Usuário com email ${email} não encontrado`);
-    }
-    return user;
+  async findAll() {
+    return await this.userRepository.findAll();
   }
 
   async findById(id: string) {
-    const idQuery = await this.usersRepository.findById(id);
-    if (!idQuery) {
-      throw new NotFoundError(`${id} não encontrado`);
-    }
-    return idQuery;
+    return await this.userRepository.findById(id);
   }
 
-  async update(id: string, UpdateUserDto: UpdateUserDto) {
-    const idUser = await this.usersRepository.update(id, UpdateUserDto);
-    if (!idUser) {
-      throw new NotFoundError(`${id} não encontrado`);
-    }
-    return idUser;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    return await this.userRepository.update(id, updateUserDto);
   }
 
   async remove(id: string) {
-    const idUser = await this.usersRepository.remove(id);
-    if (!idUser) {
-      throw new NotFoundError(`${id} não encontrado`);
-    }
-    return idUser;
+    return await this.userRepository.remove(id);
   }
 }

@@ -1,9 +1,11 @@
-import type { User } from '@prisma/client';
+import { User } from '@prisma/client';
 
 export class UserEntity implements User {
   name: string;
   id: string;
-  email: string;
   identifier: string;
+  email: string;
   password: string;
+  created_at: Date;
+  updated_at: Date;
 }

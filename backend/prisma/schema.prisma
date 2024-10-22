@@ -8,23 +8,27 @@ datasource db {
 }
 
 model User {
-  id         String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
-  name       String @db.VarChar(100)
-  email      String @unique @db.VarChar(100)
-  identifier String @unique @db.VarChar(25)
-  password   String
-  leads      Lead[]
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  name     String
+  identifier String   @unique
+  email    String   @unique
+  password String
+  created_at   DateTime @default(now())
+  updated_at   DateTime @default(now()) @updatedAt
+  tokens       Token[]
 
   @@map("users")
 }
 
-model Lead {
-  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
-  name      String @db.VarChar(80)
-  telephone String @db.VarChar(20)
-  email     String @unique @db.VarChar(70)
-  userId    String @db.Uuid()
-  user      User   @relation(fields: [userId], references: [id])
+model Token {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  created_at   DateTime @default(now())
+  updated_at   DateTime @default(now()) @updatedAt
+  access_token String
+  is_revoked   Boolean  @default(false)
+  user         User     @relation(fields: [user_id], references: [id])
+  user_id      String   @db.Uuid()
+  type         String   @default("login")
 
-  @@map("leads")
+  @@map("tokens")
 }
