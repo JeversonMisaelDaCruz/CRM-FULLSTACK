@@ -2,13 +2,19 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UserEntity } from '../entities/user.entity';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UserRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    if (await this.findByEmail(createUserDto.email)) {
+      throw new HttpException('email ja existe ', 401);
+    }
+    if (await this.findByIdentifier(createUserDto.identifier)) {
+      throw new HttpException('identifer ja existe', 401);
+    }
     return await this.prismaService.user.create({ data: createUserDto });
   }
 
@@ -28,7 +34,19 @@ export class UserRepository {
     });
   }
 
+  async findByIdentifier(identifier: string): Promise<UserEntity> {
+    return this.prismaService.user.findUnique({
+      where: { identifier },
+    });
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto): Promise<any> {
+    if (await this.findByEmail(updateUserDto.email)) {
+      throw new HttpException('email ja existe', 401);
+    }
+    if (await this.findByIdentifier(updateUserDto.identifier)) {
+      throw new HttpException('identifier ja existe', 401);
+    }
     return await this.prismaService.user.update({
       where: { id },
       data: updateUserDto,

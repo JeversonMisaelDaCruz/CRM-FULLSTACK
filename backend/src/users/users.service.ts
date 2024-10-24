@@ -14,6 +14,7 @@ export class UserService {
 
     return await this.userRepository.create({
       ...createUserDto,
+      identifier: createUserDto.identifier.replace(/[ˆ0-9]/g, ''),
       password: hashedPassword,
     });
   }
@@ -27,9 +28,13 @@ export class UserService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    return await this.userRepository.update(id, updateUserDto);
-  }
+    const updatedUserDto = {
+      ...updateUserDto,
+      identifier: updateUserDto.identifier.replace(/[ˆ0-9]/g, ''),
+    };
 
+    return await this.userRepository.update(id, updatedUserDto);
+  }
   async remove(id: string) {
     return await this.userRepository.remove(id);
   }

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { CreateLeadDto } from '../dto/create-lead.dto';
 import { LeadEntity } from '../entities/lead.entity';
+import { PrismaService } from '../../prisma/prisma.service';
+import { UpdateUserDto } from '../../users/dto/update-user.dto';
 
 @Injectable()
 export class LeadsRepository {
