@@ -1,6 +1,6 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import request from 'supertest';
+import * as request from 'supertest';
 import { AppModule } from './app.module';
 
 export let app: INestApplication;
@@ -26,7 +26,7 @@ beforeAll(async () => {
   try {
     const authResponse = await request(app.getHttpServer())
       .post('/users/auth/login')
-      .send({ email: 'misael2@gmail.com', password: '488531' })
+      .send({ email: 'jeverson@gmail.com', password: '4885' })
       .expect(201);
 
     authToken = authResponse.body.access_token;

@@ -9,10 +9,13 @@ export class UserRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    if (await this.findByEmail(createUserDto.email)) {
+    if (createUserDto.email && (await this.findByEmail(createUserDto.email))) {
       throw new HttpException('email ja existe ', 401);
     }
-    if (await this.findByIdentifier(createUserDto.identifier)) {
+    if (
+      createUserDto.identifier &&
+      (await this.findByIdentifier(createUserDto.identifier))
+    ) {
       throw new HttpException('identifer ja existe', 401);
     }
     return await this.prismaService.user.create({ data: createUserDto });
@@ -22,8 +25,8 @@ export class UserRepository {
     return await this.prismaService.user.findMany();
   }
 
-  async findById(id: string): Promise<any> {
-    return await this.prismaService.user.findUnique({
+  async findById(id: string): Promise<UserEntity> {
+    return await this.prismaService.user.findFirst({
       where: { id },
     });
   }
@@ -40,19 +43,23 @@ export class UserRepository {
     });
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<any> {
-    if (await this.findByEmail(updateUserDto.email)) {
-      throw new HttpException('email ja existe', 401);
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
+    if (updateUserDto.email && (await this.findByEmail(updateUserDto.email))) {
+      throw new HttpException('Email já existe', 401);
     }
-    if (await this.findByIdentifier(updateUserDto.identifier)) {
-      throw new HttpException('identifier ja existe', 401);
+
+    if (
+      updateUserDto.identifier &&
+      (await this.findByIdentifier(updateUserDto.identifier))
+    ) {
+      throw new HttpException('Identifier já existe', 401);
     }
+
     return await this.prismaService.user.update({
       where: { id },
       data: updateUserDto,
     });
   }
-
   async remove(id: string): Promise<UserEntity> {
     return await this.prismaService.user.delete({ where: { id } });
   }
