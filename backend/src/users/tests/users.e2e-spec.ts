@@ -7,19 +7,19 @@ const updateUser = {
   identifer: '87641236920',
 };
 const newUser = {
-  name: 'jeverson vader',
-  email: 'darthvader@gmail.com',
-  identifier: '01710484900',
+  name: 'teste teste',
+  email: 'teste@gmail.com',
+  identifier: '01710484908',
   password: '488531',
 };
 const dataUser = {
   name: 'jeverson fernando',
   password: '488531',
 };
-const userWithoutData = {};
+
 const idUser = 'e78eccf4-7414-4c6c-b5d7-61d6712030a2';
-const userWithoutId = '';
 const idUserWrong = '01e72f2b-2db1-481d-b9b2-d75287f5acc8';
+const idUserDelete = '0f77bb0a-b4c6-43a8-b096-c93ec78df772';
 
 it('Registrando um usuário', async () => {
   return await request(app.getHttpServer())
@@ -139,36 +139,37 @@ it('Atualizando usuario especifico sem passar data', async () => {
   return await request(app.getHttpServer())
     .patch(`/users/${idUser}`)
     .set('Authorization', `Bearer ${authToken}`)
-    .send(userWithoutData)
+    .send({})
     .expect(400);
 });
 
 it('Registrando um usuário especifico sem passar id', async () => {
   return await request(app.getHttpServer())
-    .patch(`/users/${userWithoutId}`)
+    .patch(`/users/`)
     .set('Authorization', `Bearer ${authToken}`)
     .send(updateUser)
     .expect(404);
 });
-it('Deletando um usuario sem passar id', async () => {
+
+it('Deletando um usuario', async () => {
   return await request(app.getHttpServer())
-    .delete(`/users/${userWithoutId}`)
+    .delete(`/users/${idUserDelete}`)
     .set('Authorization', `Bearer ${authToken}`)
     .send(idUser)
+    .expect(200);
+});
+
+it('Deletando um usuario sem passar id', async () => {
+  return await request(app.getHttpServer())
+    .delete(`/users/`)
+    .set('Authorization', `Bearer ${authToken}`)
     .expect(404);
 });
 it('Deletando um usario faltando token', async () => {
   return await request(app.getHttpServer())
-    .delete(`/users/${idUser}`)
+    .delete(`/users/${idUserDelete}`)
     .send(idUser)
     .expect(401);
-});
-it('Deletando um usuario', async () => {
-  return await request(app.getHttpServer())
-    .delete(`/users/${idUser}`)
-    .set('Authorization', `Bearer ${authToken}`)
-    .send(idUser)
-    .expect(200);
 });
 
 // acrescentar no teste= de usuario:

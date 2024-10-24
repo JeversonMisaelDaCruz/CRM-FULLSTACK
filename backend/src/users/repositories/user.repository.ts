@@ -65,6 +65,10 @@ export class UserRepository {
     });
   }
   async remove(id: string): Promise<UserEntity> {
-    return await this.prismaService.user.delete({ where: { id } });
+    const response = await this.prismaService.user.delete({ where: { id } });
+    if (!response) {
+      throw new HttpException('user not found', 404);
+    }
+    return response;
   }
 }
