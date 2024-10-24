@@ -55,6 +55,10 @@ export class UserRepository {
       throw new HttpException('Identifier já existe', 401);
     }
 
+    if (updateUserDto) {
+      throw new HttpException('não permitido campo vazio', 400);
+    }
+
     return await this.prismaService.user.update({
       where: { id },
       data: updateUserDto,

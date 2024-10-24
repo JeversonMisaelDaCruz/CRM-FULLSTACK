@@ -1,21 +1,25 @@
 import * as request from 'supertest';
 import { app, authToken } from '../../global.e2e-spec';
+import { response } from 'express';
 
-export const newUser = {
-  name: 'jeverson fernando',
+const updateUser = {
   email: 'jeversonsolomon@gmail.com',
-  identifier: '87641236920',
+  identifer: '87641236920',
+};
+const newUser = {
+  name: 'jeverson vader',
+  email: 'darthvader@gmail.com',
+  identifier: '01710484900',
   password: '488531',
 };
-
-export const dataUser = {
+const dataUser = {
   name: 'jeverson fernando',
   password: '488531',
 };
-
-export const idUser = '7ea69f3e-e280-42f1-b32c-e41554659a54';
-
-export const idUserWrong = '01e72f2b-2db1-481d-b9b2-d75287f5acc8';
+const userWithoutData = {};
+const idUser = 'e78eccf4-7414-4c6c-b5d7-61d6712030a2';
+const userWithoutId = '';
+const idUserWrong = '01e72f2b-2db1-481d-b9b2-d75287f5acc8';
 
 it('Registrando um usuário', async () => {
   return await request(app.getHttpServer())
@@ -100,15 +104,71 @@ it('filtrando usuario especifico faltando token', async () => {
 });
 
 it('atualizando um usuario especifico', async () => {
-  const updateUser = {
-    name: 'rogerio',
-  };
   const response = await request(app.getHttpServer())
     .patch(`/users/${idUser}`)
     .set('Authorization', `Bearer ${authToken}`)
     .send(updateUser)
-    .expect(200);
+    .expect(400);
 
   console.log('response', response.body);
   return response;
 });
+
+it('atualizando usuario faltando token', async () => {
+  const updateUser = {
+    name: 'rogerio',
+  };
+  const reponse = await request(app.getHttpServer())
+    .patch(`/users/${idUser}`)
+    .send(updateUser)
+    .expect(401);
+
+  console.log(`response`, reponse.body);
+  return response;
+});
+
+it('Atualizando usuario com email e cpf existente', async () => {
+  return await request(app.getHttpServer())
+    .patch(`/users/${idUser}`)
+    .set('Authorization', `Bearer ${authToken}`)
+    .send(updateUser)
+    .expect(400);
+});
+
+it('Atualizando usuario especifico sem passar data', async () => {
+  return await request(app.getHttpServer())
+    .patch(`/users/${idUser}`)
+    .set('Authorization', `Bearer ${authToken}`)
+    .send(userWithoutData)
+    .expect(400);
+});
+
+it('Registrando um usuário especifico sem passar id', async () => {
+  return await request(app.getHttpServer())
+    .patch(`/users/${userWithoutId}`)
+    .set('Authorization', `Bearer ${authToken}`)
+    .send(updateUser)
+    .expect(404);
+});
+it('Deletando um usuario sem passar id', async () => {
+  return await request(app.getHttpServer())
+    .delete(`/users/${userWithoutId}`)
+    .set('Authorization', `Bearer ${authToken}`)
+    .send(idUser)
+    .expect(404);
+});
+it('Deletando um usario faltando token', async () => {
+  return await request(app.getHttpServer())
+    .delete(`/users/${idUser}`)
+    .send(idUser)
+    .expect(401);
+});
+it('Deletando um usuario', async () => {
+  return await request(app.getHttpServer())
+    .delete(`/users/${idUser}`)
+    .set('Authorization', `Bearer ${authToken}`)
+    .send(idUser)
+    .expect(200);
+});
+
+// acrescentar no teste= de usuario:
