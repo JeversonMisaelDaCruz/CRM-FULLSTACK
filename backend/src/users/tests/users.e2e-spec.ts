@@ -1,25 +1,13 @@
 import * as request from 'supertest';
 import { app, authToken } from '../../global.e2e-spec';
-import { response } from 'express';
-
-const updateUser = {
-  email: 'jeversonsolomon@gmail.com',
-  identifer: '87641236920',
-};
-const newUser = {
-  name: 'teste teste',
-  email: 'teste@gmail.com',
-  identifier: '01710484908',
-  password: '488531',
-};
-const dataUser = {
-  name: 'jeverson fernando',
-  password: '488531',
-};
-
-const idUser = 'e78eccf4-7414-4c6c-b5d7-61d6712030a2';
-const idUserWrong = '01e72f2b-2db1-481d-b9b2-d75287f5acc8';
-const idUserDelete = '0f77bb0a-b4c6-43a8-b096-c93ec78df772';
+import {
+  newUser,
+  dataUser,
+  idUser,
+  idUserWrong,
+  updateUser,
+  idUserDelete,
+} from './const.test.e2e';
 
 it('Registrando um usuário', async () => {
   return await request(app.getHttpServer())
@@ -29,7 +17,7 @@ it('Registrando um usuário', async () => {
     .expect(201);
 });
 
-it('registrando usuario com o mesmo email e identifer', async () => {
+it('Registrando usuário com o mesmo email e identifier', async () => {
   return await request(app.getHttpServer())
     .post('/users/register')
     .set('Authorization', `Bearer ${authToken}`)
@@ -37,7 +25,7 @@ it('registrando usuario com o mesmo email e identifer', async () => {
     .expect(401);
 });
 
-it('registrando usuario faltando campo', async () => {
+it('Registrando usuário faltando campo', async () => {
   return await request(app.getHttpServer())
     .post('/users/register')
     .set('Authorization', `Bearer ${authToken}`)
@@ -45,7 +33,7 @@ it('registrando usuario faltando campo', async () => {
     .expect(400);
 });
 
-it('registrando usuario rota incorreta', async () => {
+it('Registrando usuário em rota incorreta', async () => {
   return await request(app.getHttpServer())
     .post('/users')
     .set('Authorization', `Bearer ${authToken}`)
@@ -53,57 +41,57 @@ it('registrando usuario rota incorreta', async () => {
     .expect(404);
 });
 
-it('registrando usuario sem token', async () => {
+it('Registrando usuário sem token', async () => {
   return await request(app.getHttpServer())
     .post('/users/register')
     .send(newUser)
     .expect(401);
 });
 
-it('filtrando todos os usuarios', async () => {
+it('Filtrando todos os usuários', async () => {
   return await request(app.getHttpServer())
     .get('/users')
     .set('Authorization', `Bearer ${authToken}`)
     .expect(200);
 });
 
-it('filtrando todos os usuarios rota incorreta', async () => {
+it('Filtrando todos os usuários - rota incorreta', async () => {
   return await request(app.getHttpServer())
     .get('/user')
     .set('Authorization', `Bearer ${authToken}`)
     .expect(404);
 });
 
-it('filtrando todos os usuarios sem o token', async () => {
+it('Filtrando todos os usuários sem o token', async () => {
   return await request(app.getHttpServer()).get('/users').expect(401);
 });
 
-it('filtrando usuario especifico', async () => {
+it('Filtrando usuário específico', async () => {
   return await request(app.getHttpServer())
     .get(`/users/${idUser}`)
     .set('Authorization', `Bearer ${authToken}`)
     .expect(200);
 });
 
-it('filtrando usuario especifico id incorreto', async () => {
+it('Filtrando usuário específico com id incorreto', async () => {
   return await request(app.getHttpServer())
     .get(`/users/${idUserWrong}`)
     .set('Authorization', `Bearer ${authToken}`)
     .expect(404);
 });
 
-it('filtrando usuario especifico com rota incorreta', async () => {
+it('Filtrando usuário específico em rota incorreta', async () => {
   return await request(app.getHttpServer())
     .get(`/user/${idUser}`)
     .set('Authorization', `Bearer ${authToken}`)
     .expect(404);
 });
 
-it('filtrando usuario especifico faltando token', async () => {
+it('Filtrando usuário específico sem token', async () => {
   return await request(app.getHttpServer()).get(`/user/${idUser}`).expect(404);
 });
 
-it('atualizando um usuario especifico', async () => {
+it('Atualizando um usuário específico', async () => {
   const response = await request(app.getHttpServer())
     .patch(`/users/${idUser}`)
     .set('Authorization', `Bearer ${authToken}`)
@@ -114,20 +102,20 @@ it('atualizando um usuario especifico', async () => {
   return response;
 });
 
-it('atualizando usuario faltando token', async () => {
+it('Atualizando usuário sem token', async () => {
   const updateUser = {
     name: 'rogerio',
   };
-  const reponse = await request(app.getHttpServer())
+  const response = await request(app.getHttpServer())
     .patch(`/users/${idUser}`)
     .send(updateUser)
     .expect(401);
 
-  console.log(`response`, reponse.body);
+  console.log(`response`, response.body);
   return response;
 });
 
-it('Atualizando usuario com email e cpf existente', async () => {
+it('Atualizando usuário com email e cpf existente', async () => {
   return await request(app.getHttpServer())
     .patch(`/users/${idUser}`)
     .set('Authorization', `Bearer ${authToken}`)
@@ -135,7 +123,7 @@ it('Atualizando usuario com email e cpf existente', async () => {
     .expect(400);
 });
 
-it('Atualizando usuario especifico sem passar data', async () => {
+it('Atualizando usuário específico sem passar data', async () => {
   return await request(app.getHttpServer())
     .patch(`/users/${idUser}`)
     .set('Authorization', `Bearer ${authToken}`)
@@ -143,7 +131,7 @@ it('Atualizando usuario especifico sem passar data', async () => {
     .expect(400);
 });
 
-it('Registrando um usuário especifico sem passar id', async () => {
+it('Atualizando usuário específico sem passar id', async () => {
   return await request(app.getHttpServer())
     .patch(`/users/`)
     .set('Authorization', `Bearer ${authToken}`)
@@ -151,7 +139,7 @@ it('Registrando um usuário especifico sem passar id', async () => {
     .expect(404);
 });
 
-it('Deletando um usuario', async () => {
+it('Deletando um usuário', async () => {
   return await request(app.getHttpServer())
     .delete(`/users/${idUserDelete}`)
     .set('Authorization', `Bearer ${authToken}`)
@@ -159,13 +147,14 @@ it('Deletando um usuario', async () => {
     .expect(200);
 });
 
-it('Deletando um usuario sem passar id', async () => {
+it('Deletando um usuário sem passar id', async () => {
   return await request(app.getHttpServer())
     .delete(`/users/`)
     .set('Authorization', `Bearer ${authToken}`)
     .expect(404);
 });
-it('Deletando um usario faltando token', async () => {
+
+it('Deletando um usuário sem token', async () => {
   return await request(app.getHttpServer())
     .delete(`/users/${idUserDelete}`)
     .send(idUser)
