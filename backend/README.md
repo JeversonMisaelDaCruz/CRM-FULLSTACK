@@ -4,14 +4,14 @@ Testes para o Modelo Lead
 
 1. Testes de Criação (Create)
 
-	•	Criar um lead com dados válidos: Verifica se um lead é criado com sucesso quando todos os campos obrigatórios são fornecidos corretamente.
-	•	Criar um lead com e-mail duplicado: Verifica se o sistema impede a criação de leads com e-mails duplicados, caso você queira garantir a exclusividade de e-mails.
-	•	Criar um lead com dados faltantes: Verifica o erro retornado ao tentar criar um lead sem fornecer campos obrigatórios (como name, phone, email e leadsStatus).
-	•	Criar um lead associado a um usuário inexistente: Verifica o comportamento ao tentar criar um lead com um userId que não existe na tabela User.
+	•	Criar um lead com dados válidos: Verifica se um lead é criado com sucesso quando todos os campos obrigatórios são fornecidos corretamente. ok
+
+	•	Criar um lead com dados faltantes: Verifica o erro retornado ao tentar criar um lead sem fornecer campos obrigatórios (como name, phone, email e leadsStatus).ok
+
 
 2. Testes de Leitura (Read)
 
-	•	Listar todos os leads: Verifica se o sistema retorna uma lista de todos os leads disponíveis.
+	•	Listar todos os leads: Verifica se o sistema retorna uma lista de todos os leads disponíveis. ok
 	•	Buscar lead específico por ID: Verifica se o sistema retorna corretamente as informações de um lead ao buscar pelo ID.
 	•	Buscar lead com ID inexistente: Verifica se o sistema retorna o erro apropriado ao buscar um lead com um ID que não existe.
 	•	Listar leads filtrados por status: Caso você implemente uma funcionalidade de filtro, verifique se o sistema retorna corretamente os leads de acordo com o leadsStatus (por exemplo, new, in_progress, closed, rejected).

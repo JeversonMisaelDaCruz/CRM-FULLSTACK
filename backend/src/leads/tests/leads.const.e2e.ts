@@ -1,9 +1,12 @@
-const newLead = {
-  name:'misael',
+export const newLead = {
+  name: 'misael',
   phone: '998309758',
-  email: 'jeversonvader@gmail.com'
-}
+  email: 'jeversonvader@gmail.com',
+};
 
-const leadWithoutData = {
-  name:'fernando'
-}
+export const leadMissingData = {
+  name: 'fernando',
+  phone: '998309758',
+};
+
+export const leadWithoutData = {};
