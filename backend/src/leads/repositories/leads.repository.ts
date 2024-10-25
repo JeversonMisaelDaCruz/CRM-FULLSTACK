@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateLeadDto } from '../dto/create-lead.dto';
 import { LeadEntity } from '../entities/lead.entity';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -20,6 +20,9 @@ export class LeadsRepository {
     });
   }
   async update(id: string, updateUserDto: UpdateUserDto): Promise<any> {
+    if (updateUserDto) {
+      throw new HttpException('não permitido campo vazio', 400);
+    }
     return await this.prismaService.lead.update({
       where: { id },
       data: updateUserDto,

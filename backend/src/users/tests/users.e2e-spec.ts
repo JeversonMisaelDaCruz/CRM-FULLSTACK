@@ -7,7 +7,7 @@ import {
   idUserWrong,
   updateUser,
   idUserDelete,
-} from './const.test.e2e';
+} from './const.e2e';
 
 it('Registrando um usuário', async () => {
   return await request(app.getHttpServer())

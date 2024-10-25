@@ -1,6 +1,7 @@
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
@@ -33,17 +34,6 @@ export class CreateLeadDto {
     },
   )
   email: string;
-  @IsNotEmpty({
-    message: 'o Status deve ser informado',
-  })
-  @IsString()
-  @MinLength(2, {
-    message: 'o Status deve ter pelo menos 2 caracteres',
-  })
-  @MaxLength(20, {
-    message: 'o Status deve ter no maximo 20 caracteres',
-  })
-  status: string;
   @IsNotEmpty({
     message: 'o Telefone deve ser informado',
   })
