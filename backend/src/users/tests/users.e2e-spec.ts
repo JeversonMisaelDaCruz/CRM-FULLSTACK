@@ -171,5 +171,3 @@ it('Deletando um usario faltando token', async () => {
     .send(idUser)
     .expect(401);
 });
-
-// acrescentar no teste= de usuario:
