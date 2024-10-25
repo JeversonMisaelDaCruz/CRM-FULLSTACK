@@ -1,6 +1,7 @@
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
@@ -48,4 +49,10 @@ export class UpdateLeadDto {
       'O Telefone deve ter no maximo 17 aracteres. Por favor, tente novamente.',
   })
   phone?: string;
+  @IsString()
+  @IsOptional()
+  user_id?: string;
+  @IsString()
+  @IsOptional()
+  leads_status_id?: string;
 }

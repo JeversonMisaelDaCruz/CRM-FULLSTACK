@@ -3,7 +3,8 @@ export class LeadEntity {
   name: string;
   phone: string;
   email: string;
-  createdAt: Date;
-  updatedAt: Date;
-  userId: string;
+  created_at: Date;
+  updated_at: Date;
+  user_id?: string;
+  leads_status_id?: string;
 }

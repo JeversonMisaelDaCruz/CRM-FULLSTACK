@@ -6,6 +6,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+
 export class CreateLeadDto {
   @IsNotEmpty()
   @IsString()
@@ -47,4 +48,10 @@ export class CreateLeadDto {
       'O Telefone deve ter no maximo 17 aracteres. Por favor, tente novamente.',
   })
   phone: string;
+  @IsString()
+  @IsOptional()
+  user_id?: string;
+  @IsString()
+  @IsOptional()
+  leads_status_id?: string;
 }

@@ -35,20 +35,22 @@ model Token {
 }
 
 model Lead {
-  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
-  name        String     @db.VarChar(100)
-  phone       String     @db.VarChar(20)
-  email       String     @db.VarChar(60)
-  leadsStatus LeadStatus
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  User        User?      @relation(fields: [userId], references: [id])
-  userId      String?    @db.Uuid()
+  id             String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  name           String      @db.VarChar(100)
+  phone          String      @db.VarChar(20)
+  email          String      @db.VarChar(60)
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @default(now()) @updatedAt
+  User           User?       @relation(fields: [user_id], references: [id])
+  user_id        String?     @db.Uuid()
+  leads_status   LeadStatus? @relation(fields: [lead_status_id], references: [id])
+  lead_status_id String?     @db.Uuid()
 }
 
-enum LeadStatus {
-  new
-  in_progress
-  closed
-  rejected
+model LeadStatus {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  name       String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  Lead       Lead[]
 }

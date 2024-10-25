@@ -19,7 +19,7 @@ export class LeadsRepository {
       where: { id },
     });
   }
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<any> {
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<LeadEntity> {
     if (updateUserDto) {
       throw new HttpException('não permitido campo vazio', 400);
     }
