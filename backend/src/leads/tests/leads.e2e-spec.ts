@@ -99,3 +99,17 @@ it('Atualizando informaçoes de um lead ', async () => {
     .send(updateLead)
     .expect(200);
 });
+it('deletendo um lead sem autenticação', async () => {
+  return await request(app.getHttpServer())
+  .delete(`/leads/${leadId}`)
+  .expect(401)
+})
+
+it('deletando um lead sem passar id', async () => {
+  return await request(app.getHttpServer())
+  .delete(`/leads/`)
+  .set(`Authorization`, `Bearer ${authToken}`)
+  .expect(400)
+})
+
+

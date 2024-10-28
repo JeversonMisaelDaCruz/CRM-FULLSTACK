@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.leadId = exports.leadWithoutData = exports.leadMissingData = exports.newLead = void 0;
+exports.leadWrongId = exports.leadId = exports.leadWithoutData = exports.updateLead = exports.leadMissingData = exports.newLead = void 0;
 exports.newLead = {
     name: 'misael',
     phone: '998309758',
@@ -10,6 +10,12 @@ exports.leadMissingData = {
     name: 'fernando',
     phone: '998309758',
 };
+exports.updateLead = {
+    name: 'joaquim',
+    phone: '998309755',
+    email: 'atualizado@gmail.com'
+};
 exports.leadWithoutData = {};
-exports.leadId = '0926f711-e5b3-4cd5-89e6-95755756f537';
+exports.leadId = 'ceb1e741-f699-46c3-84de-a18b612bca95';
+exports.leadWrongId = 'c8e1807d-f540-495e-8748-0ae0a993a5dg';
 //# sourceMappingURL=leads.const.e2e.js.map

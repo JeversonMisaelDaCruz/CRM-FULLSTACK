@@ -8,6 +8,6 @@ export declare class LeadsService {
     findAll(): Promise<import("./entities/lead.entity").LeadEntity[]>;
     findById(id: string): Promise<import("./entities/lead.entity").LeadEntity>;
     findByEmail(email: string): Promise<import("./entities/lead.entity").LeadEntity>;
-    update(id: string, updateLeadDto: UpdateLeadDto): Promise<import("./entities/lead.entity").LeadEntity>;
+    update(id: string, updateLeadDto: UpdateLeadDto): Promise<void>;
     remove(id: string): Promise<import("./entities/lead.entity").LeadEntity>;
 }

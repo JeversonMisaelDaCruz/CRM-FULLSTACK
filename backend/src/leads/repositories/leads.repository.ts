@@ -10,10 +10,19 @@ export class LeadsRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createLeadDto: CreateLeadDto): Promise<LeadEntity> {
-    return await this.prismaService.lead.create({ data: createLeadDto });
+    return await this.prismaService.lead.create({
+      data: createLeadDto,
+      include: {
+        user: true,
+      },
+    });
   }
   async findAll(): Promise<LeadEntity[]> {
-    return await this.prismaService.lead.findMany();
+    return await this.prismaService.lead.findMany({
+      include: {
+        user: true,
+      },
+    });
   }
   async findById(id: string): Promise<LeadEntity> {
     if (!id || !isUUID(id)) {
@@ -23,6 +32,9 @@ export class LeadsRepository {
     return await this.prismaService.lead.findUnique({
       where: {
         id: id,
+      },
+      include: {
+        user: true,
       },
     });
   }
@@ -37,6 +49,9 @@ export class LeadsRepository {
     return await this.prismaService.lead.update({
       where: { id: id },
       data: updateLead,
+      include: {
+        user: true,
+      },
     });
   }
   async findByEmail(email: string): Promise<LeadEntity> {
@@ -44,6 +59,7 @@ export class LeadsRepository {
       where: { email },
     });
   }
+
   async remove(id: string): Promise<LeadEntity> {
     return await this.prismaService.lead.delete({
       where: { id: id },

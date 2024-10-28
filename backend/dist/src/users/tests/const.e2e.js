@@ -2,8 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.idUserDelete = exports.idUserWrong = exports.idUser = exports.dataUser = exports.newUser = exports.updateUser = void 0;
 exports.updateUser = {
-    email: 'jeversonsolomon@gmail.com',
-    identifer: '87641236920',
+    name: 'ola mundo',
+    email: 'testeolamundo@gmail.com',
+    identifier: '01780984908',
 };
 exports.newUser = {
     name: 'teste teste',
@@ -15,7 +16,7 @@ exports.dataUser = {
     name: 'jeverson fernando',
     password: '488531',
 };
-exports.idUser = '66b88550-905b-4ae7-a2ad-28a82faa15b7';
+exports.idUser = '13eece81-fcb4-496c-9b76-e34ff8eb7a2c';
 exports.idUserWrong = '01e72f2b-2db1-481d-b9b2-d75287f5acc8';
-exports.idUserDelete = 'a033728e-0ba5-492d-b17a-fbf608c11f74';
+exports.idUserDelete = '13eece81-fcb4-496c-9b76-e34ff8eb7a2c';
 //# sourceMappingURL=const.e2e.js.map

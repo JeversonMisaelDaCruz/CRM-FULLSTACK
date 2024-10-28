@@ -11,29 +11,53 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LeadsRepository = void 0;
 const common_1 = require("@nestjs/common");
+const uuid_1 = require("uuid");
 const prisma_service_1 = require("../../prisma/prisma.service");
 let LeadsRepository = class LeadsRepository {
     constructor(prismaService) {
         this.prismaService = prismaService;
     }
     async create(createLeadDto) {
-        return await this.prismaService.lead.create({ data: createLeadDto });
-    }
-    async findAll() {
-        return await this.prismaService.lead.findMany();
-    }
-    async findById(id) {
-        return await this.prismaService.lead.findUnique({
-            where: { id },
+        return await this.prismaService.lead.create({
+            data: createLeadDto,
+            include: {
+                user: true,
+            },
         });
     }
-    async update(id, updateUserDto) {
-        if (updateUserDto) {
-            throw new common_1.HttpException('não permitido campo vazio', 400);
+    async findAll() {
+        return await this.prismaService.lead.findMany({
+            include: {
+                user: true,
+            },
+        });
+    }
+    async findById(id) {
+        if (!id || !(0, uuid_1.validate)(id)) {
+            throw new common_1.HttpException('Lead não encontrado', 404);
+        }
+        return await this.prismaService.lead.findUnique({
+            where: {
+                id: id,
+            },
+            include: {
+                user: true,
+            },
+        });
+    }
+    async update(id, updateLead) {
+        if (!updateLead || Object.keys(updateLead).length === 0) {
+            throw new common_1.HttpException('Não permitido campo vazio', 400);
+        }
+        if (!id || !(0, uuid_1.validate)(id)) {
+            throw new common_1.HttpException('Lead não encontrado', 404);
         }
         return await this.prismaService.lead.update({
-            where: { id },
-            data: updateUserDto,
+            where: { id: id },
+            data: updateLead,
+            include: {
+                user: true,
+            },
         });
     }
     async findByEmail(email) {
@@ -43,7 +67,7 @@ let LeadsRepository = class LeadsRepository {
     }
     async remove(id) {
         return await this.prismaService.lead.delete({
-            where: { id },
+            where: { id: id },
         });
     }
 };

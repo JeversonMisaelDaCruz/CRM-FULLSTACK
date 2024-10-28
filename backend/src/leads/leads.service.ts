@@ -6,8 +6,10 @@ import { LeadsRepository } from './repositories/leads.repository';
 @Injectable()
 export class LeadsService {
   constructor(private readonly leadsRepository: LeadsRepository) {}
-  async create(createLeadDto: CreateLeadDto) {
-    return await this.leadsRepository.create(createLeadDto);
+
+  async create(createLeadDto: CreateLeadDto,) {
+    const leadData = { ...createLeadDto};
+    return await this.leadsRepository.create(leadData);
   }
 
   async findAll() {

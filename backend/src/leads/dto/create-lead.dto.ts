@@ -35,6 +35,7 @@ export class CreateLeadDto {
     },
   )
   email: string;
+
   @IsNotEmpty({
     message: 'o Telefone deve ser informado',
   })
@@ -48,9 +49,11 @@ export class CreateLeadDto {
       'O Telefone deve ter no maximo 17 aracteres. Por favor, tente novamente.',
   })
   phone: string;
+  
   @IsString()
   @IsOptional()
   user_id?: string;
+
   @IsString()
   @IsOptional()
   leads_status_id?: string;

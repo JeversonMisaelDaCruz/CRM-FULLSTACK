@@ -17,19 +17,27 @@ let LeadsService = class LeadsService {
         this.leadsRepository = leadsRepository;
     }
     async create(createLeadDto) {
-        return await this.leadsRepository.create(createLeadDto);
+        const leadData = { ...createLeadDto };
+        return await this.leadsRepository.create(leadData);
     }
     async findAll() {
         return await this.leadsRepository.findAll();
     }
     async findById(id) {
-        return await this.leadsRepository.findById(id);
+        const response = await this.leadsRepository.findById(id);
+        if (!response) {
+            throw new common_1.NotFoundException(`${id} nao encontrado`);
+        }
+        return response;
     }
     async findByEmail(email) {
         return await this.leadsRepository.findByEmail(email);
     }
     async update(id, updateLeadDto) {
-        return await this.leadsRepository.update(id, updateLeadDto);
+        const response = await this.leadsRepository.update(id, updateLeadDto);
+        if (!response) {
+            throw new common_1.NotFoundException(`${id} nao encontrado`);
+        }
     }
     async remove(id) {
         return await this.leadsRepository.remove(id);
