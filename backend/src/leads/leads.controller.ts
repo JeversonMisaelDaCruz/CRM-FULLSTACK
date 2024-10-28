@@ -22,24 +22,29 @@ export class LeadsController {
   create(@Body() createLeadDto: CreateLeadDto) {
     return this.leadsService.create(createLeadDto);
   }
+
   @UseGuards(AuthGuard)
   @Get()
   findAll() {
     return this.leadsService.findAll();
   }
+
   @UseGuards(AuthGuard)
   @Get(':id')
-  async findOne(@Param(':id') id: string) {
-    await this.leadsService.findById(id);
+  async findOne(@Param('id') id: string) {
+    return this.leadsService.findById(id);
   }
+
   @UseGuards(AuthGuard)
   @Patch(':id')
-  update(@Param(':id') id: string, @Body() updateLeadDto: UpdateLeadDto) {
+  async update(@Param('id') id: string, @Body() updateLeadDto: UpdateLeadDto) {
+    console.log('ID recebido no Controller:', id);
     return this.leadsService.update(id, updateLeadDto);
   }
+
   @UseGuards(AuthGuard)
   @Delete(':id')
-  remove(@Param(':id') id: string) {
+  remove(@Param('id') id: string) {
     return this.leadsService.remove(id);
   }
 }

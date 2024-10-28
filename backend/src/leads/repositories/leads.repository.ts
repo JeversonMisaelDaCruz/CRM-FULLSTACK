@@ -1,8 +1,9 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { CreateLeadDto } from '../dto/create-lead.dto';
-import { LeadEntity } from '../entities/lead.entity';
+import { validate as isUUID } from 'uuid';
 import { PrismaService } from '../../prisma/prisma.service';
-import { UpdateUserDto } from '../../users/dto/update-user.dto';
+import { CreateLeadDto } from '../dto/create-lead.dto';
+import { UpdateLeadDto } from '../dto/update-lead.dto';
+import { LeadEntity } from '../entities/lead.entity';
 
 @Injectable()
 export class LeadsRepository {
@@ -15,17 +16,27 @@ export class LeadsRepository {
     return await this.prismaService.lead.findMany();
   }
   async findById(id: string): Promise<LeadEntity> {
+    if (!id || !isUUID(id)) {
+      throw new HttpException('Lead não encontrado', 404);
+    }
+
     return await this.prismaService.lead.findUnique({
-      where: { id },
+      where: {
+        id: id,
+      },
     });
   }
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<LeadEntity> {
-    if (updateUserDto) {
-      throw new HttpException('não permitido campo vazio', 400);
+
+  async update(id: string, updateLead: UpdateLeadDto): Promise<LeadEntity> {
+    if (!updateLead || Object.keys(updateLead).length === 0) {
+      throw new HttpException('Não permitido campo vazio', 400);
+    }
+    if (!id || !isUUID(id)) {
+      throw new HttpException('Lead não encontrado', 404);
     }
     return await this.prismaService.lead.update({
-      where: { id },
-      data: updateUserDto,
+      where: { id: id },
+      data: updateLead,
     });
   }
   async findByEmail(email: string): Promise<LeadEntity> {
@@ -35,7 +46,7 @@ export class LeadsRepository {
   }
   async remove(id: string): Promise<LeadEntity> {
     return await this.prismaService.lead.delete({
-      where: { id },
+      where: { id: id },
     });
   }
 }

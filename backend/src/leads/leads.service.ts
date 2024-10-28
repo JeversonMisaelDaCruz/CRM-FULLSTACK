@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateLeadDto } from './dto/create-lead.dto';
 import { UpdateLeadDto } from './dto/update-lead.dto';
 import { LeadsRepository } from './repositories/leads.repository';
@@ -15,14 +15,22 @@ export class LeadsService {
   }
 
   async findById(id: string) {
-    return await this.leadsRepository.findById(id);
+    const response = await this.leadsRepository.findById(id);
+    if (!response) {
+      throw new NotFoundException(`${id} nao encontrado`);
+    }
+    return response;
   }
+
   async findByEmail(email: string) {
     return await this.leadsRepository.findByEmail(email);
   }
 
   async update(id: string, updateLeadDto: UpdateLeadDto) {
-    return await this.leadsRepository.update(id, updateLeadDto);
+    const response = await this.leadsRepository.update(id, updateLeadDto);
+    if (!response) {
+      throw new NotFoundException(`${id} nao encontrado`);
+    }
   }
 
   async remove(id: string) {
