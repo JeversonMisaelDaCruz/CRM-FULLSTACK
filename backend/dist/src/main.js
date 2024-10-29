@@ -10,11 +10,17 @@ const unauthorized_interceptor_1 = require("./common/errors/interceptors/unautho
 const encrypt_identifier_interceptor_1 = require("./encrypt-identifier.interceptor");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule, { cors: true });
+    app.setGlobalPrefix('api');
     app.useGlobalPipes(new common_1.ValidationPipe({
         whitelist: true,
         forbidNonWhitelisted: true,
         transform: true,
     }));
+    app.enableCors({
+        origin: 'http://localhost:3000',
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        credentials: true,
+    });
     app.useGlobalInterceptors(new conflict_interceptors_1.ConflictInterception());
     app.useGlobalInterceptors(new database_interceptors_1.DatabaseInterception());
     app.useGlobalInterceptors(new unauthorized_interceptor_1.UnauthorizedInterception());

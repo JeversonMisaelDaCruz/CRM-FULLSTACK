@@ -1883,9 +1883,9 @@ picomatch@^4.0.2:
   integrity sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==
 
 pinia@^2.1.7:
-  version "2.2.4"
-  resolved "https://registry.npmjs.org/pinia/-/pinia-2.2.4.tgz"
-  integrity sha512-K7ZhpMY9iJ9ShTC0cR2+PnxdQRuwVIsXDO/WIEV/RnMC/vmSoKDTKW/exNQYPI+4ij10UjXqdNiEHwn47McANQ==
+  version "2.2.5"
+  resolved "https://registry.npmjs.org/pinia/-/pinia-2.2.5.tgz"
+  integrity sha512-T4PEQ4uFv2KIRC8A1Y3k1ceQGTDtxtd7nngYGu1IJUUSpuQoYfGq7w7rOc+f5YN1vx3mEs2NjjtN2IFbNS7jqA==
   dependencies:
     "@vue/devtools-api" "^6.6.3"
     vue-demi "^0.14.10"
@@ -2394,11 +2394,6 @@ util-deprecate@^1.0.2:
   resolved "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
 
-v-mask@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.npmjs.org/v-mask/-/v-mask-2.3.0.tgz"
-  integrity sha512-ap7pTtCTvj25CqX4VYXqudCBd0+XvYyhiiLbzWQQR7AMQosJ2+DPu0a94P9stk0EGmGcmYxJaPkFkfjD8hquWQ==
-
 vite-plugin-vue-layouts@^0.11.0:
   version "0.11.0"
   resolved "https://registry.npmjs.org/vite-plugin-vue-layouts/-/vite-plugin-vue-layouts-0.11.0.tgz"
@@ -2452,7 +2447,7 @@ vue-router@^4.0.11, vue-router@^4.4.0:
   dependencies:
     "@vue/devtools-api" "^6.6.4"
 
-"vue@^2.6.14 || ^3.3.0", "vue@^2.7.0 || ^3.2.25", vue@^3.0.0, "vue@^3.0.0-0 || ^2.6.0", vue@^3.2.0, vue@^3.2.25, vue@^3.2.4, vue@^3.3.0, vue@^3.4.21, vue@^3.4.31, "vue@2 || 3", vue@3.5.12:
+"vue@^2.6.14 || ^3.5.11", "vue@^2.7.0 || ^3.2.25", vue@^3.0.0, "vue@^3.0.0-0 || ^2.6.0", vue@^3.2.0, vue@^3.2.25, vue@^3.2.4, vue@^3.3.0, vue@^3.4.21, vue@^3.4.31, "vue@2 || 3", vue@3.5.12:
   version "3.5.12"
   resolved "https://registry.npmjs.org/vue/-/vue-3.5.12.tgz"
   integrity sha512-CLVZtXtn2ItBIi/zHZ0Sg1Xkb7+PU32bJJ8Bmy7ts3jxXTcbfsEfBivFYYWz1Hur+lalqGAh65Coin0r+HRUfg==
@@ -2463,7 +2458,7 @@ vue-router@^4.0.11, vue-router@^4.4.0:
     "@vue/server-renderer" "3.5.12"
     "@vue/shared" "3.5.12"
 
-vuetify@^3.0.0, vuetify@^3.5.9, vuetify@^3.7.0-beta.1:
+vuetify@^3.0.0, vuetify@^3.5.9, vuetify@^3.6.11:
   version "3.7.3"
   resolved "https://registry.npmjs.org/vuetify/-/vuetify-3.7.3.tgz"
   integrity sha512-bpuvBpZl1/+nLlXDgdVXekvMNR6W/ciaoa8CYlpeAzAARbY8zUFSoBq05JlLhkIHI58AnzKVy4c09d0OtfYAPg==

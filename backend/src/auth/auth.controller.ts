@@ -3,14 +3,12 @@ import {
   Controller,
   Get,
   NotFoundException,
-  Patch,
   Post,
   Req,
-  UseGuards,
+  UseGuards
 } from '@nestjs/common';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
-import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 
 @Controller('users/auth')
 export class AuthController {
@@ -19,7 +17,9 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Post('login')
   async login(@Body() body) {
+    console.log('Login requisitado:', body);
     const { email, password } = body;
+    console.log(' logado com sucesso? Email:', email, 'Password:', password);
     return this.authService.login(email, password);
   }
 
