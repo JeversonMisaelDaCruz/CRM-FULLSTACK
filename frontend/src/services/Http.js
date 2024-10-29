@@ -2,11 +2,15 @@ import axios from "axios";
 
 // Configurações do Axios
 axios.defaults.timeout = 24 * 60 * 60 * 1000; // Tempo limite de 24 horas
-axios.defaults.baseURL = "http://localhost:3001" || process.env.VUE_APP_API_URL;
+axios.defaults.baseURL =
+  "http://localhost:3001/" || process.env.VUE_APP_API_URL;
 
 class Http {
   constructor(path) {
     this.path = path;
+    this.HTTP_CONFIG = {
+      Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+    };
   }
 
   async post(path, body, options = { headers: {} }) {
@@ -73,6 +77,13 @@ class Http {
     } catch (error) {
       this.checkExpires(error);
       throw error;
+    }
+  }
+
+  checkExpires(error) {
+    if (error.response && error.response.status === 401) {
+      console.warn("Sua sessão expirou. Por favor, realize o login novamente.");
+      localStorage.removeItem("token"); // Remove o token expirado do localStorage
     }
   }
 }

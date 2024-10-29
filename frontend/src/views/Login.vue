@@ -1,9 +1,11 @@
+
+
 <template>
   <v-app>
     <v-container fluid class="pa-0">
       <div class="background-container">
         <img
-          src="https://media.istockphoto.com/id/842628662/pt/foto/family-with-dog-on-the-trip.jpg?s=612x612&w=0&k=20&c=Iy2pkj5opEkE-af0gjIt9eJwbCu8Tj9SC7kQZ1vNT_8="
+          src="https://img.freepik.com/fotos-gratis/familia-com-sua-filha-pequena-em-um-campo-de-outono_1303-17368.jpg?t=st=1730231585~exp=1730235185~hmac=fd3cdd7f565782ec63ecfbb2f7e69733098531e56f1b2ebe7be19f41f31ce2af&w=2000"
           alt="" class="background-image" />
         <div class="gradient-overlay"></div>
         <v-card class="mx-auto pa-8" elevation="8" max-width="448" width="100%" rounded="lg">
@@ -38,6 +40,7 @@
   </v-app>
 </template>
 <script>
+const imgUrl = ""
 export default {
   name: "Login",
   data: () => ({
@@ -51,6 +54,7 @@ export default {
         const response = await this.$store.dispatch('auth/login', {
           email: this.email,
           password: this.password,
+
         })
         if (response) {
           console.log("usuario logado com sucesso", response)

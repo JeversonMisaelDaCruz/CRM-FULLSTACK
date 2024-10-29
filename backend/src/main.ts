@@ -9,7 +9,6 @@ import { EncryptIdentifierInterceptor } from './encrypt-identifier.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
-  app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -17,11 +16,6 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  app.enableCors({
-    origin: 'http://localhost:3000', // Certifique-se de que o domínio está correto
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true, // Habilite se precisar de cookies
-  });
 
   app.useGlobalInterceptors(new ConflictInterception());
   app.useGlobalInterceptors(new DatabaseInterception());
@@ -31,6 +25,8 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3001;
   await app.listen(port);
+  console.log(`server running in ip: ${process.env.HOSTNAME || 'localhost'}:${port}`);
+
 
   return app;
 }
