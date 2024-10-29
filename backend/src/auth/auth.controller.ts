@@ -34,12 +34,6 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard)
-  @Patch('profile')
-  async changeProfile(@Req() req, @Body() updateUserDto: UpdateUserDto) {
-    return this.authService.changeProfile(req.user.id, updateUserDto);
-  }
-
-  @UseGuards(AuthGuard)
   @Post('logout')
   async logout(@Req() req) {
     const userId = req.user.id;

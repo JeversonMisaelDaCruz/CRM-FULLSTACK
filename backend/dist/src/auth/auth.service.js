@@ -11,11 +11,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
-const prisma_service_1 = require("../prisma/prisma.service");
-const bcrypt = require("bcryptjs");
 const jwt_1 = require("@nestjs/jwt");
-const jwtConstants_1 = require("./jwtConstants");
+const bcrypt = require("bcryptjs");
+const prisma_service_1 = require("../prisma/prisma.service");
 const user_repository_1 = require("../users/repositories/user.repository");
+const jwtConstants_1 = require("./jwtConstants");
 let AuthService = class AuthService {
     constructor(prisma, userRepository, jwtService, PrismaService) {
         this.prisma = prisma;
@@ -42,6 +42,16 @@ let AuthService = class AuthService {
             access_token: accessToken,
         };
     }
+    async getProfile(id) {
+        return await this.prisma.user.findFirst({
+            where: { id: id },
+            select: {
+                name: true,
+                email: true,
+                identifier: true,
+            },
+        });
+    }
     async logout(userId) {
         await this.prisma.token.updateMany({
             where: {
@@ -64,30 +74,6 @@ let AuthService = class AuthService {
             }
         }
         return null;
-    }
-    async changeProfile(id, updateUserDto) {
-        const user = await this.prisma.user.findFirst({ where: { id } });
-        if (!user)
-            throw new common_1.NotFoundException('Usuário não encontrado!');
-        return this.prisma.user.update({
-            where: { id },
-            data: updateUserDto,
-            select: {
-                name: true,
-                identifier: true,
-                email: true,
-            },
-        });
-    }
-    async getProfile(id) {
-        return await this.PrismaService.user.findFirst({
-            where: { id: id },
-            select: {
-                name: true,
-                email: true,
-                identifier: true,
-            },
-        });
     }
 };
 exports.AuthService = AuthService;

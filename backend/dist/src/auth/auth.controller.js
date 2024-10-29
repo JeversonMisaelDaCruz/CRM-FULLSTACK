@@ -16,7 +16,6 @@ exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_guard_1 = require("./auth.guard");
 const auth_service_1 = require("./auth.service");
-const update_user_dto_1 = require("../users/dto/update-user.dto");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
@@ -31,9 +30,6 @@ let AuthController = class AuthController {
             throw new common_1.NotFoundException('Profile not found');
         }
         return profile;
-    }
-    async changeProfile(req, updateUserDto) {
-        return this.authService.changeProfile(req.user.id, updateUserDto);
     }
     async logout(req) {
         const userId = req.user.id;
@@ -57,15 +53,6 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "getProfile", null);
-__decorate([
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
-    (0, common_1.Patch)('profile'),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, update_user_dto_1.UpdateUserDto]),
-    __metadata("design:returntype", Promise)
-], AuthController.prototype, "changeProfile", null);
 __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Post)('logout'),
