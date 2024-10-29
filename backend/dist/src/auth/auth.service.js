@@ -17,10 +17,11 @@ const jwt_1 = require("@nestjs/jwt");
 const jwtConstants_1 = require("./jwtConstants");
 const user_repository_1 = require("../users/repositories/user.repository");
 let AuthService = class AuthService {
-    constructor(prisma, userRepository, jwtService) {
+    constructor(prisma, userRepository, jwtService, PrismaService) {
         this.prisma = prisma;
         this.userRepository = userRepository;
         this.jwtService = jwtService;
+        this.PrismaService = PrismaService;
     }
     async login(email, password) {
         const user = await this.validateUser(email, password);
@@ -64,12 +65,37 @@ let AuthService = class AuthService {
         }
         return null;
     }
+    async changeProfile(id, updateUserDto) {
+        const user = await this.prisma.user.findFirst({ where: { id } });
+        if (!user)
+            throw new common_1.NotFoundException('Usuário não encontrado!');
+        return this.prisma.user.update({
+            where: { id },
+            data: updateUserDto,
+            select: {
+                name: true,
+                identifier: true,
+                email: true,
+            },
+        });
+    }
+    async getProfile(id) {
+        return await this.PrismaService.user.findFirst({
+            where: { id: id },
+            select: {
+                name: true,
+                email: true,
+                identifier: true,
+            },
+        });
+    }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
         user_repository_1.UserRepository,
-        jwt_1.JwtService])
+        jwt_1.JwtService,
+        prisma_service_1.PrismaService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

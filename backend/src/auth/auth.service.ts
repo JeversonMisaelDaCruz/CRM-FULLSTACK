@@ -1,9 +1,14 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from './jwtConstants';
 import { UserRepository } from '../users/repositories/user.repository';
+import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +16,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
+    private readonly PrismaService: PrismaService,
   ) {}
 
   async login(email: string, password: string) {
@@ -59,5 +65,31 @@ export class AuthService {
       }
     }
     return null;
+  }
+
+  async changeProfile(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.prisma.user.findFirst({ where: { id } });
+    if (!user) throw new NotFoundException('Usuário não encontrado!');
+
+    return this.prisma.user.update({
+      where: { id },
+      data: updateUserDto,
+      select: {
+        name: true,
+        identifier: true,
+        email: true,
+      },
+    });
+  }
+
+  async getProfile(id: string) {
+    return await this.PrismaService.user.findFirst({
+      where: { id: id },
+      select: {
+        name: true,
+        email: true,
+        identifier: true,
+      },
+    });
   }
 }

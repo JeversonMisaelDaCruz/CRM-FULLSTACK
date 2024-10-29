@@ -111,5 +111,10 @@ it('deletando um lead sem passar id', async () => {
   .set(`Authorization`, `Bearer ${authToken}`)
   .expect(400)
 })
-
+it('deletando um lead', async () => {
+  return await request(app.getHttpServer())
+  .delete(`/leads/${leadId}`)
+  .set(`Authorization`, `Bearer ${authToken}`)
+  .expect(200)
+})
 

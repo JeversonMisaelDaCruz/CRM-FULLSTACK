@@ -5,6 +5,7 @@ exports.newLead = {
     name: 'misael',
     phone: '998309758',
     email: 'jeversonvader@gmail.com',
+    user_id: 'd7396dfc-c070-4870-bdc4-f860f6d08e76',
 };
 exports.leadMissingData = {
     name: 'fernando',
@@ -13,7 +14,7 @@ exports.leadMissingData = {
 exports.updateLead = {
     name: 'joaquim',
     phone: '998309755',
-    email: 'atualizado@gmail.com'
+    email: 'atualizado@gmail.com',
 };
 exports.leadWithoutData = {};
 exports.leadId = 'ceb1e741-f699-46c3-84de-a18b612bca95';

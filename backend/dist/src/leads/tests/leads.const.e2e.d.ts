@@ -2,6 +2,7 @@ export declare const newLead: {
     name: string;
     phone: string;
     email: string;
+    user_id: string;
 };
 export declare const leadMissingData: {
     name: string;
