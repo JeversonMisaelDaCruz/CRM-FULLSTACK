@@ -52,8 +52,8 @@ export default {
     async login() {
       try {
         const response = await this.$store.dispatch('auth/login', {
-          email: this.email,
-          password: this.password,
+          email: this.inputEmail,
+          password: this.inputPassword,
 
         })
         if (response) {
@@ -66,6 +66,7 @@ export default {
       } catch (error) {
         console.error('Falha no login', error);
       }
+        router.push('/leads')
     },
   },
 };

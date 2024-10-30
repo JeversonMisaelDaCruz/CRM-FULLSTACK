@@ -2,10 +2,11 @@ import Http from "./Http";
 
 export class Auth extends Http {
   constructor() {
-    super("user/auth");
+    super("/users/auth");
   }
   async login(data) {
     try {
+      console.log("dados recebidos", data);
       const response = await this.post("login", data);
       console.log("login service", response);
       return response;

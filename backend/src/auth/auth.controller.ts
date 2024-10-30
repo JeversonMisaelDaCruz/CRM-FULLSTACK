@@ -5,7 +5,7 @@ import {
   NotFoundException,
   Post,
   Req,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
@@ -14,7 +14,6 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(AuthGuard)
   @Post('login')
   async login(@Body() body) {
     console.log('Login requisitado:', body);

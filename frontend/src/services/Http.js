@@ -83,7 +83,7 @@ class Http {
   checkExpires(error) {
     if (error.response && error.response.status === 401) {
       console.warn("Sua sessão expirou. Por favor, realize o login novamente.");
-      localStorage.removeItem("token"); // Remove o token expirado do localStorage
+      localStorage.removeItem("token");
     }
   }
 }
