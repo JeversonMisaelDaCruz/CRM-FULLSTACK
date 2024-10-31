@@ -9,6 +9,7 @@ export class LeadsService {
 
   async create(createLeadDto: CreateLeadDto,) {
     const leadData = { ...createLeadDto};
+    console.log('leadData:', leadData);
     return await this.leadsRepository.create(leadData);
   }
 

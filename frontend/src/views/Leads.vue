@@ -1,23 +1,17 @@
-<!-- src/views/Leads.vue -->
 <template>
   <v-app>
     <v-container>
       <h1 class="text-h4 mb-4">Gerenciar Leads</h1>
       <v-btn color="primary" @click="dialog = true">Novo Lead</v-btn>
-
-      <!-- Componente Modal -->
-      <modal v-model="dialog" @lead-saved="createLead" />
-
-      <!-- Tabela de Leads -->
+      <modal v-model="dialog" @lead-saved="handleCreateLead" />
       <v-data-table :headers="headers" :items="leads" class="elevation-1 mt-4">
-        <!-- Você pode personalizar as colunas aqui -->
       </v-data-table>
     </v-container>
   </v-app>
 </template>
 
 <script>
-import modal from "../components/modal.vue";
+import modal from "@/components/modal.vue";
 import { mapState, mapActions } from "vuex";
 
 export default {
@@ -40,13 +34,12 @@ export default {
   },
   methods: {
     ...mapActions("leads", ["fetchLeads", "createLead"]),
-    async createLead(leadData) {
+    async handleCreateLead(leadData) {
       try {
         await this.createLead(leadData);
-        // Exiba uma notificação de sucesso, se desejar
       } catch (error) {
         console.error("Erro ao criar lead:", error);
-        // Exiba uma notificação de erro, se desejar
+
       }
     },
   },

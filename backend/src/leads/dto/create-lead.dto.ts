@@ -25,7 +25,7 @@ export class CreateLeadDto {
   })
   @MinLength(6, {
     message:
-      'A senha deve ter pelo menos 6 caracteres. Por favor, tente novamente.',
+      'o email deve ter pelo menos 6 caracteres. Por favor, tente novamente.',
   })
   @IsEmail(
     {},
@@ -49,7 +49,7 @@ export class CreateLeadDto {
       'O Telefone deve ter no maximo 17 aracteres. Por favor, tente novamente.',
   })
   phone: string;
-  
+
   @IsString()
   @IsOptional()
   user_id?: string;

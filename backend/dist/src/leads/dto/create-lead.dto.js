@@ -32,7 +32,7 @@ __decorate([
         message: 'O e-mail deve ter o maximo de 120 caracteres. Por favor, tente novamente.',
     }),
     (0, class_validator_1.MinLength)(6, {
-        message: 'A senha deve ter pelo menos 6 caracteres. Por favor, tente novamente.',
+        message: 'o email deve ter pelo menos 6 caracteres. Por favor, tente novamente.',
     }),
     (0, class_validator_1.IsEmail)({}, {
         message: 'E-mail inválido. Por favor, forneça um endereço de e-mail válido.',

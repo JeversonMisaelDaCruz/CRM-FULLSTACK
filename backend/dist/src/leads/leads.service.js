@@ -18,6 +18,7 @@ let LeadsService = class LeadsService {
     }
     async create(createLeadDto) {
         const leadData = { ...createLeadDto };
+        console.log('leadData:', leadData);
         return await this.leadsRepository.create(leadData);
     }
     async findAll() {

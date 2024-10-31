@@ -7,12 +7,7 @@
         <v-form ref="leadForm" v-model="isValid">
           <v-row dense>
             <v-col cols="12" sm="6">
-              <v-text-field v-model="leadData.firstName" label="Primeiro Nome*" :rules="[rules.required]"
-                required></v-text-field>
-            </v-col>
-
-            <v-col cols="12" sm="6">
-              <v-text-field v-model="leadData.lastName" label="Sobrenome*" :rules="[rules.required]"
+              <v-text-field v-model="leadData.name" label="Primeiro Nome*" :rules="[rules.required]"
                 required></v-text-field>
             </v-col>
 
@@ -28,7 +23,7 @@
         </v-form>
       </v-card-text>
 
-      <v-divider></v-divider>
+      <v-divider />
 
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -46,13 +41,21 @@ export default {
     modelValue: Boolean,
   },
   emits: ["update:modelValue", "lead-saved"],
+  computed: {
+    dialog: {
+      get() {
+        return this.modelValue;
+      },
+      set(value) {
+        this.$emit("update:modelValue", value);
+      },
+    },
+  },
   data() {
     return {
-      dialog: this.modelValue,
       isValid: false,
       leadData: {
-        firstName: "",
-        lastName: "",
+        name: "",
         email: "",
         phone: "",
       },
@@ -64,14 +67,6 @@ export default {
         },
       },
     };
-  },
-  watch: {
-    modelValue(val) {
-      this.dialog = val;
-    },
-    dialog(val) {
-      this.$emit("update:modelValue", val);
-    },
   },
   methods: {
     closeModal() {
@@ -86,8 +81,7 @@ export default {
     },
     resetForm() {
       this.leadData = {
-        firstName: "",
-        lastName: "",
+        name: "",
         email: "",
         phone: "",
       };
