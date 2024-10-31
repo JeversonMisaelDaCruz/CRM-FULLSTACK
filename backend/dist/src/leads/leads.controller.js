@@ -17,7 +17,6 @@ const common_1 = require("@nestjs/common");
 const create_lead_dto_1 = require("./dto/create-lead.dto");
 const update_lead_dto_1 = require("./dto/update-lead.dto");
 const leads_service_1 = require("./leads.service");
-const auth_guard_1 = require("../auth/auth.guard");
 let LeadsController = class LeadsController {
     constructor(leadsService) {
         this.leadsService = leadsService;
@@ -41,7 +40,6 @@ let LeadsController = class LeadsController {
 };
 exports.LeadsController = LeadsController;
 __decorate([
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -49,14 +47,12 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], LeadsController.prototype, "create", null);
 __decorate([
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], LeadsController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -64,7 +60,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], LeadsController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Patch)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
@@ -73,7 +68,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], LeadsController.prototype, "update", null);
 __decorate([
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),

@@ -1,5 +1,3 @@
-
-
 <template>
   <v-app>
     <v-container fluid class="pa-0">
@@ -39,8 +37,8 @@
     </v-container>
   </v-app>
 </template>
+
 <script>
-const imgUrl = ""
 export default {
   name: "Login",
   data: () => ({
@@ -51,26 +49,27 @@ export default {
   methods: {
     async login() {
       try {
-        const response = await this.$store.dispatch('auth/login', {
+        const response = await this.$store.dispatch("auth/login", {
           email: this.inputEmail,
           password: this.inputPassword,
-
-        })
+        });
         if (response) {
-          console.log("usuario logado com sucesso", response)
-          return response
+          console.log("Usuário logado com sucesso", response);
+          // Armazene o token no localStorage
+          localStorage.setItem("token", response.token);
 
+          // Navegue para a rota /leads
+          this.$router.push("/leads");
         }
-        console.log("erro ao tentar logar", response)
-        return response
       } catch (error) {
-        console.error('Falha no login', error);
+        console.error("Falha no login", error);
+        // Exiba uma mensagem de erro ao usuário, se desejar
       }
-        router.push('/leads')
     },
   },
 };
 </script>
+
 <style scoped>
 .background-container {
   position: relative;
