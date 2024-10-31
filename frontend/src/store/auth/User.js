@@ -1,30 +1,34 @@
+// src/store/users.js
 import API from "@/services/module/API";
 
 const state = {
-  user: null,
+  users: [],
 };
 
 const mutations = {
-  SET_USER(state, payload) {
-    state.user = payload;
+  SET_USERS(state, users) {
+    state.users = users;
+  },
+  REMOVE_USER(state, id) {
+    state.users = state.users.filter((user) => user.id !== id);
   },
 };
 
-// const getters = {
-//   getbyid: (state) => (id) => {
-//     return state.user.find((user) => user.id === id);
-//   },
-// };
-
 const actions = {
-  async login({ commit }, requestBody) {
+  async fetchUsers({ commit }) {
     try {
-      console.log("dados recebidos", requestBody);
-      const response = await API.auth.login(requestBody);
-      console.log("login store", response);
-      commit("SET_USER", response);
-      return response;
+      const response = await API.users.getUsers(); // Assumindo que existe um método getUsers()
+      commit("SET_USERS", response);
     } catch (error) {
+      console.error("Erro ao buscar usuários:", error);
+    }
+  },
+  async deleteUser({ commit }, id) {
+    try {
+      await API.users.deleteUser(id);
+      commit("REMOVE_USER", id);
+    } catch (error) {
+      console.error("Erro ao deletar usuário:", error);
       throw error;
     }
   },
@@ -34,6 +38,5 @@ export default {
   namespaced: true,
   state,
   mutations,
-  // getters,
   actions,
 };

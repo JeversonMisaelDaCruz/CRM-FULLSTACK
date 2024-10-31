@@ -12,6 +12,9 @@ const mutations = {
   ADD_LEAD(state, lead) {
     state.leads.push(lead);
   },
+  REMOVE_LEAD(state, id) {
+    state.leads = state.leads.filter((lead) => lead.id !== id);
+  },
 };
 
 const actions = {
@@ -30,6 +33,15 @@ const actions = {
       return response;
     } catch (error) {
       console.error("Erro ao criar lead:", error);
+      throw error;
+    }
+  },
+  async deleteLead({ commit }, id) {
+    try {
+      await API.leads.deleteLead(id);
+      commit("REMOVE_LEAD", id);
+    } catch (error) {
+      console.error("Erro ao deletar lead:", error);
       throw error;
     }
   },

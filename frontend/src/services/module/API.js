@@ -1,5 +1,5 @@
 import { Auth } from "../Auth";
-import { Leads } from "./leads";
+import Leads from "./leads";
 
 class API {
   static auth = new Auth();

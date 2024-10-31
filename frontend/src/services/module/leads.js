@@ -3,7 +3,7 @@ import Http from "../Http";
 
 export class Leads extends Http {
   constructor() {
-    super("/leads"); // Rota base para leads no backend
+    super("/leads");
   }
 
   async createLead(data) {
@@ -25,6 +25,16 @@ export class Leads extends Http {
       throw error;
     }
   }
+  async deleteLead(id) {
+    try {
+      const response = await this.delete(`/${id}`);
+      return response;
+    } catch (error) {
+      console.error("Erro ao deletar lead", error);
+      throw error;
+    }
+  }
+
 }
 
 

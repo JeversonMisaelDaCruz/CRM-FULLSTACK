@@ -7,8 +7,7 @@
         <v-form ref="leadForm" v-model="isValid">
           <v-row dense>
             <v-col cols="12" sm="6">
-              <v-text-field v-model="leadData.name" label="Primeiro Nome*" :rules="[rules.required]"
-                required></v-text-field>
+              <v-text-field v-model="leadData.name" label="Nome*" :rules="[rules.required]" required></v-text-field>
             </v-col>
 
             <v-col cols="12" sm="6">
