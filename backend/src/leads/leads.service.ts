@@ -37,6 +37,8 @@ export class LeadsService {
   }
 
   async remove(id: string) {
-    return await this.leadsRepository.remove(id);
+    const response = await this.leadsRepository.remove(id);
+    console.log('response delete:', response);
+    return response;
   }
 }

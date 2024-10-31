@@ -41,7 +41,9 @@ let LeadsService = class LeadsService {
         }
     }
     async remove(id) {
-        return await this.leadsRepository.remove(id);
+        const response = await this.leadsRepository.remove(id);
+        console.log('response delete:', response);
+        return response;
     }
 };
 exports.LeadsService = LeadsService;

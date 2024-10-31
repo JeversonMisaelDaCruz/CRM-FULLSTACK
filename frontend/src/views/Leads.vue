@@ -47,6 +47,7 @@ export default {
     async handleCreateLead(leadData) {
       try {
         await this.createLead(leadData);
+        console.console.log("Lead criado com sucesso:", leadData);
       } catch (error) {
         console.error("Erro ao criar lead:", error);
       }
@@ -54,6 +55,7 @@ export default {
     async handleDeleteLead(id) {
       try {
         await this.deleteLead(id);
+        console.log("Lead deletado com sucesso:", id);
       } catch (error) {
         console.error("Erro ao deletar lead:", error);
       }
