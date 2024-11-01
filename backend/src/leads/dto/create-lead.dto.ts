@@ -56,5 +56,5 @@ export class CreateLeadDto {
 
   @IsString()
   @IsOptional()
-  leads_status_id?: string;
+  lead_status_id?: string;
 }

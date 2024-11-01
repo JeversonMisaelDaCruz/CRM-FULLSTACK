@@ -3,5 +3,5 @@ export declare class CreateLeadDto {
     email: string;
     phone: string;
     user_id?: string;
-    leads_status_id?: string;
+    lead_status_id?: string;
 }
