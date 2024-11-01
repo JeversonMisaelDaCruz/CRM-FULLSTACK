@@ -25,6 +25,18 @@ export class Leads extends Http {
       throw error;
     }
   }
+
+  async updateLead(data) {
+    try {
+      const response = await this.patch(`/${data.id}`, data);
+      console.log("lead atualizado", response);
+      return response;
+    } catch (error) {
+      console.error("Erro ao atualizar lead", error);
+      throw error;
+    }
+  }
+
   async deleteLead(id) {
     try {
       const response = await this.delete(`/${id}`);
@@ -34,8 +46,6 @@ export class Leads extends Http {
       throw error;
     }
   }
-
 }
-
 
 export default Leads;

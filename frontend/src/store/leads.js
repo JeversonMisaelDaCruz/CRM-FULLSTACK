@@ -12,6 +12,16 @@ const mutations = {
   ADD_LEAD(state, lead) {
     state.leads.push(lead);
   },
+  UPDATE_LEAD(state, updatedLead) {
+    const index = state.leads.findIndex((lead) => lead.id === updatedLead.id);
+    if (index !== -1) {
+      state.leads.splice(index, 1, updatedLead);
+    } else {
+      console.warn(
+        `Lead com ID ${updatedLead.id} não encontrado para atualização.`
+      );
+    }
+  },
   REMOVE_LEAD(state, id) {
     state.leads = state.leads.filter((lead) => lead.id !== id);
   },
@@ -33,6 +43,16 @@ const actions = {
       return response;
     } catch (error) {
       console.error("Erro ao criar lead:", error);
+      throw error;
+    }
+  },
+  async updateLead({ commit }, leadData) {
+    try {
+      const response = await API.leads.updateLead(leadData);
+      commit("UPDATE_LEAD", response);
+      return response;
+    } catch (error) {
+      console.error("Erro ao atualizar lead:", error);
       throw error;
     }
   },
