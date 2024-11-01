@@ -4,8 +4,17 @@ import { AuthModule } from './auth/auth.module';
 import { LeadsModule } from './leads/leads.module';
 import { PrismaService } from './prisma/prisma.service';
 import { UserModule } from './users/users.module';
+import { LeadStatusModule } from './lead-status/lead-status.module';
 @Module({
-  imports: [ConfigModule.forRoot(), UserModule, AuthModule, LeadsModule],
+  imports: [
+    ConfigModule.forRoot(),
+    UserModule,
+    AuthModule,
+    LeadsModule,
+    LeadStatusModule,
+    LeadsModule,
+    LeadStatusModule,
+  ],
   providers: [PrismaService],
 })
 export class AppModule {}

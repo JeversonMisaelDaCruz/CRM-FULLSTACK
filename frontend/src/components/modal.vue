@@ -1,4 +1,3 @@
-<!-- src/components/modal.vue -->
 <template>
   <v-dialog v-model="dialog" max-width="600">
     <v-card>
@@ -19,8 +18,12 @@
               <v-text-field v-model="leadData.phone" label="Telefone"></v-text-field>
             </v-col>
             <v-col cols="12" sm="6">
-              <v-select v-model="leadData.lead_status_id" :items="statuses" item-text="name" item-value="id"
-                label="Status" :rules="[rules.requiredStatus]" required></v-select>
+              <v-select v-model="leadData.lead_status_id" :items="statuses" item-text="name"
+                item-value="id"
+                label="Status"
+                :rules="[rules.requiredStatus]"
+                required
+                ></v-select>
             </v-col>
           </v-row>
         </v-form>
@@ -72,7 +75,7 @@ export default {
         name: "",
         email: "",
         phone: "",
-        lead_status_id: "", // Campo para capturar o status
+        lead_status_id: "",
       },
       rules: {
         required: (value) => !!value || "Este campo é obrigatório.",
@@ -89,7 +92,10 @@ export default {
       immediate: true,
       handler(newLead) {
         if (newLead) {
-          this.leadData = { ...newLead };
+          this.leadData = {
+            ...newLead,
+            lead_status_id: newLead.lead_status ? newLead.lead_status.id : "",
+          };
         } else {
           this.resetForm();
         }
@@ -103,7 +109,7 @@ export default {
     },
     submitForm() {
       if (this.$refs.leadForm && this.$refs.leadForm.validate()) {
-        const leadData = { ...this.leadData, lead_status_id: this.leadData.lead_status_id || null };
+        const leadData = { ...this.leadData };
         if (this.editMode) {
           this.$emit("lead-updated", leadData);
         } else {

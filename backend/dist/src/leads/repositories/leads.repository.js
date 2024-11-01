@@ -27,12 +27,14 @@ let LeadsRepository = class LeadsRepository {
         });
     }
     async findAll() {
-        return await this.prismaService.lead.findMany({
+        const leads = await this.prismaService.lead.findMany({
             include: {
                 user: true,
-                lead_status: true
+                lead_status: true,
             },
         });
+        console.log('Dados retornados dos leads:', leads);
+        return leads;
     }
     async findById(id) {
         if (!id || !(0, uuid_1.validate)(id)) {
@@ -44,7 +46,7 @@ let LeadsRepository = class LeadsRepository {
             },
             include: {
                 user: true,
-                lead_status: true
+                lead_status: true,
             },
         });
     }
@@ -60,7 +62,7 @@ let LeadsRepository = class LeadsRepository {
             data: updateLead,
             include: {
                 user: true,
-                lead_status: true
+                lead_status: true,
             },
         });
     }

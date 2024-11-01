@@ -1,10 +1,9 @@
-<!-- src/views/Leads.vue -->
 <template>
   <v-app>
     <v-container>
       <h1 class="text-h4 mb-4">Gerenciar Leads</h1>
       <v-btn color="primary" @click="openModal()">Novo Lead</v-btn>
-      <modal v-model="dialog" :leadToEdit="selectedLead" @lead-saved="handleCreateLead"
+      <modal v-model="dialog" :leadToEdit="selectedLead" :statuses="statuses" @lead-saved="handleCreateLead"
         @lead-updated="handleUpdateLead" />
       <v-data-table :headers="headers" :items="leads" class="elevation-1 mt-4">
         <template #item.actions="{ item }">
@@ -16,7 +15,6 @@
           </v-btn>
         </template>
       </v-data-table>
-
       <v-snackbar v-model="snackbar" :timeout="3000" top right>
         {{ snackbarMessage }}
         <v-btn color="red" text @click="snackbar = false">Fechar</v-btn>
@@ -50,10 +48,10 @@ export default {
     };
   },
   computed: {
-    ...mapState("leads", ["leads"]),
+    ...mapState("leads", ["leads", "statuses"]),
   },
   methods: {
-    ...mapActions("leads", ["fetchLeads", "createLead", "updateLead", "deleteLead"]),
+    ...mapActions("leads", ["fetchLeads", "fetchStatuses", "createLead", "updateLead", "deleteLead"]),
     openModal(lead = null) {
       this.selectedLead = lead;
       this.dialog = true;
@@ -88,14 +86,9 @@ export default {
       }
     },
   },
-  created() {
-    this.fetchLeads();
+  async created() {
+    await this.fetchLeads();
+    await this.fetchStatuses(); // Carrega os statuses
   },
 };
 </script>
-
-<style scoped>
-.text-h4 {
-  font-weight: bold;
-}
-</style>

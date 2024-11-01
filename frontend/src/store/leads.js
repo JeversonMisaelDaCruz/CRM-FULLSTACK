@@ -3,11 +3,15 @@ import API from "@/services/module/API";
 
 const state = {
   leads: [],
+  statuses: [], // Armazena os diferentes statuses
 };
 
 const mutations = {
   SET_LEADS(state, leads) {
     state.leads = leads;
+  },
+  SET_STATUSES(state, statuses) {
+    state.statuses = statuses;
   },
   ADD_LEAD(state, lead) {
     state.leads.push(lead);
@@ -16,10 +20,6 @@ const mutations = {
     const index = state.leads.findIndex((lead) => lead.id === updatedLead.id);
     if (index !== -1) {
       state.leads.splice(index, 1, updatedLead);
-    } else {
-      console.warn(
-        `Lead com ID ${updatedLead.id} não encontrado para atualização.`
-      );
     }
   },
   REMOVE_LEAD(state, id) {
@@ -34,6 +34,17 @@ const actions = {
       commit("SET_LEADS", response);
     } catch (error) {
       console.error("Erro ao buscar leads:", error);
+    }
+  },
+  async fetchStatuses({ commit }) {
+    try {
+      const response = await API.leads.getLeads();
+      const uniqueStatuses = [
+        ...new Set(response.map((lead) => lead.lead_status)),
+      ].filter(Boolean);
+      commit("SET_STATUSES", uniqueStatuses);
+    } catch (error) {
+      console.error("Erro ao buscar statuses:", error);
     }
   },
   async createLead({ commit }, leadData) {

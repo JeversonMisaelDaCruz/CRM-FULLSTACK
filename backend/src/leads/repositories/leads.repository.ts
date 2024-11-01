@@ -18,14 +18,19 @@ export class LeadsRepository {
       },
     });
   }
+
   async findAll(): Promise<LeadEntity[]> {
-    return await this.prismaService.lead.findMany({
+    const leads = await this.prismaService.lead.findMany({
       include: {
         user: true,
-        lead_status: true
+        lead_status: true,
       },
     });
+
+    console.log('Dados retornados dos leads:', leads); 
+    return leads;
   }
+
   async findById(id: string): Promise<LeadEntity> {
     if (!id || !isUUID(id)) {
       throw new HttpException('Lead não encontrado', 404);
@@ -37,7 +42,7 @@ export class LeadsRepository {
       },
       include: {
         user: true,
-        lead_status: true
+        lead_status: true,
       },
     });
   }
@@ -54,7 +59,7 @@ export class LeadsRepository {
       data: updateLead,
       include: {
         user: true,
-        lead_status: true
+        lead_status: true,
       },
     });
   }
