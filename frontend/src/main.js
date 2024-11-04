@@ -1,9 +1,13 @@
 import { createApp } from "vue";
+import { createPinia } from "pinia";
 import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
-import store from "./store";
 import router from "./router";
 
 const app = createApp(App);
 
-app.use(router).use(store).use(vuetify).mount("#app");
+app.use(createPinia());
+app.use(router);
+app.use(vuetify);
+
+app.mount("#app");

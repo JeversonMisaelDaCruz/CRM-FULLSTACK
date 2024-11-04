@@ -3,32 +3,24 @@
     <v-container fluid class="pa-0">
       <div class="background-container">
         <img
-          src="https://img.freepik.com/fotos-gratis/familia-com-sua-filha-pequena-em-um-campo-de-outono_1303-17368.jpg?t=st=1730231585~exp=1730235185~hmac=fd3cdd7f565782ec63ecfbb2f7e69733098531e56f1b2ebe7be19f41f31ce2af&w=2000"
+          src="https://media.istockphoto.com/id/842628662/pt/foto/family-with-dog-on-the-trip.jpg?s=612x612&w=0&k=20&c=Iy2pkj5opEkE-af0gjIt9eJwbCu8Tj9SC7kQZ1vNT_8="
           alt="" class="background-image" />
         <div class="gradient-overlay"></div>
         <v-card class="mx-auto pa-8" elevation="8" max-width="448" width="100%" rounded="lg">
-          <v-card-title class="d-flex flex-column justify-center align-center font-weight-bold" style="
-              font-size: 30px;
-              border-bottom: 0.5px solid black;
-              margin-bottom: 20px;
-            ">
+          <v-card-title class="d-flex flex-column justify-center align-center font-weight-bold"
+            style="font-size: 30px; border-bottom: 0.5px solid black; margin-bottom: 20px;">
             Login
           </v-card-title>
 
-          <v-text-field v-model="inputEmail" placeholder="E-mail" prepend-inner-icon="mdi-email" />
+          <v-text-field v-model="inputEmail" placeholder="E-mail" prepend-inner-icon="mdi-email" @keyup.enter="login" />
 
           <v-text-field v-model="inputPassword" prepend-inner-icon="mdi-lock-outline" placeholder="Senha"
             :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
-            @click:append-inner="visible = !visible" />
+            @click:append-inner="toggleVisibility" @keyup.enter="login" />
 
           <v-card-actions class="d-flex justify-center align-center">
-            <v-btn @click="login" color="white" style="
-                background-color: green;
-                width: 100%;
-                height: 50px;
-                font-size: 16px;
-                font-weight: bold;
-              ">
+            <v-btn @click="login" color="white"
+              style="background-color: green; width: 100%; height: 50px; font-size: 16px; font-weight: bold;">
               Entrar
             </v-btn>
           </v-card-actions>
@@ -39,33 +31,45 @@
 </template>
 
 <script>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "../store/auth/User";
+
 export default {
   name: "Login",
-  data: () => ({
-    visible: false,
-    inputEmail: "",
-    inputPassword: "",
-  }),
-  methods: {
-    async login() {
-      try {
-        const response = await this.$store.dispatch("auth/login", {
-          email: this.inputEmail,
-          password: this.inputPassword,
-        });
-        if (response) {
-          console.log("Usuário logado com sucesso", response);
-          // Armazene o token no localStorage
-          localStorage.setItem("token", response.token);
+  setup() {
 
-          // Navegue para a rota /leads
-          this.$router.push("/leads");
+    const router = useRouter();
+    const authStore = useAuthStore();
+    const visible = ref(false);
+    const inputEmail = ref("");
+    const inputPassword = ref("");
+
+    const toggleVisibility = () => {
+      visible.value = !visible.value;
+    };
+    async function login() {
+      try {
+        const response = await authStore.login(inputEmail.value, inputPassword.value);
+        if (response) {
+
+          router.push("/leads");
         }
       } catch (error) {
-        console.error("Falha no login", error);
-        // Exiba uma mensagem de erro ao usuário, se desejar
+        throw error;
       }
-    },
+    }
+
+
+
+
+    return {
+      visible,
+      inputEmail,
+      inputPassword,
+      login,
+      toggleVisibility,
+    };
   },
 };
 </script>

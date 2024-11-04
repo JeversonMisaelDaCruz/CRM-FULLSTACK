@@ -1,86 +1,67 @@
-// src/store/leads.js
+import { defineStore } from "pinia";
 import API from "@/services/module/API";
 
-const state = {
-  leads: [],
-  statuses: [], // Armazena os diferentes statuses
-};
+export const useLeadsStore = defineStore("leads", {
+  state: () => ({
+    leads: [],
+    statuses: [],
+  }),
 
-const mutations = {
-  SET_LEADS(state, leads) {
-    state.leads = leads;
-  },
-  SET_STATUSES(state, statuses) {
-    state.statuses = statuses;
-  },
-  ADD_LEAD(state, lead) {
-    state.leads.push(lead);
-  },
-  UPDATE_LEAD(state, updatedLead) {
-    const index = state.leads.findIndex((lead) => lead.id === updatedLead.id);
-    if (index !== -1) {
-      state.leads.splice(index, 1, updatedLead);
-    }
-  },
-  REMOVE_LEAD(state, id) {
-    state.leads = state.leads.filter((lead) => lead.id !== id);
-  },
-};
+  actions: {
+    async fetchLeads() {
+      try {
+        const response = await API.leads.getLeads();
+        this.leads = response;
+      } catch (error) {
+        console.error("Erro ao buscar leads:", error);
+      }
+    },
 
-const actions = {
-  async fetchLeads({ commit }) {
-    try {
-      const response = await API.leads.getLeads();
-      commit("SET_LEADS", response);
-    } catch (error) {
-      console.error("Erro ao buscar leads:", error);
-    }
-  },
-  async fetchStatuses({ commit }) {
-    try {
-      const response = await API.leads.getLeads();
-      const uniqueStatuses = [
-        ...new Set(response.map((lead) => lead.lead_status)),
-      ].filter(Boolean);
-      commit("SET_STATUSES", uniqueStatuses);
-    } catch (error) {
-      console.error("Erro ao buscar statuses:", error);
-    }
-  },
-  async createLead({ commit }, leadData) {
-    try {
-      const response = await API.leads.createLead(leadData);
-      commit("ADD_LEAD", response);
-      return response;
-    } catch (error) {
-      console.error("Erro ao criar lead:", error);
-      throw error;
-    }
-  },
-  async updateLead({ commit }, leadData) {
-    try {
-      const response = await API.leads.updateLead(leadData);
-      commit("UPDATE_LEAD", response);
-      return response;
-    } catch (error) {
-      console.error("Erro ao atualizar lead:", error);
-      throw error;
-    }
-  },
-  async deleteLead({ commit }, id) {
-    try {
-      await API.leads.deleteLead(id);
-      commit("REMOVE_LEAD", id);
-    } catch (error) {
-      console.error("Erro ao deletar lead:", error);
-      throw error;
-    }
-  },
-};
+    async fetchStatuses() {
+      try {
+        const response = await API.leads.getLeads();
+        const uniqueStatuses = [
+          ...new Set(response.map((lead) => lead.lead_status)),
+        ].filter(Boolean);
+        this.statuses = uniqueStatuses;
+      } catch (error) {
+        console.error("Erro ao buscar statuses:", error);
+      }
+    },
 
-export default {
-  namespaced: true,
-  state,
-  mutations,
-  actions,
-};
+    async createLead(leadData) {
+      try {
+        const response = await API.leads.createLead(leadData);
+        this.leads.push(response);
+        return response;
+      } catch (error) {
+        console.error("Erro ao criar lead:", error);
+        throw error;
+      }
+    },
+
+    async updateLead(leadData) {
+      try {
+        const response = await API.leads.updateLead(leadData);
+        const index = this.leads.findIndex((lead) => lead.id === response.id);
+        if (index !== -1) {
+          this.leads.splice(index, 1, response);
+        }
+        return response;
+      } catch (error) {
+        console.error("Erro ao atualizar lead:", error);
+        throw error;
+      }
+    },
+
+    async deleteLead(id) {
+      try {
+        await API.leads.deleteLead(id);
+        this.leads = this.leads.filter((lead) => lead.id !== id);
+      } catch (error) {
+        console.error("Erro ao deletar lead:", error);
+        throw error;
+      }
+    },
+  },
+});

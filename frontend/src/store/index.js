@@ -1,13 +1,5 @@
-// src/store/index.js
-import { createStore } from "vuex";
-import auth from "./auth/User";
-import leads from "./leads";
+import { createPinia } from "pinia";
 
-const store = createStore({
-  modules: {
-    auth,
-    leads,
-  },
-});
+const pinia = createPinia();
 
-export default store;
+export default pinia;

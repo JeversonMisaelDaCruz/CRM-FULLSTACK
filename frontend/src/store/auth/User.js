@@ -1,42 +1,66 @@
-// src/store/users.js
+import { defineStore } from "pinia";
 import API from "@/services/module/API";
 
-const state = {
-  users: [],
-};
+export const useAuthStore = defineStore("auth", {
+  state: () => ({
+    user: null,
+    sessionExpired: false,
+    token: localStorage.getItem("@crm.access_token") || null,
+  }),
+  actions: {
+    async login(email, password) {
+      try {
+        console.log("Chamando API de login com:", { email, password });
 
-const mutations = {
-  SET_USERS(state, users) {
-    state.users = users;
-  },
-  REMOVE_USER(state, id) {
-    state.users = state.users.filter((user) => user.id !== id);
-  },
-};
+        const response = await API.auth.login({ email, password });
+        console.log("Resposta da API:", response);
 
-const actions = {
-  async fetchUsers({ commit }) {
-    try {
-      const response = await API.users.getUsers(); // Assumindo que existe um método getUsers()
-      commit("SET_USERS", response);
-    } catch (error) {
-      console.error("Erro ao buscar usuários:", error);
-    }
-  },
-  async deleteUser({ commit }, id) {
-    try {
-      await API.users.deleteUser(id);
-      commit("REMOVE_USER", id);
-    } catch (error) {
-      console.error("Erro ao deletar usuário:", error);
-      throw error;
-    }
-  },
-};
+        this.setToken(response.access_token);
+        await this.fetchUserProfile();
 
-export default {
-  namespaced: true,
-  state,
-  mutations,
-  actions,
-};
+        console.log("Usuário salvo:", this.user);
+
+        return this.user;
+      } catch (error) {
+        console.error("Login error:", error);
+        throw error;
+      }
+    },
+
+    async fetchUserProfile() {
+      try {
+        const user = await API.auth.profile();
+        this.setUser(user);
+      } catch (error) {
+        console.error("Erro ao buscar o perfil do usuário:", error);
+      }
+    },
+
+    async logout() {
+      try {
+        await API.auth.logout();
+        this.setUser(null);
+        this.setToken(null);
+        this.sessionExpired = true;
+
+        console.log("Logout realizado com sucesso!");
+      } catch (error) {
+        console.error("Erro no logout:", error);
+        throw error;
+      }
+    },
+
+    setToken(token) {
+      this.token = token;
+      if (token) {
+        localStorage.setItem("@crm.access_token", token);
+      } else {
+        localStorage.removeItem("@crm.access_token");
+      }
+    },
+
+    setUser(user) {
+      this.user = user;
+    },
+  },
+});
