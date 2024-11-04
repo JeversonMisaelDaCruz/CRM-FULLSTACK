@@ -21,9 +21,7 @@ let AuthController = class AuthController {
         this.authService = authService;
     }
     async login(body) {
-        console.log('Login requisitado:', body);
         const { email, password } = body;
-        console.log(' logado com sucesso? Email:', email, 'Password:', password);
         return this.authService.login(email, password);
     }
     async getProfile(req) {

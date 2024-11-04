@@ -16,9 +16,7 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() body) {
-    console.log('Login requisitado:', body);
     const { email, password } = body;
-    console.log(' logado com sucesso? Email:', email, 'Password:', password);
     return this.authService.login(email, password);
   }
 

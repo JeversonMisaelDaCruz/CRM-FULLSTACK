@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../prisma/prisma.service';
+import * as bcrypt from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from '../users/repositories/user.repository';
 import { jwtConstants } from './jwtConstants';
 
@@ -11,7 +11,6 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
-    private readonly PrismaService: PrismaService,
   ) {}
 
   async login(email: string, password: string) {
@@ -42,8 +41,10 @@ export class AuthService {
       where: { id: id },
       select: {
         name: true,
-        email: true,
         identifier: true,
+        email: true,
+        created_at: true,
+        updated_at: true,
       },
     });
   }
@@ -62,10 +63,8 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.prisma.user.findFirst({ where: { email } });
-    console.log('User found:', user);
     if (user) {
       const isPasswordMatching = await bcrypt.compare(password, user.password);
-      console.log('Is password matching?', isPasswordMatching);
       if (isPasswordMatching) {
         return user;
       }

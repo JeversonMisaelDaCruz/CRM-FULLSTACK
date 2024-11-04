@@ -6,6 +6,8 @@ export declare class AuthController {
         access_token: string;
     }>;
     getProfile(req: any): Promise<{
+        created_at: Date;
+        updated_at: Date;
         name: string;
         identifier: string;
         email: string;

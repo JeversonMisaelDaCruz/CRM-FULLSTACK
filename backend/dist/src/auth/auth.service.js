@@ -11,17 +11,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
-const jwt_1 = require("@nestjs/jwt");
-const bcrypt = require("bcryptjs");
 const prisma_service_1 = require("../prisma/prisma.service");
+const bcrypt = require("bcryptjs");
+const jwt_1 = require("@nestjs/jwt");
 const user_repository_1 = require("../users/repositories/user.repository");
 const jwtConstants_1 = require("./jwtConstants");
 let AuthService = class AuthService {
-    constructor(prisma, userRepository, jwtService, PrismaService) {
+    constructor(prisma, userRepository, jwtService) {
         this.prisma = prisma;
         this.userRepository = userRepository;
         this.jwtService = jwtService;
-        this.PrismaService = PrismaService;
     }
     async login(email, password) {
         const user = await this.validateUser(email, password);
@@ -47,8 +46,10 @@ let AuthService = class AuthService {
             where: { id: id },
             select: {
                 name: true,
-                email: true,
                 identifier: true,
+                email: true,
+                created_at: true,
+                updated_at: true,
             },
         });
     }
@@ -65,10 +66,8 @@ let AuthService = class AuthService {
     }
     async validateUser(email, password) {
         const user = await this.prisma.user.findFirst({ where: { email } });
-        console.log('User found:', user);
         if (user) {
             const isPasswordMatching = await bcrypt.compare(password, user.password);
-            console.log('Is password matching?', isPasswordMatching);
             if (isPasswordMatching) {
                 return user;
             }
@@ -81,7 +80,6 @@ exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
         user_repository_1.UserRepository,
-        jwt_1.JwtService,
-        prisma_service_1.PrismaService])
+        jwt_1.JwtService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map
