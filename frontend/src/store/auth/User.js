@@ -7,19 +7,16 @@ export const useAuthStore = defineStore("auth", {
     sessionExpired: false,
     token: localStorage.getItem("@crm.access_token") || null,
   }),
+
   actions: {
     async login(email, password) {
       try {
         console.log("Chamando API de login com:", { email, password });
-
         const response = await API.auth.login({ email, password });
         console.log("Resposta da API:", response);
-
-        this.setToken(response.access_token);
+        this.setToken(response.access_token);http://localhost:3000/leads
         await this.fetchUserProfile();
-
         console.log("Usuário salvo:", this.user);
-
         return this.user;
       } catch (error) {
         console.error("Login error:", error);

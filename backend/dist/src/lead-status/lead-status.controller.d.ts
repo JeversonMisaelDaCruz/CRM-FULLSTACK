@@ -4,8 +4,8 @@ export declare class LeadStatusController {
     constructor(leadStatusService: LeadStatusService);
     findAll(): Promise<{
         id: string;
+        name: string;
         created_at: Date;
         updated_at: Date;
-        name: string;
     }[]>;
 }
