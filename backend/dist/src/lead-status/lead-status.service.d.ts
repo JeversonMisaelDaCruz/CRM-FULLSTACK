@@ -1,9 +1,8 @@
-import { PrismaService } from '../prisma/prisma.service';
+import { CreateLeadStatusDto } from './dto/create-lead-status.dto';
+import { StatusLeadsRepository } from './repositories/leads-status.repository';
 export declare class LeadStatusService {
-    private readonly prismaService;
-    constructor(prismaService: PrismaService);
-    findAll(): Promise<{
-        id: string;
-        name: string;
-    }[]>;
+    private readonly statusLeadsRepository;
+    constructor(statusLeadsRepository: StatusLeadsRepository);
+    create(CreateLeadStatusDto: CreateLeadStatusDto): Promise<import("./entities/lead-status.entity").LeadStatusEntity>;
+    findAll(): Promise<import("./entities/lead-status.entity").LeadStatusEntity[]>;
 }

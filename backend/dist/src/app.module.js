@@ -24,7 +24,6 @@ exports.AppModule = AppModule = __decorate([
             users_module_1.UserModule,
             auth_module_1.AuthModule,
             leads_module_1.LeadsModule,
-            lead_status_module_1.LeadStatusModule,
             leads_module_1.LeadsModule,
             lead_status_module_1.LeadStatusModule,
         ],

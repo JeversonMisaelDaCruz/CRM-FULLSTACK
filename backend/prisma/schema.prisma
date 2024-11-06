@@ -52,7 +52,7 @@ model Lead {
 model LeadStatus {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
   name       String   @db.VarChar(100)
-  leads      Lead[]   // Relacionamento com Lead
+  leads      Lead[]
 
-  @@map("lead_statuses")
+  @@map("lead_status")
 }
