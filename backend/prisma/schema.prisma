@@ -9,12 +9,12 @@ datasource db {
 
 model User {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
   name       String   @db.VarChar(100)
   identifier String   @unique @db.VarChar(12)
   email      String   @unique @db.VarChar(60)
   password   String   @db.VarChar(200)
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now()) @updatedAt
   leads      Lead[]
   tokens     Token[]
 
@@ -23,11 +23,11 @@ model User {
 
 model Token {
   id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  created_at   DateTime @default(now())
+  updated_at   DateTime @default(now()) @updatedAt
   access_token String
   is_revoked   Boolean  @default(false)
   type         String   @default("login")
-  created_at   DateTime @default(now())
-  updated_at   DateTime @default(now()) @updatedAt
   user         User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id      String   @db.Uuid()
 
@@ -36,11 +36,11 @@ model Token {
 
 model Lead {
   id             String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @default(now()) @updatedAt
   name           String      @db.VarChar(100)
   phone          String      @db.VarChar(20)
   email          String      @db.VarChar(60)
-  created_at     DateTime    @default(now())
-  updated_at     DateTime    @default(now()) @updatedAt
   user           User?       @relation(fields: [user_id], references: [id], onDelete: SetNull)
   user_id        String?     @db.Uuid()
   lead_status    LeadStatus? @relation(fields: [lead_status_id], references: [id], onDelete: SetNull)
@@ -49,10 +49,16 @@ model Lead {
   @@map("leads")
 }
 
+// model Pipeline {
+//   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+//   created_at DateTime @default(now())
+//   updated_at DateTime @default(now()) @updatedAt
+// }
+
 model LeadStatus {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
-  name       String   @db.VarChar(100)
-  leads      Lead[]
+  id    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  name  String @db.VarChar(100)
+  leads Lead[]
 
   @@map("lead_status")
 }

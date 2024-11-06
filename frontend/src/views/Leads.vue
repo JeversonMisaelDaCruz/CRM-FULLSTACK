@@ -2,8 +2,13 @@
   <v-app>
     <v-container>
       <h1 class="text-h4 mb-4">Gerenciar Leads</h1>
-      <modal v-model="dialog" :leadToEdit="selectedLead" :statuses="statuses" @lead-saved="handleCreateLead"
-        @lead-updated="handleUpdateLead" />
+      <modal
+        v-model="dialog"
+        :leadToEdit="selectedLead"
+        :statuses="statuses"
+        @lead-saved="handleCreateLead"
+        @lead-updated="handleUpdateLead"
+      />
       <v-data-table :headers="headers" :items="leads" class="elevation-1 mt-4">
         <template #item.actions="{ item }">
           <v-btn icon @click="openModal(item)">
@@ -24,16 +29,13 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { useLeadsStore } from "../store/Leads";
-import { useLeadStatusesStore } from "@/store/StatusLeads";
+import { useLeadsStore } from "@/store/Leads";
 import modal from "@/components/modal.vue";
-
 
 const dialog = ref(false);
 const selectedLead = ref(null);
 const snackbar = ref(false);
 const snackbarMessage = ref("");
-
 
 const headers = [
   { text: "Nome", value: "name" },
@@ -43,14 +45,10 @@ const headers = [
   { text: "Ações", value: "actions", sortable: false },
 ];
 
-
 const leadsStore = useLeadsStore();
-const leadsStatusStore = useLeadStatusesStore();
-
 
 const leads = computed(() => leadsStore.leads);
-const statuses = computed(() => leadsStatusStore.statuses);
-
+const statuses = computed(() => leadsStore.statuses);
 
 const openModal = (lead = null) => {
   selectedLead.value = lead;
@@ -89,10 +87,9 @@ const handleDeleteLead = async (id) => {
   }
 };
 
-
 onMounted(async () => {
-  await leadsStore.fetchLeads();
-  await leadsStatusStore.fetchStatuses();
+  await Promise.all([leadsStore.fetchLeads(), leadsStore.fetchStatuses()]);
+
   console.log("Statuses carregados:", statuses.value);
 });
 </script>

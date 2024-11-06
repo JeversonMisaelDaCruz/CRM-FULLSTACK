@@ -9,7 +9,7 @@ export class LeadsStatus extends Http {
     try {
       const response = await this.get("");
       console.log("Resposta completa no getLeadsStatus:", response);
-      return response.data;
+      return response;
     } catch (error) {
       console.error("Erro ao obter leads status:", error);
       throw error;

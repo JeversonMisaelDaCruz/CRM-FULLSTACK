@@ -22,11 +22,23 @@
           <v-card class="elevation-4" style="padding: 16px">
             <v-row>
               <v-col>
-                <v-text-field v-model="leadData.name" label="Nome" outlined dense hide-details />
+                <v-text-field
+                  v-model="leadData.name"
+                  label="Nome"
+                  outlined
+                  dense
+                  hide-details
+                />
               </v-col>
 
               <v-col>
-                <v-text-field v-model="leadData.email" label="EMAIL" outlined dense hide-details />
+                <v-text-field
+                  v-model="leadData.email"
+                  label="E-mail"
+                  outlined
+                  dense
+                  hide-details
+                />
               </v-col>
             </v-row>
 
@@ -46,7 +58,7 @@
                 <v-select
                   v-model="leadData.lead_status_id"
                   :items="computedStatuses"
-                  item-text="name"
+                  item-title="name"
                   item-value="id"
                   label="Status"
                   :rules="[rules.requiredStatus]"
@@ -61,14 +73,24 @@
             <v-card-actions style="display: flex; justify-content: end">
               <v-btn
                 color="primary"
-                style="font-weight: bold; color: white; margin-right: 16px; background-color: gainsboro;"
+                style="
+                  font-weight: bold;
+                  color: white;
+                  margin-right: 16px;
+                  background-color: gainsboro;
+                "
                 @click="closeDialog"
               >
                 Cancelar
               </v-btn>
               <v-btn
                 color="white"
-                style="font-weight: bold; color: white; margin-right: 16px; background-color: green;"
+                style="
+                  font-weight: bold;
+                  color: white;
+                  margin-right: 16px;
+                  background-color: green;
+                "
                 @click="createdStatusLeads"
               >
                 Criar
@@ -83,7 +105,7 @@
 
 <script setup lang="js">
 import { ref, computed, onMounted } from "vue";
-import { useLeadStatusesStore } from "@/store/StatusLeads";
+import { useLeadsStore } from "@/store/Leads";
 
 const dialog = ref(false);
 const leadData = ref({
@@ -93,12 +115,12 @@ const leadData = ref({
   lead_status_id: "",
 });
 
-const statusLeadsStore = useLeadStatusesStore();
+const leadsStore = useLeadsStore();
 const loadingStatuses = ref(true);
 
 const computedStatuses = computed(() => {
-  console.log("Conteúdo de statuses na computed:", statusLeadsStore.statuses);
-  return statusLeadsStore.statuses || [];
+  console.log("Conteúdo de statuses na computed:", leadsStore.statuses);
+  return leadsStore.statuses || [];
 });
 
 const rules = {
@@ -130,8 +152,8 @@ const createdStatusLeads = async () => {
 
 // Carrega os statuses quando o componente é montado
 onMounted(async () => {
-  await statusLeadsStore.fetchStatuses();
+  await leadsStore.fetchStatuses();
   loadingStatuses.value = false;
-  console.log("Statuses carregados após fetchStatuses:", statusLeadsStore.statuses);
+  console.log("Statuses carregados após fetchStatuses:", leadsStore.statuses);
 });
 </script>

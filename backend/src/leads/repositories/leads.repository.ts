@@ -27,7 +27,7 @@ export class LeadsRepository {
       },
     });
 
-    console.log('Dados retornados dos leads:', leads); 
+    console.log('Dados retornados dos leads:', leads);
     return leads;
   }
 

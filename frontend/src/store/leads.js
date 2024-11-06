@@ -19,11 +19,8 @@ export const useLeadsStore = defineStore("leads", {
 
     async fetchStatuses() {
       try {
-        const response = await API.leads.getLeads();
-        const uniqueStatuses = [
-          ...new Set(response.map((lead) => lead.lead_status)),
-        ].filter(Boolean);
-        this.statuses = uniqueStatuses;
+        const response = await API.leadStatus.getLeadsStatus();
+        this.statuses = response;
       } catch (error) {
         console.error("Erro ao buscar statuses:", error);
       }
