@@ -8,19 +8,39 @@
         <v-form ref="leadForm" v-model="isValid">
           <v-row dense>
             <v-col cols="12" sm="6">
-              <v-text-field v-model="leadData.name" label="Nome*" :rules="[rules.required]" required></v-text-field>
+              <v-text-field
+                v-model="leadData.name"
+                label="Nome*"
+                :rules="[rules.required]"
+                required
+              ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6">
-              <v-text-field v-model="leadData.email" label="Email*" :rules="[rules.required, rules.email]"
-                required></v-text-field>
+              <v-text-field
+                v-model="leadData.email"
+                label="Email*"
+                :rules="[rules.required, rules.email]"
+                required
+              ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6">
-              <v-text-field v-model="leadData.phone" label="Telefone"></v-text-field>
+              <v-text-field
+                v-model="leadData.phone"
+                label="Telefone"
+              ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6">
-              <v-select v-model="leadData.lead_status_id" :items="computedStatuses" item-text="name" item-value="id"
-                label="Status" :rules="[rules.requiredStatus]" required :loading="loadingStatuses"
-                :disabled="loadingStatuses || !computedStatuses.length" />
+              <v-select
+                v-model="leadData.lead_status_id"
+                :items="computedStatuses"
+                item-text="name"
+                item-value="id"
+                label="Status"
+                :rules="[rules.requiredStatus]"
+                required
+                :loading="loadingStatuses"
+                :disabled="loadingStatuses || !computedStatuses.length"
+              />
             </v-col>
           </v-row>
         </v-form>
@@ -31,7 +51,9 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn text @click="closeModal">Cancelar</v-btn>
-        <v-btn color="primary" text @click="submitForm">{{ editMode ? "Atualizar" : "Salvar" }}</v-btn>
+        <v-btn color="primary" text @click="submitForm">{{
+          editMode ? "Atualizar" : "Salvar"
+        }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -60,7 +82,6 @@ export default {
     const loadingStatuses = ref(true);
     const errorLoadingStatuses = ref(false);
 
-
     const computedStatuses = computed(() => leadStatusesStore.statuses || []);
 
     const leadData = ref({
@@ -79,7 +100,6 @@ export default {
       requiredStatus: (value) => !!value || "Status é obrigatório.",
     };
 
-
     watch(
       () => props.modelValue,
       (newVal) => {
@@ -87,13 +107,9 @@ export default {
       }
     );
 
-    watch(
-      dialog,
-      (newVal) => {
-        emit("update:modelValue", newVal);
-      }
-    );
-
+    watch(dialog, (newVal) => {
+      emit("update:modelValue", newVal);
+    });
 
     watch(
       computedStatuses,
@@ -141,7 +157,10 @@ export default {
 
       try {
         await leadStatusesStore.fetchStatuses();
-        console.log("Statuses carregados com sucesso:", leadStatusesStore.statuses.value);
+        console.log(
+          "Statuses carregados com sucesso:",
+          leadStatusesStore.statuses.value
+        );
       } catch (error) {
         console.error("Erro ao carregar statuses:", error);
         errorLoadingStatuses.value = true;

@@ -45,15 +45,21 @@ model Lead {
   user_id        String?     @db.Uuid()
   lead_status    LeadStatus? @relation(fields: [lead_status_id], references: [id], onDelete: SetNull)
   lead_status_id String?     @db.Uuid()
+  pipeline       Pipeline?   @relation(fields: [pipeline_id], references: [id], onDelete: SetNull)
+  pipeline_id    String?     @db.Uuid()
 
   @@map("leads")
 }
 
-// model Pipeline {
-//   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
-//   created_at DateTime @default(now())
-//   updated_at DateTime @default(now()) @updatedAt
-// }
+model Pipeline {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  name       String   @db.VarChar(100) 
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  leads      Lead[]
+
+  @@map("pipelines")
+}
 
 model LeadStatus {
   id    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
