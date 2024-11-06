@@ -15,7 +15,7 @@ model User {
   password   String   @db.VarChar(200)
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
-  leads      Lead[]   
+  leads      Lead[]
   tokens     Token[]
 
   @@map("users")
@@ -52,8 +52,6 @@ model Lead {
 model LeadStatus {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
   name       String   @db.VarChar(100)
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now()) @updatedAt
   leads      Lead[]   // Relacionamento com Lead
 
   @@map("lead_statuses")

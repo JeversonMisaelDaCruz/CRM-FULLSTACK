@@ -2,7 +2,6 @@
   <v-app>
     <v-container>
       <h1 class="text-h4 mb-4">Gerenciar Leads</h1>
-      <v-btn color="primary" @click="openModal()">Novo Lead</v-btn>
       <modal v-model="dialog" :leadToEdit="selectedLead" :statuses="statuses" @lead-saved="handleCreateLead"
         @lead-updated="handleUpdateLead" />
       <v-data-table :headers="headers" :items="leads" class="elevation-1 mt-4">
@@ -24,17 +23,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useLeadsStore } from "../store/Leads"; // Store do Pinia para "leads"
+import { ref, onMounted, computed } from "vue";
+import { useLeadsStore } from "../store/Leads";
+import { useLeadStatusesStore } from "@/store/StatusLeads";
 import modal from "@/components/modal.vue";
 
-// Referências e estados locais
+
 const dialog = ref(false);
 const selectedLead = ref(null);
 const snackbar = ref(false);
 const snackbarMessage = ref("");
 
-// Configuração dos headers da tabela
+
 const headers = [
   { text: "Nome", value: "name" },
   { text: "Email", value: "email" },
@@ -43,12 +43,15 @@ const headers = [
   { text: "Ações", value: "actions", sortable: false },
 ];
 
-// Acessando a store do Pinia
-const leadsStore = useLeadsStore();
-const leads = leadsStore.leads;
-const statuses = leadsStore.statuses;
 
-// Métodos
+const leadsStore = useLeadsStore();
+const leadsStatusStore = useLeadStatusesStore();
+
+
+const leads = computed(() => leadsStore.leads);
+const statuses = computed(() => leadsStatusStore.statuses);
+
+
 const openModal = (lead = null) => {
   selectedLead.value = lead;
   dialog.value = true;
@@ -86,10 +89,11 @@ const handleDeleteLead = async (id) => {
   }
 };
 
-// Carregar leads e statuses ao montar o componente
+
 onMounted(async () => {
   await leadsStore.fetchLeads();
-  await leadsStore.fetchStatuses();
+  await leadsStatusStore.fetchStatuses();
+  console.log("Statuses carregados:", statuses.value);
 });
 </script>
 

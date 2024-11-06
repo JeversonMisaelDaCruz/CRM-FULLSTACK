@@ -14,8 +14,9 @@ export const useAuthStore = defineStore("auth", {
         console.log("Chamando API de login com:", { email, password });
         const response = await API.auth.login({ email, password });
         console.log("Resposta da API:", response);
-        this.setToken(response.access_token);http://localhost:3000/leads
-        await this.fetchUserProfile();
+        this.setToken(response.access_token);
+        //localhost:3000/leads
+        http: await this.fetchUserProfile();
         console.log("Usuário salvo:", this.user);
         return this.user;
       } catch (error) {
