@@ -14,6 +14,7 @@ const leads_module_1 = require("./leads/leads.module");
 const prisma_service_1 = require("./prisma/prisma.service");
 const users_module_1 = require("./users/users.module");
 const lead_status_module_1 = require("./lead-status/lead-status.module");
+const pipeline_module_1 = require("./pipeline/pipeline.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -26,6 +27,7 @@ exports.AppModule = AppModule = __decorate([
             leads_module_1.LeadsModule,
             leads_module_1.LeadsModule,
             lead_status_module_1.LeadStatusModule,
+            pipeline_module_1.PipelineModule,
         ],
         providers: [prisma_service_1.PrismaService],
     })

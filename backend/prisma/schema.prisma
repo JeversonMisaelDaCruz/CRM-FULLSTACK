@@ -53,7 +53,7 @@ model Lead {
 
 model Pipeline {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
-  name       String   @db.VarChar(100) 
+  name       String   @db.VarChar(100)
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
   leads      Lead[]

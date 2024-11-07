@@ -7,6 +7,6 @@ export declare class LeadsController {
     create(createLeadDto: CreateLeadDto): Promise<import("./entities/lead.entity").LeadEntity>;
     findAll(): Promise<import("./entities/lead.entity").LeadEntity[]>;
     findOne(id: string): Promise<import("./entities/lead.entity").LeadEntity>;
-    update(id: string, updateLeadDto: UpdateLeadDto): Promise<void>;
+    update(id: string, updateLeadDto: UpdateLeadDto): Promise<import("./entities/lead.entity").LeadEntity>;
     remove(id: string): Promise<import("./entities/lead.entity").LeadEntity>;
 }

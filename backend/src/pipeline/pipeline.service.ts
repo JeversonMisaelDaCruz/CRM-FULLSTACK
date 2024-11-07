@@ -1,26 +1,57 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreatePipelineDto } from './dto/create-pipeline.dto';
 import { UpdatePipelineDto } from './dto/update-pipeline.dto';
+import { PipelineRepository } from './repositories/pipeline.repository';
 
 @Injectable()
 export class PipelineService {
-  create(createPipelineDto: CreatePipelineDto) {
-    return 'This action adds a new pipeline';
+  constructor(private readonly pipelineRepository: PipelineRepository) {}
+
+  async create(createPipelineDto: CreatePipelineDto) {
+    const response = await this.pipelineRepository.create(createPipelineDto);
+    if (!response) {
+      throw new HttpException('pipeline not created', 400);
+    }
+    console.log('pipeline criado:', response);
+    return response;
   }
 
-  findAll() {
-    return `This action returns all pipeline`;
+  async findAll() {
+    const response = await this.pipelineRepository.findAll();
+    if (!response) {
+      throw new HttpException('pipeline not created', 400);
+    }
+    console.log('pipeline encontrados:', response);
+    return response;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} pipeline`;
+  async findById(id: string) {
+    const response = await this.pipelineRepository.findById(id);
+    if (!response) {
+      throw new HttpException('pipeline not created', 400);
+    }
+    console.log('pipeline encontrado:', response);
+    return response;
   }
 
-  update(id: number, updatePipelineDto: UpdatePipelineDto) {
-    return `This action updates a #${id} pipeline`;
+  async update(id: string, updatePipelineDto: UpdatePipelineDto) {
+    const response = await this.pipelineRepository.update(
+      id,
+      updatePipelineDto,
+    );
+    if (!response) {
+      throw new HttpException('pipeline not found', 404);
+    }
+    console.log('pipeline atualizado:', response);
+    return response;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} pipeline`;
+  async remove(id: string) {
+    const response = await this.pipelineRepository.delete(id);
+    if (!response) {
+      throw new HttpException('pipeline not created', 400);
+    }
+    console.log('pipeline deletado:', response);
+    return response;
   }
 }

@@ -34,6 +34,7 @@ export class LeadsService {
     if (!response) {
       throw new NotFoundException(`${id} nao encontrado`);
     }
+    return response;
   }
 
   async remove(id: string) {
