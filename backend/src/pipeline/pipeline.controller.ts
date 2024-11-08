@@ -11,7 +11,7 @@ import {
 import { PipelineService } from './pipeline.service';
 import { CreatePipelineDto } from './dto/create-pipeline.dto';
 import { UpdatePipelineDto } from './dto/update-pipeline.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from '../auth/auth.guard';
 
 
 @Controller('pipeline')
