@@ -35,36 +35,38 @@ model Token {
 }
 
 model Lead {
-  id             String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
-  created_at     DateTime    @default(now())
-  updated_at     DateTime    @default(now()) @updatedAt
-  name           String      @db.VarChar(100)
-  phone          String      @db.VarChar(20)
-  email          String      @db.VarChar(60)
-  user           User?       @relation(fields: [user_id], references: [id], onDelete: SetNull)
-  user_id        String?     @db.Uuid()
-  lead_status    LeadStatus? @relation(fields: [lead_status_id], references: [id], onDelete: SetNull)
-  lead_status_id String?     @db.Uuid()
-  pipeline       Pipeline?   @relation(fields: [pipeline_id], references: [id], onDelete: SetNull)
-  pipeline_id    String?     @db.Uuid()
+  id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  created_at        DateTime        @default(now())
+  updated_at        DateTime        @default(now()) @updatedAt
+  name              String          @db.VarChar(100)
+  phone             String          @db.VarChar(20)
+  email             String          @db.VarChar(60)
+  user              User?           @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  user_id           String?         @db.Uuid()
+  pipeline_phase    Pipeline_Phase? @relation(fields: [pipeline_phase_id], references: [id], onDelete: SetNull)
+  pipeline_phase_id String?         @db.Uuid()
 
   @@map("leads")
 }
 
-model Pipeline {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
-  name       String   @db.VarChar(100)
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now()) @updatedAt
-  leads      Lead[]
+model Pipeline_Phase {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now()) @updatedAt
+  name        String   @db.VarChar(100)
+  pipeline    Pipeline @relation(fields: [pipeline_id], references: [id], onDelete: Cascade)
+  pipeline_id String   @db.Uuid()
+  leads       Lead[]
 
-  @@map("pipelines")
+  @@map("pipeline_phases")
 }
 
-model LeadStatus {
-  id    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
-  name  String @db.VarChar(100)
-  leads Lead[]
+model Pipeline {
+  id         String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  name       String           @db.VarChar(100)
+  created_at DateTime         @default(now())
+  updated_at DateTime         @default(now()) @updatedAt
+  phases     Pipeline_Phase[]
 
-  @@map("lead_status")
+  @@map("pipelines")
 }
