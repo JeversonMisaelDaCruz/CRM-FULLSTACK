@@ -28,8 +28,8 @@ model Token {
   access_token String
   is_revoked   Boolean  @default(false)
   type         String   @default("login")
-  user         User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  user_id      String   @db.Uuid()
+  user         User?    @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  user_id      String?  @db.Uuid()
 
   @@map("tokens")
 }
@@ -50,12 +50,12 @@ model Lead {
 }
 
 model Pipeline_Phase {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
-  created_at  DateTime @default(now())
-  updated_at  DateTime @default(now()) @updatedAt
-  name        String   @db.VarChar(100)
-  pipeline    Pipeline @relation(fields: [pipeline_id], references: [id], onDelete: Cascade)
-  pipeline_id String   @db.Uuid()
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now()) @updatedAt
+  name        String    @db.VarChar(100)
+  pipeline    Pipeline? @relation(fields: [pipeline_id], references: [id], onDelete: SetNull)
+  pipeline_id String?   @db.Uuid()
   leads       Lead[]
 
   @@map("pipeline_phases")

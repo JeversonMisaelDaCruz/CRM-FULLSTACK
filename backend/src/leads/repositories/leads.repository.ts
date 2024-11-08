@@ -14,7 +14,7 @@ export class LeadsRepository {
       data: createLeadDto,
       include: {
         user: true,
-        lead_status: true,
+        pipeline_phase: true,
       },
     });
   }
@@ -23,7 +23,7 @@ export class LeadsRepository {
     const leads = await this.prismaService.lead.findMany({
       include: {
         user: true,
-        lead_status: true,
+        pipeline_phase: true,
       },
     });
 
@@ -42,7 +42,7 @@ export class LeadsRepository {
       },
       include: {
         user: true,
-        lead_status: true,
+        pipeline_phase: true,
       },
     });
   }
@@ -59,7 +59,7 @@ export class LeadsRepository {
       data: updateLead,
       include: {
         user: true,
-        lead_status: true,
+        pipeline_phase: true,
       },
     });
   }
