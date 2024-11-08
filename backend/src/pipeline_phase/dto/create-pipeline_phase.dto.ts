@@ -16,7 +16,6 @@ export class CreatePipelinePhaseDto {
     message: 'O nome deve ter no maximo 50 caracteres',
   })
   name: string;
-  @IsDate()
   created_at?: Date;
   updated_at?: Date;
 }

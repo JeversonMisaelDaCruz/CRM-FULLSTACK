@@ -9,20 +9,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateLeadStatusDto = void 0;
+exports.UpdatePipelinePhaseDto = void 0;
 const class_validator_1 = require("class-validator");
-class CreateLeadStatusDto {
+class UpdatePipelinePhaseDto {
 }
-exports.CreateLeadStatusDto = CreateLeadStatusDto;
+exports.UpdatePipelinePhaseDto = UpdatePipelinePhaseDto;
 __decorate([
-    (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
     (0, class_validator_1.MinLength)(2, {
         message: 'O nome deve ter pelo menos 2 caracteres',
     }),
-    (0, class_validator_1.MaxLength)(30, {
-        message: 'O nome deve ter no maximo 30 caracteres',
+    (0, class_validator_1.MaxLength)(50, {
+        message: 'O nome deve ter no maximo 50 caracteres',
     }),
     __metadata("design:type", String)
-], CreateLeadStatusDto.prototype, "name", void 0);
-//# sourceMappingURL=create-lead-status.dto.js.map
+], UpdatePipelinePhaseDto.prototype, "name", void 0);
+//# sourceMappingURL=update-pipeline_phase.dto.js.map

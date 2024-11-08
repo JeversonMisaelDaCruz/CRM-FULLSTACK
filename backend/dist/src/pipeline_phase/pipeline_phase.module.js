@@ -6,21 +6,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LeadStatusModule = void 0;
+exports.PipelinePhaseModule = void 0;
 const common_1 = require("@nestjs/common");
-const lead_status_service_1 = require("./lead-status.service");
-const lead_status_controller_1 = require("./lead-status.controller");
+const pipeline_phase_service_1 = require("./pipeline_phase.service");
+const pipeline_phase_controller_1 = require("./pipeline_phase.controller");
+const phase_repository_1 = require("./repositories/phase.repository");
 const prisma_service_1 = require("../prisma/prisma.service");
-const leads_status_repository_1 = require("./repositories/leads-status.repository");
-let LeadStatusModule = class LeadStatusModule {
+let PipelinePhaseModule = class PipelinePhaseModule {
 };
-exports.LeadStatusModule = LeadStatusModule;
-exports.LeadStatusModule = LeadStatusModule = __decorate([
+exports.PipelinePhaseModule = PipelinePhaseModule;
+exports.PipelinePhaseModule = PipelinePhaseModule = __decorate([
     (0, common_1.Module)({
         imports: [],
-        controllers: [lead_status_controller_1.LeadStatusController],
-        providers: [lead_status_service_1.LeadStatusService, prisma_service_1.PrismaService, leads_status_repository_1.StatusLeadsRepository],
-        exports: [leads_status_repository_1.StatusLeadsRepository],
+        controllers: [pipeline_phase_controller_1.PipelinePhaseController],
+        providers: [pipeline_phase_service_1.PipelinePhaseService, prisma_service_1.PrismaService, phase_repository_1.PhaseRepository],
+        exports: [phase_repository_1.PhaseRepository],
     })
-], LeadStatusModule);
-//# sourceMappingURL=lead-status.module.js.map
+], PipelinePhaseModule);
+//# sourceMappingURL=pipeline_phase.module.js.map

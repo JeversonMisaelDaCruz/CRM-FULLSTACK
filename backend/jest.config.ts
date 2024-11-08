@@ -3,9 +3,10 @@ module.exports = {
   rootDir: '.',
   testMatch: [
     '**/../global.e2e-spec.ts',
-    '**/pipeline/test/*e2e-spec.ts',
+    '**/pipeline_phase/tests/*.e2e-spec.ts',
+    // '**/pipeline/tests/*.e2e-spec.ts',
     // '**/leads/tests/*.e2e-spec.ts',
-    //  '**/users/tests/*.e2e-spec.ts',
+    // '**/users/tests/*.e2e-spec.ts',
   ],
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',

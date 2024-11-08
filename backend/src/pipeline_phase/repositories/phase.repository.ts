@@ -12,9 +12,6 @@ export class PhaseRepository {
   ): Promise<PipelinePhaseEntity> {
     return await this.prismaService.pipeline_Phase.create({
       data: createPipelinePhaseDto,
-      include: {
-        pipeline: true,
-      },
     });
   }
   async findAll(): Promise<PipelinePhaseEntity[]> {
