@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreatePipelinePhaseDto } from '../dto/create-pipeline_phase.dto';
+import { UpdatePipelinePhaseDto } from '../dto/update-pipeline_phase.dto';
 import { PipelinePhaseEntity } from '../entities/pipeline_phase.entity';
 
 @Injectable()
 export class PhaseRepository {
   constructor(private readonly prismaService: PrismaService) {}
-
   async create(
     createPipelinePhaseDto: CreatePipelinePhaseDto,
   ): Promise<PipelinePhaseEntity> {
@@ -40,11 +40,11 @@ export class PhaseRepository {
 
   async update(
     id: string,
-    updatePipelinePhaseDto: CreatePipelinePhaseDto,
+    UpdatePipelinePhaseDto: UpdatePipelinePhaseDto,
   ): Promise<PipelinePhaseEntity> {
     const response = await this.prismaService.pipeline_Phase.update({
       where: { id: id },
-      data: updatePipelinePhaseDto,
+      data: UpdatePipelinePhaseDto,
       include: {
         pipeline: true,
       },

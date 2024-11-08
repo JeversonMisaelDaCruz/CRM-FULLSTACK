@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreatePipelinePhaseDto } from './dto/create-pipeline_phase.dto';
+import { PhaseRepository } from './repositories/phase.repository';
 import { UpdatePipelinePhaseDto } from './dto/update-pipeline_phase.dto';
 
 @Injectable()
 export class PipelinePhaseService {
-  create(createPipelinePhaseDto: CreatePipelinePhaseDto) {
-    return 'This action adds a new pipelinePhase';
+  constructor(private readonly phaseRepository: PhaseRepository) {}
+
+  async create(createPipelinePhaseDto: CreatePipelinePhaseDto) {
+    const response = this.phaseRepository.create(createPipelinePhaseDto);
+    if (!response) {
+      throw new HttpException('pipelinePhase not created', 400);
+    }
+    console.log('pipelinePhase service criado:', response);
+    return response;
   }
 
-  findAll() {
-    return `This action returns all pipelinePhase`;
+  async findAll() {
+    return this.phaseRepository.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} pipelinePhase`;
+  async findOne(id: string) {
+    const response = this.phaseRepository.findById(id);
+    if (!response) {
+      throw new HttpException('pipelinePhase not found', 404);
+    }
   }
 
-  update(id: number, updatePipelinePhaseDto: UpdatePipelinePhaseDto) {
-    return `This action updates a #${id} pipelinePhase`;
+  async update(id: string, updatePipelinePhaseDto: UpdatePipelinePhaseDto) {
+    const response = this.phaseRepository.update(id, updatePipelinePhaseDto);
+    if (!response) {
+      throw new HttpException('pipelinePhase not updated', 400);
+    }
+    console.log('pipelinePhase service atualizado:', response);
+    return response;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} pipelinePhase`;
+  async remove(id: string) {
+    const response = this.phaseRepository.remove(id);
+    if (!response) {
+      throw new HttpException('pipelinePhase not deleted', 400);
+    }
+    console.log('pipelinePhase service deletado:', response);
+    return response;
   }
 }

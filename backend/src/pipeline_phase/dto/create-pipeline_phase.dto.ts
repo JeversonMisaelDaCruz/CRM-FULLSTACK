@@ -1,13 +1,12 @@
 import {
   IsDate,
-  isDate,
   IsNotEmpty,
   IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
 export class CreatePipelinePhaseDto {
-  id: string;
+  id?: string;
   @IsNotEmpty()
   @IsString()
   @MinLength(2, {
