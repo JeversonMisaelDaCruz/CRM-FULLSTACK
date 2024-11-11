@@ -21,9 +21,9 @@ export const useLeadsStore = defineStore("leads", {
       try {
         const response = await API.PipelinePhase.getPipelinePhase();
         this.PipelinePhase = response;
-        console.log("Statuses:", this.PipelinePhase);
+        console.log("pipelinephase log:", response);
       } catch (error) {
-        console.error("Erro ao buscar statuses:", error);
+        console.error("Erro ao buscar pipelinephase:", error);
       }
     },
 

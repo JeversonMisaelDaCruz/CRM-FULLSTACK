@@ -47,7 +47,6 @@
                 <v-text-field
                   v-model="leadData.phone"
                   label="Telefone"
-                  v-mask="'(##) #####-####'"
                   outlined
                   dense
                   hide-details
@@ -118,10 +117,8 @@ const leadData = ref({
 const leadsStore = useLeadsStore();
 const loadingPipelinePhases = ref(true);
 
-const computedPipelinePhases = computed(() => {
-  console.log("Conteúdo de pipeline phases na computed:", leadsStore.pipelinePhases);
-  return leadsStore.pipelinePhases || [];
-});
+// Computed property para obter pipeline phases do store
+const computedPipelinePhases = computed(() => leadsStore.pipelinePhases || []);
 
 const rules = {
   requiredPipelinePhase: (value) => !!value || "Pipeline Phase é obrigatória.",
@@ -141,19 +138,11 @@ const resetForm = () => {
   };
 };
 
-const createLead = async () => {
-  try {
-    // Aqui você pode adicionar lógica para criar o lead, se necessário
-    closeDialog();
-  } catch (error) {
-    console.error(error);
-  }
-};
 
-// Carrega as pipeline phases quando o componente é montado
+
 onMounted(async () => {
   await leadsStore.fetchPipelinePhases();
   loadingPipelinePhases.value = false;
-  console.log("Pipeline phases carregadas após fetchPipelinePhases:", leadsStore.pipelinePhases);
+  console.log("Pipeline phases carregadas:", leadsStore.pipelinePhases);
 });
 </script>

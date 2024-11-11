@@ -9,7 +9,7 @@ export class PipelinePhase extends Http {
     try {
       const response = await this.get("");
       console.log("Resposta completa no getPipelinePhase:", response);
-      return response.data;
+      return response;
     } catch (error) {
       console.error("Erro ao obter getPipelinePhase:", error);
       throw error;
