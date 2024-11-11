@@ -29,7 +29,6 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { useLeadsStore } from "@/store/Leads";
 import modal from "@/components/modal.vue";
 
 const dialog = ref(false);
