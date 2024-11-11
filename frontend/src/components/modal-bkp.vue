@@ -156,7 +156,7 @@ export default {
       errorLoadingStatuses.value = false;
 
       try {
-        await leadStatusesStore.fetchStatuses();
+        await leadStatusesStore.fetchPipelinePhases();
         console.log(
           "Statuses carregados com sucesso:",
           leadStatusesStore.statuses.value

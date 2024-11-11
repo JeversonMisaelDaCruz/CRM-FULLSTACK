@@ -5,7 +5,7 @@
       <modal
         v-model="dialog"
         :leadToEdit="selectedLead"
-        :statuses="statuses"
+        :pipelinePhases="pipelinePhases"
         @lead-saved="handleCreateLead"
         @lead-updated="handleUpdateLead"
       />
@@ -29,6 +29,8 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
+import { useLeadsStore } from "@/store/leads"; 
+
 import modal from "@/components/modal.vue";
 
 const dialog = ref(false);
@@ -40,14 +42,14 @@ const headers = [
   { text: "Nome", value: "name" },
   { text: "Email", value: "email" },
   { text: "Telefone", value: "phone" },
-  { text: "Status", value: "status" },
+  { text: "Pipeline Phase", value: "pipelinePhase" },
   { text: "Ações", value: "actions", sortable: false },
 ];
 
 const leadsStore = useLeadsStore();
 
 const leads = computed(() => leadsStore.leads);
-const statuses = computed(() => leadsStore.statuses);
+const pipelinePhases = computed(() => leadsStore.pipelinePhases); // Atualizado de statuses para pipelinePhases
 
 const openModal = (lead = null) => {
   selectedLead.value = lead;
@@ -87,9 +89,12 @@ const handleDeleteLead = async (id) => {
 };
 
 onMounted(async () => {
-  await Promise.all([leadsStore.fetchLeads(), leadsStore.fetchStatuses()]);
+  await Promise.all([
+    leadsStore.fetchLeads(),
+    leadsStore.fetchPipelinePhases(),
+  ]);
 
-  console.log("Statuses carregados:", statuses.value);
+  console.log("Pipeline phases carregadas:", pipelinePhases.value);
 });
 </script>
 

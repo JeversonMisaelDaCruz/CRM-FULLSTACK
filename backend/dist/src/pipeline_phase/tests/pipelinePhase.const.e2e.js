@@ -1,8 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.pipelinePhaseWrongData = exports.newPipelinePhase = void 0;
+exports.pipelinePhaseWrongData = exports.updatePipelinePhaseData = exports.newPipelinePhase = void 0;
 exports.newPipelinePhase = {
     name: 'Ganho',
+};
+exports.updatePipelinePhaseData = {
+    name: 'Perdido',
 };
 exports.pipelinePhaseWrongData = {
     teste: 'darth plagueis',

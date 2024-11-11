@@ -1,11 +1,11 @@
 import { Auth } from "../Auth";
 import { Leads } from "../Leads";
-import { LeadsStatus } from "../LeadsStatus";
+import { PipelinePhase } from "../PipelinePhase";
 
 class API {
   static auth = new Auth();
   static leads = new Leads();
-  static leadStatus = new LeadsStatus();
+  static PipelinePhase = new PipelinePhase();
 }
 
 export default API;

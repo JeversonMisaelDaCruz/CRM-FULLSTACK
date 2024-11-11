@@ -4,7 +4,7 @@ import API from "@/services/module/API";
 export const useLeadsStore = defineStore("leads", {
   state: () => ({
     leads: [],
-    statuses: [],
+    PipelinePhase: [],
   }),
 
   actions: {
@@ -17,10 +17,11 @@ export const useLeadsStore = defineStore("leads", {
       }
     },
 
-    async fetchStatuses() {
+    async fetchPipelinePhases() {
       try {
-        const response = await API.leadStatus.getLeadsStatus();
-        this.statuses = response;
+        const response = await API.PipelinePhase.getPipelinePhase();
+        this.PipelinePhase = response;
+        console.log("Statuses:", this.PipelinePhase);
       } catch (error) {
         console.error("Erro ao buscar statuses:", error);
       }

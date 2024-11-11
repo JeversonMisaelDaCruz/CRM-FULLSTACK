@@ -56,14 +56,14 @@
 
               <v-col>
                 <v-select
-                  v-model="leadData.lead_status_id"
-                  :items="computedStatuses"
+                  v-model="leadData.pipeline_phase_id"
+                  :items="computedPipelinePhases"
                   item-title="name"
                   item-value="id"
-                  label="Status"
-                  :rules="[rules.requiredStatus]"
+                  label="Pipeline Phase"
+                  :rules="[rules.requiredPipelinePhase]"
                   required
-                  :loading="loadingStatuses"
+                  :loading="loadingPipelinePhases"
                   outlined
                   dense
                   hide-details
@@ -91,7 +91,7 @@
                   margin-right: 16px;
                   background-color: green;
                 "
-                @click="createdStatusLeads"
+                @click="createLead"
               >
                 Criar
               </v-btn>
@@ -105,26 +105,26 @@
 
 <script setup lang="js">
 import { ref, computed, onMounted } from "vue";
-import { useLeadsStore } from "@/store/Leads";
+import { useLeadsStore } from "@/store/leads";
 
 const dialog = ref(false);
 const leadData = ref({
   name: "",
   email: "",
   phone: "",
-  lead_status_id: "",
+  pipeline_phase_id: "",
 });
 
 const leadsStore = useLeadsStore();
-const loadingStatuses = ref(true);
+const loadingPipelinePhases = ref(true);
 
-const computedStatuses = computed(() => {
-  console.log("Conteúdo de statuses na computed:", leadsStore.statuses);
-  return leadsStore.statuses || [];
+const computedPipelinePhases = computed(() => {
+  console.log("Conteúdo de pipeline phases na computed:", leadsStore.pipelinePhases);
+  return leadsStore.pipelinePhases || [];
 });
 
 const rules = {
-  requiredStatus: (value) => !!value || "Status é obrigatório.",
+  requiredPipelinePhase: (value) => !!value || "Pipeline Phase é obrigatória.",
 };
 
 const closeDialog = () => {
@@ -137,11 +137,11 @@ const resetForm = () => {
     name: "",
     email: "",
     phone: "",
-    lead_status_id: "",
+    pipeline_phase_id: "",
   };
 };
 
-const createdStatusLeads = async () => {
+const createLead = async () => {
   try {
     // Aqui você pode adicionar lógica para criar o lead, se necessário
     closeDialog();
@@ -150,10 +150,10 @@ const createdStatusLeads = async () => {
   }
 };
 
-// Carrega os statuses quando o componente é montado
+// Carrega as pipeline phases quando o componente é montado
 onMounted(async () => {
-  await leadsStore.fetchStatuses();
-  loadingStatuses.value = false;
-  console.log("Statuses carregados após fetchStatuses:", leadsStore.statuses);
+  await leadsStore.fetchPipelinePhases();
+  loadingPipelinePhases.value = false;
+  console.log("Pipeline phases carregadas após fetchPipelinePhases:", leadsStore.pipelinePhases);
 });
 </script>
