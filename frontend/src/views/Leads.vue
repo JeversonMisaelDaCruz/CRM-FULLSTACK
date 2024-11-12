@@ -29,7 +29,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { useLeadsStore } from "@/store/leads"; 
+import { useLeadsStore } from "@/store/leads";
 
 import modal from "@/components/modal.vue";
 
@@ -49,7 +49,7 @@ const headers = [
 const leadsStore = useLeadsStore();
 
 const leads = computed(() => leadsStore.leads);
-const pipelinePhases = computed(() => leadsStore.pipelinePhases); // Atualizado de statuses para pipelinePhases
+const pipelinePhases = computed(() => leadsStore.PipelinePhase || []);
 
 const openModal = (lead = null) => {
   selectedLead.value = lead;

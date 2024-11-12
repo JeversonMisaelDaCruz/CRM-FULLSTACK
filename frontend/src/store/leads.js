@@ -31,6 +31,7 @@ export const useLeadsStore = defineStore("leads", {
       try {
         const response = await API.leads.createLead(leadData);
         this.leads.push(response);
+        console.log("Lead criado:", response);
         return response;
       } catch (error) {
         console.error("Erro ao criar lead:", error);

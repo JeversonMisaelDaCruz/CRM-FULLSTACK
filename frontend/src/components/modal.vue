@@ -117,8 +117,7 @@ const leadData = ref({
 const leadsStore = useLeadsStore();
 const loadingPipelinePhases = ref(true);
 
-// Computed property para obter pipeline phases do store
-const computedPipelinePhases = computed(() => leadsStore.pipelinePhases || []);
+const computedPipelinePhases = computed(() => leadsStore.PipelinePhase || []);
 
 const rules = {
   requiredPipelinePhase: (value) => !!value || "Pipeline Phase é obrigatória.",
