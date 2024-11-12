@@ -1,7 +1,8 @@
-import { createRouter, createWebHistory } from "vue-router";
-import { setupLayouts } from "virtual:generated-layouts";
-import Login from "@/views/Login.vue";
+import Kanban from "@/views/kanban.vue";
 import Leads from "@/views/Leads.vue";
+import Login from "@/views/Login.vue";
+import { setupLayouts } from "virtual:generated-layouts";
+import { createRouter, createWebHistory } from "vue-router";
 
 const manualRoutes = [
   {
@@ -11,6 +12,10 @@ const manualRoutes = [
   {
     path: "/leads",
     component: Leads,
+  },
+  {
+    path: "/kanban",
+    component: Kanban,
   },
 ];
 
