@@ -137,11 +137,18 @@ const resetForm = () => {
   };
 };
 
-
+const createLead = async () => {
+  try {
+    await leadsStore.createLead(leadData.value);
+    closeDialog();
+  } catch (error) {
+    console.error("Erro ao criar lead:", error);
+    alert("Erro ao criar lead: Verifique os dados preenchidos.");
+  }
+};
 
 onMounted(async () => {
   await leadsStore.fetchPipelinePhases();
   loadingPipelinePhases.value = false;
-  console.log("Pipeline phases carregadas:", leadsStore.pipelinePhases);
 });
 </script>

@@ -61,5 +61,5 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], UpdateLeadDto.prototype, "leads_status_id", void 0);
+], UpdateLeadDto.prototype, "pipeline_phase_id", void 0);
 //# sourceMappingURL=update-lead.dto.js.map

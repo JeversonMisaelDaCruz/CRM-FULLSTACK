@@ -6,5 +6,5 @@ export declare class LeadEntity {
     created_at: Date;
     updated_at: Date;
     user_id?: string;
-    leads_status_id?: string;
+    pipeline_phase_id?: string;
 }

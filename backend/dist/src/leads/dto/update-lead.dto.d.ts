@@ -3,5 +3,5 @@ export declare class UpdateLeadDto {
     email?: string;
     phone?: string;
     user_id?: string;
-    leads_status_id?: string;
+    pipeline_phase_id?: string;
 }

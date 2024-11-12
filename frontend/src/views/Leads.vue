@@ -30,7 +30,6 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useLeadsStore } from "@/store/leads";
-
 import modal from "@/components/modal.vue";
 
 const dialog = ref(false);
@@ -61,8 +60,11 @@ const handleCreateLead = async (leadData) => {
     await leadsStore.createLead(leadData);
     snackbarMessage.value = "Lead criado com sucesso!";
     snackbar.value = true;
+    dialog.value = false; // Fechar o modal após a criação
   } catch (error) {
     console.error("Erro ao criar lead:", error);
+    snackbarMessage.value = "Erro ao criar lead";
+    snackbar.value = true;
   }
 };
 
@@ -71,8 +73,11 @@ const handleUpdateLead = async (leadData) => {
     await leadsStore.updateLead(leadData);
     snackbarMessage.value = "Lead atualizado com sucesso!";
     snackbar.value = true;
+    dialog.value = false; // Fechar o modal após a atualização
   } catch (error) {
     console.error("Erro ao atualizar lead:", error);
+    snackbarMessage.value = "Erro ao atualizar lead";
+    snackbar.value = true;
   }
 };
 
@@ -93,8 +98,6 @@ onMounted(async () => {
     leadsStore.fetchLeads(),
     leadsStore.fetchPipelinePhases(),
   ]);
-
-  console.log("Pipeline phases carregadas:", pipelinePhases.value);
 });
 </script>
 

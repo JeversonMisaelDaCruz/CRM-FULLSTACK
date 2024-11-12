@@ -56,8 +56,8 @@ export class UpdateLeadDto {
   @IsString()
   @IsOptional()
   user_id?: string;
-  
+
   @IsString()
   @IsOptional()
-  leads_status_id?: string;
+  pipeline_phase_id?: string;
 }

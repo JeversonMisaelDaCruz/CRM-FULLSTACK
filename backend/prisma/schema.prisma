@@ -34,19 +34,14 @@ model Token {
   @@map("tokens")
 }
 
-model Lead {
-  id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
-  created_at        DateTime        @default(now())
-  updated_at        DateTime        @default(now()) @updatedAt
-  name              String          @db.VarChar(100)
-  phone             String          @db.VarChar(20)
-  email             String          @db.VarChar(60)
-  user              User?           @relation(fields: [user_id], references: [id], onDelete: SetNull)
-  user_id           String?         @db.Uuid()
-  pipeline_phase    Pipeline_Phase? @relation(fields: [pipeline_phase_id], references: [id], onDelete: SetNull)
-  pipeline_phase_id String?         @db.Uuid()
+model Pipeline {
+  id         String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  name       String           @db.VarChar(100)
+  created_at DateTime         @default(now())
+  updated_at DateTime         @default(now()) @updatedAt
+  phases     Pipeline_Phase[]
 
-  @@map("leads")
+  @@map("pipelines")
 }
 
 model Pipeline_Phase {
@@ -61,12 +56,17 @@ model Pipeline_Phase {
   @@map("pipeline_phases")
 }
 
-model Pipeline {
-  id         String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
-  name       String           @db.VarChar(100)
-  created_at DateTime         @default(now())
-  updated_at DateTime         @default(now()) @updatedAt
-  phases     Pipeline_Phase[]
+model Lead {
+  id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  created_at        DateTime        @default(now())
+  updated_at        DateTime        @default(now()) @updatedAt
+  name              String          @db.VarChar(100)
+  phone             String          @db.VarChar(20)
+  email             String          @db.VarChar(60)
+  user              User?           @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  user_id           String?         @db.Uuid()
+  pipeline_phase    Pipeline_Phase? @relation(fields: [pipeline_phase_id], references: [id], onDelete: SetNull)
+  pipeline_phase_id String?         @db.Uuid()
 
-  @@map("pipelines")
+  @@map("leads")
 }

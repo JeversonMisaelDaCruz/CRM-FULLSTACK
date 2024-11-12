@@ -56,5 +56,5 @@ export class CreateLeadDto {
 
   @IsString()
   @IsOptional()
-  lead_status_id?: string;
+  pipeline_phase_id?: string;
 }

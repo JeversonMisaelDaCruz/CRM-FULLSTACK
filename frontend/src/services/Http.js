@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useAuthStore } from "../store/auth/User";
 
-axios.defaults.timeout = 24 * 60 * 60 * 1000; // Tempo limite de 24 horas
+axios.defaults.timeout = 24 * 60 * 60 * 1000;
 axios.defaults.baseURL = process.env.VUE_APP_API_URL || "http://localhost:3001";
 
 class Http {
