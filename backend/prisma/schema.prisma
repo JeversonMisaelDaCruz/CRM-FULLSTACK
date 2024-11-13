@@ -8,15 +8,16 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now()) @updatedAt
-  name       String   @db.VarChar(100)
-  identifier String   @unique @db.VarChar(12)
-  email      String   @unique @db.VarChar(60)
-  password   String   @db.VarChar(200)
+  id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now()) @updatedAt
+  name       String     @db.VarChar(100)
+  identifier String     @unique @db.VarChar(12)
+  email      String     @unique @db.VarChar(60)
+  password   String     @db.VarChar(200)
   leads      Lead[]
   tokens     Token[]
+  pipelines  Pipeline[]
 
   @@map("users")
 }
@@ -40,6 +41,8 @@ model Pipeline {
   created_at DateTime         @default(now())
   updated_at DateTime         @default(now()) @updatedAt
   phases     Pipeline_Phase[]
+  user       User?            @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  user_id    String?          @db.Uuid()
 
   @@map("pipelines")
 }
