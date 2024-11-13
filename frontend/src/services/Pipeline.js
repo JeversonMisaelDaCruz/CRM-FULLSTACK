@@ -8,38 +8,46 @@ export class Pipeline extends Http {
   async createPipeline(data) {
     try {
       const response = await this.post("", data);
-      console.log("Pipeline criado", response);
+      console.log("Pipeline criada", response);
       return response;
     } catch (error) {
       console.log("Erro ao criar pipeline", error);
+      throw error;
     }
   }
+
   async deletePipeline(id) {
     try {
       const response = await this.delete(`/${id}`);
-      console.log("pipeline deletada com sucesso", response);
+      console.log("Pipeline deletada com sucesso", response);
       return response;
     } catch (error) {
-      console.log("Não foi possivel deletar sua pipeline");
+      console.log("Não foi possível deletar a pipeline");
+      throw error;
     }
   }
+
   async getPipeline() {
     try {
       const response = await this.get("");
-      console.log("Pipelines puxadas", response);
+      console.log("Pipelines carregadas", response);
       return response;
     } catch (error) {
-      console.log("erro em puxar as Pipelines ", response);
+      console.log("Erro ao carregar pipelines");
+      throw error;
     }
   }
+
   async updatePipeline(data) {
     try {
       const response = await this.patch(`/${data.id}`, data);
-      console.log("pipeline atualizada", response);
+      console.log("Pipeline atualizada", response);
       return response;
     } catch (error) {
-      console.log("erro ao editar pipeline", response);
+      console.log("Erro ao atualizar pipeline");
+      throw error;
     }
   }
 }
+
 export default Pipeline;

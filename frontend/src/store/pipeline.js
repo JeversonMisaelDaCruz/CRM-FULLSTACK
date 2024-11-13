@@ -1,7 +1,7 @@
 import API from "@/services/module/API";
 import { defineStore } from "pinia";
 
-export const useLeadsStore = defineStore("pipeline", {
+export const usePipelineStore = defineStore("pipeline", {
   state: () => ({
     pipeline: [],
   }),

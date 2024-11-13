@@ -7,7 +7,7 @@ class API {
   static auth = new Auth();
   static leads = new Leads();
   static PipelinePhase = new PipelinePhase();
-  static Pipeline = new Pipeline();
+  static pipeline = new Pipeline();
 }
 
 export default API;
