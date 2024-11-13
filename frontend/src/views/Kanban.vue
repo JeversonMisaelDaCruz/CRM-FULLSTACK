@@ -2,10 +2,10 @@
   <v-card>
     <v-layout>
       <v-app-bar color="primary" prominent>
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
         <v-toolbar-title>CRM</v-toolbar-title>
         <v-spacer />
-        <v-btn icon="mdi-dots-vertical" variant="text"></v-btn>
+        <v-btn icon="mdi-dots-vertical" variant="text" />
       </v-app-bar>
       <v-navigation-drawer v-model="drawer" temporary>
         <v-list>
@@ -14,7 +14,7 @@
             :key="index"
             @click="selectPipeline(pipeline)"
           >
-            <v-list-item-title>{{ pipeline.name }}</v-list-item-title>
+            <v-list-item-title>{{ pipeline.name.toUpperCase() }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
@@ -23,14 +23,13 @@
           <v-btn @click="showModal = true" color="primary">
             Criar Pipeline
           </v-btn>
-          <!-- Modal para criar pipeline -->
           <v-dialog v-model="showModal" max-width="500">
             <v-card>
               <v-card-title>Cadastrar Pipeline</v-card-title>
               <v-card-text>
                 <v-text-field
                   v-model="pipelineName"
-                  label="Nome da Pipeline"
+                  label="Nome:"
                   required
                 ></v-text-field>
               </v-card-text>
@@ -48,7 +47,7 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { usePipelineStore } from "@/store/pipeline";
 
 export default {
@@ -72,6 +71,10 @@ export default {
       pipelineName.value = "";
       showModal.value = false;
     };
+
+    onMounted(async () => {
+      await pipelineStore.fetchPipelines();
+    });
 
     const selectPipeline = (pipeline) => {
       console.log("Pipeline selecionada:", pipeline);
