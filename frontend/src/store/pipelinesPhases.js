@@ -10,7 +10,7 @@ export const usePipelinePhaseStore = defineStore("pipelinePhase", {
     async fetchPipelinePhases() {
       try {
         const response = await API.PipelinePhase.getPipelinePhase();
-        this.PipelinePhase = response;
+        this.phases = response; // Corrigido
         console.log("pipelinephase log:", response);
       } catch (error) {
         console.error("Erro ao buscar pipelinephase:", error);
