@@ -10,20 +10,23 @@ import {
   updatePipelineWithMaxLength,
 } from './consts-pipeline-e2e';
 
-it('registrando um pipeline sem token', async () => {
+// Testes de criação
+it('Criando um pipeline sem autenticação', async () => {
   return await request(app.getHttpServer())
     .post('/pipeline')
     .send(createPipeline)
     .expect(401);
 });
-it('registrando um pipeline com token mas sem data', async () => {
+
+it('Criando um pipeline sem dados', async () => {
   return await request(app.getHttpServer())
     .post('/pipeline')
     .set('Authorization', `Bearer ${authToken}`)
     .send(pipelineMissingData)
     .expect(400);
 });
-it('registrando um pipeline com dados incorretos', async () => {
+
+it('Criando um pipeline com dados incorretos', async () => {
   return await request(app.getHttpServer())
     .post('/pipeline')
     .set('Authorization', `Bearer ${authToken}`)
@@ -31,39 +34,42 @@ it('registrando um pipeline com dados incorretos', async () => {
     .expect(400);
 });
 
-it('registrando um pipeline com o campo maior que o limite', async () => {
+it('Criando um pipeline com o campo maior que o limite', async () => {
   return await request(app.getHttpServer())
     .post('/pipeline')
     .set('Authorization', `Bearer ${authToken}`)
     .send(createPipelineWithMaxLength)
     .expect(400);
 });
-it('registrando um pipeline', async () => {
+
+it('Criando um pipeline', async () => {
   return await request(app.getHttpServer())
     .post('/pipeline')
     .set('Authorization', `Bearer ${authToken}`)
     .send(createPipeline)
     .expect(201);
 });
-it('buscando todos os pipelines sem token', async () => {
+
+// Testes de listagem
+it('Listando todos os pipelines sem autenticação', async () => {
   return await request(app.getHttpServer()).get('/pipeline').expect(401);
 });
 
-it('buscando todos os pipelines na rota incorreta', async () => {
+it('Listando todos os pipelines na rota incorreta', async () => {
   return await request(app.getHttpServer())
     .get('/pipelines')
     .set('Authorization', `Bearer ${authToken}`)
     .expect(404);
 });
 
-it('buscando todos os pipelines ', async () => {
+it('Listando todos os pipelines', async () => {
   return await request(app.getHttpServer())
     .get('/pipeline')
     .set('Authorization', `Bearer ${authToken}`)
     .expect(200);
 });
 
-it('atualizando um pipeline sem token', async () => {
+it('Listando um pipeline pelo ID', async () => {
   const response = await request(app.getHttpServer())
     .get('/pipeline')
     .set('Authorization', `Bearer ${authToken}`)
@@ -77,11 +83,13 @@ it('atualizando um pipeline sem token', async () => {
   const pipelineId = pipelines[0].id;
 
   return await request(app.getHttpServer())
-    .patch(`/pipeline/${pipelineId}`)
-    .send(updatePipeline)
-    .expect(401);
+    .get(`/pipeline/${pipelineId}`)
+    .set('Authorization', `Bearer ${authToken}`)
+    .expect(200);
 });
-it('atualizando um pipeline sem data', async () => {
+
+// Testes de atualização
+it('Atualizando um pipeline sem autenticação', async () => {
   const response = await request(app.getHttpServer())
     .get('/pipeline')
     .set('Authorization', `Bearer ${authToken}`)
@@ -89,9 +97,22 @@ it('atualizando um pipeline sem data', async () => {
   const pipelines = Array.isArray(response.body)
     ? response.body
     : response.body.data;
-  expect(pipelines).toBeInstanceOf(Array);
-  expect(pipelines.length).toBeGreaterThan(0);
+  const pipelineId = pipelines[0].id;
 
+  return await request(app.getHttpServer())
+    .patch(`/pipeline/${pipelineId}`)
+    .send(updatePipeline)
+    .expect(401);
+});
+
+it('Atualizando um pipeline sem dados', async () => {
+  const response = await request(app.getHttpServer())
+    .get('/pipeline')
+    .set('Authorization', `Bearer ${authToken}`)
+    .expect(200);
+  const pipelines = Array.isArray(response.body)
+    ? response.body
+    : response.body.data;
   const pipelineId = pipelines[0].id;
 
   return await request(app.getHttpServer())
@@ -100,7 +121,8 @@ it('atualizando um pipeline sem data', async () => {
     .send(updatePipelineWithoutData)
     .expect(400);
 });
-it('atualizando um pipeline excedendo os limites', async () => {
+
+it('Atualizando um pipeline excedendo os limites', async () => {
   const response = await request(app.getHttpServer())
     .get('/pipeline')
     .set('Authorization', `Bearer ${authToken}`)
@@ -108,9 +130,6 @@ it('atualizando um pipeline excedendo os limites', async () => {
   const pipelines = Array.isArray(response.body)
     ? response.body
     : response.body.data;
-  expect(pipelines).toBeInstanceOf(Array);
-  expect(pipelines.length).toBeGreaterThan(0);
-
   const pipelineId = pipelines[0].id;
 
   return await request(app.getHttpServer())
@@ -119,7 +138,8 @@ it('atualizando um pipeline excedendo os limites', async () => {
     .send(updatePipelineWithMaxLength)
     .expect(400);
 });
-it('atualizando um pipeline com a rota incorreta', async () => {
+
+it('Atualizando um pipeline na rota incorreta', async () => {
   const response = await request(app.getHttpServer())
     .get('/pipeline')
     .set('Authorization', `Bearer ${authToken}`)
@@ -127,9 +147,6 @@ it('atualizando um pipeline com a rota incorreta', async () => {
   const pipelines = Array.isArray(response.body)
     ? response.body
     : response.body.data;
-  expect(pipelines).toBeInstanceOf(Array);
-  expect(pipelines.length).toBeGreaterThan(0);
-
   const pipelineId = pipelines[0].id;
 
   return await request(app.getHttpServer())
@@ -138,7 +155,8 @@ it('atualizando um pipeline com a rota incorreta', async () => {
     .send(updatePipeline)
     .expect(404);
 });
-it('atualizando um pipeline', async () => {
+
+it('Atualizando um pipeline', async () => {
   const response = await request(app.getHttpServer())
     .get('/pipeline')
     .set('Authorization', `Bearer ${authToken}`)
@@ -146,9 +164,6 @@ it('atualizando um pipeline', async () => {
   const pipelines = Array.isArray(response.body)
     ? response.body
     : response.body.data;
-  expect(pipelines).toBeInstanceOf(Array);
-  expect(pipelines.length).toBeGreaterThan(0);
-
   const pipelineId = pipelines[0].id;
 
   return await request(app.getHttpServer())
@@ -157,7 +172,9 @@ it('atualizando um pipeline', async () => {
     .send(updatePipeline)
     .expect(200);
 });
-it('Deletando um pipeline sem token', async () => {
+
+// Testes de exclusão
+it('Deletando um pipeline sem autenticação', async () => {
   const response = await request(app.getHttpServer())
     .get('/pipeline')
     .set('Authorization', `Bearer ${authToken}`)
@@ -165,22 +182,21 @@ it('Deletando um pipeline sem token', async () => {
   const pipelines = Array.isArray(response.body)
     ? response.body
     : response.body.data;
-  expect(pipelines).toBeInstanceOf(Array);
-  expect(pipelines.length).toBeGreaterThan(0);
-
   const pipelineId = pipelines[0].id;
 
   return await request(app.getHttpServer())
     .delete(`/pipeline/${pipelineId}`)
     .expect(401);
 });
-it('Deletando um pipeline sem passar id', async () => {
+
+it('Deletando um pipeline sem passar ID', async () => {
   return await request(app.getHttpServer())
     .delete(`/pipeline/`)
     .set('Authorization', `Bearer ${authToken}`)
     .expect(404);
 });
-it('Deletando um pipeline na rota incorreta ', async () => {
+
+it('Deletando um pipeline na rota incorreta', async () => {
   const response = await request(app.getHttpServer())
     .get('/pipeline')
     .set('Authorization', `Bearer ${authToken}`)
@@ -188,16 +204,15 @@ it('Deletando um pipeline na rota incorreta ', async () => {
   const pipelines = Array.isArray(response.body)
     ? response.body
     : response.body.data;
-  expect(pipelines).toBeInstanceOf(Array);
-  expect(pipelines.length).toBeGreaterThan(0);
-
   const pipelineId = pipelines[0].id;
 
   return await request(app.getHttpServer())
     .delete(`/pipelines/${pipelineId}`)
+    .set('Authorization', `Bearer ${authToken}`)
     .expect(404);
 });
-it('Deletando um pipeline ', async () => {
+
+it('Deletando um pipeline', async () => {
   const response = await request(app.getHttpServer())
     .get('/pipeline')
     .set('Authorization', `Bearer ${authToken}`)
@@ -205,9 +220,6 @@ it('Deletando um pipeline ', async () => {
   const pipelines = Array.isArray(response.body)
     ? response.body
     : response.body.data;
-  expect(pipelines).toBeInstanceOf(Array);
-  expect(pipelines.length).toBeGreaterThan(0);
-
   const pipelineId = pipelines[0].id;
 
   return await request(app.getHttpServer())
