@@ -9,7 +9,7 @@ export const usePipelineStore = defineStore("pipeline", {
   actions: {
     async fetchPipelines() {
       try {
-        const response = await API.pipeline.getPipeline(); // Corrigido para `getPipeline`
+        const response = await API.pipeline.getPipeline();
         console.log("fetchPipeline log:", response);
         this.pipeline = response;
       } catch (error) {

@@ -17,16 +17,6 @@ export const useLeadsStore = defineStore("leads", {
       }
     },
 
-    async fetchPipelinePhases() {
-      try {
-        const response = await API.PipelinePhase.getPipelinePhase();
-        this.PipelinePhase = response;
-        console.log("pipelinephase log:", response);
-      } catch (error) {
-        console.error("Erro ao buscar pipelinephase:", error);
-      }
-    },
-
     async createLead(leadData) {
       try {
         const response = await API.leads.createLead(leadData);
