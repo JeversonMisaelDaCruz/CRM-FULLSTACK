@@ -19,6 +19,9 @@ let PhaseRepository = class PhaseRepository {
     async create(createPipelinePhaseDto) {
         return await this.prismaService.pipeline_Phase.create({
             data: createPipelinePhaseDto,
+            include: {
+                pipeline: true,
+            },
         });
     }
     async findAll() {

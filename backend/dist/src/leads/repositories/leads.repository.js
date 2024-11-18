@@ -18,13 +18,15 @@ let LeadsRepository = class LeadsRepository {
         this.prismaService = prismaService;
     }
     async create(createLeadDto) {
-        return await this.prismaService.lead.create({
+        const response = await this.prismaService.lead.create({
             data: createLeadDto,
             include: {
                 user: true,
                 pipeline_phase: true,
             },
         });
+        console.log('Lead criado:', response);
+        return response;
     }
     async findAll() {
         const leads = await this.prismaService.lead.findMany({

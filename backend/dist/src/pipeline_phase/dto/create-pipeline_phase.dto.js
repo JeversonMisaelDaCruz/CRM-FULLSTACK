@@ -21,8 +21,13 @@ __decorate([
         message: 'O nome deve ter pelo menos 2 caracteres',
     }),
     (0, class_validator_1.MaxLength)(50, {
-        message: 'O nome deve ter no maximo 50 caracteres',
+        message: 'O nome deve ter no máximo 50 caracteres',
     }),
     __metadata("design:type", String)
 ], CreatePipelinePhaseDto.prototype, "name", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreatePipelinePhaseDto.prototype, "pipeline_id", void 0);
 //# sourceMappingURL=create-pipeline_phase.dto.js.map

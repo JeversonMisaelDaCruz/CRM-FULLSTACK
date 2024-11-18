@@ -3,4 +3,5 @@ export class PipelinePhaseEntity {
   name: string;
   created_at: Date;
   updated_at: Date;
+  pipeline_id: string;
 }

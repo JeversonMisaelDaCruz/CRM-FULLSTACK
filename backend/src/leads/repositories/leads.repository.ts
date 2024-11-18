@@ -10,13 +10,15 @@ export class LeadsRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createLeadDto: CreateLeadDto): Promise<LeadEntity> {
-    return await this.prismaService.lead.create({
+    const response = await this.prismaService.lead.create({
       data: createLeadDto,
       include: {
         user: true,
         pipeline_phase: true,
       },
     });
+    console.log('Lead criado:', response);
+    return response;
   }
 
   async findAll(): Promise<LeadEntity[]> {
