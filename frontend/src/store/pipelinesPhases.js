@@ -10,46 +10,33 @@ export const usePipelinePhaseStore = defineStore("pipelinePhase", {
     async fetchPipelinePhases() {
       try {
         const response = await API.PipelinePhase.getPipelinePhase();
-        this.phases = response; // Corrigido
-        console.log("pipelinephase log:", response);
+        this.phases = response;
       } catch (error) {
-        console.error("Erro ao buscar pipelinephase:", error);
+        console.error("Erro ao buscar pipeline phases:", error);
       }
     },
 
     async createPipelinePhase(data) {
       try {
         const response = await API.PipelinePhase.createPipelinePhase(data);
-        console.log("Pipeline Phase criada com sucesso", response);
         this.phases.push(response);
       } catch (error) {
         console.error("Erro ao criar pipeline phase:", error);
       }
     },
-
-    async updatePipelinePhase(data) {
-      try {
-        const response = await API.PipelinePhase.updatePipelinePhase(data);
-        console.log("Pipeline Phase atualizada com sucesso", response);
-        const index = this.phases.findIndex(
-          (phase) => phase.id === response.id
-        );
-        if (index !== -1) {
-          this.phases.splice(index, 1, response);
-        }
-      } catch (error) {
-        console.error("Erro ao atualizar pipeline phase:", error);
-      }
-    },
-
     async deletePipelinePhase(id) {
       try {
-        await API.PipelinePhase.deletePipelinePhase(id);
-        console.log("Pipeline Phase deletada com sucesso");
-        this.phases = this.phases.filter((phase) => phase.id !== id);
+        const response = await API.PipelinePhase.deletePipelinePhase(id);
+        console.log(
+          "pipeline deletado com sucesso:passando na store ",
+          response
+        );
+        return response;
       } catch (error) {
-        console.error("Erro ao deletar pipeline phase:", error);
+        console.error("erro ao deletar a pipeline phase no store");
+        throw error;
       }
     },
+    //parte logica de deletar pipeline phase feita falta somente a parte visual.
   },
 });

@@ -1,6 +1,7 @@
 <template>
   <v-card>
     <v-layout>
+      <!-- Barra de Navegação -->
       <v-app-bar color="primary" prominent>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
         <v-toolbar-title>CRM</v-toolbar-title>
@@ -8,6 +9,7 @@
         <v-btn icon="mdi-dots-vertical" variant="text" />
       </v-app-bar>
 
+      <!-- Menu Lateral -->
       <v-navigation-drawer v-model="drawer" temporary>
         <v-list>
           <v-list-item
@@ -22,14 +24,15 @@
         </v-list>
       </v-navigation-drawer>
 
+      <!-- Conteúdo Principal -->
       <v-main style="height: 100vh">
         <v-container>
-          <!-- Botão para abrir o modal de criação de pipeline -->
+          <!-- Botão para abrir o modal de criação de Pipeline -->
           <v-btn @click="showPipelineModal = true" color="primary">
             Criar Pipeline
           </v-btn>
 
-          <!-- Modal para criação de pipeline -->
+          <!-- Modal para criação de Pipeline -->
           <v-dialog v-model="showPipelineModal" max-width="500">
             <v-card>
               <v-card-title>Cadastrar Pipeline</v-card-title>
@@ -43,25 +46,38 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="primary" @click="createPipeline">Salvar</v-btn>
-                <v-btn color="grey" @click="cancelPipelineModal"
-                  >Cancelar</v-btn
-                >
+                <v-btn color="grey" @click="cancelPipelineModal">
+                  Cancelar
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
 
-          <!-- Botão para criar Fases (Pipeline Phases) -->
+          <!-- Botão para abrir o modal de criação de Fase -->
           <v-btn @click="openPhaseModal" color="secondary" class="mt-4">
             Criar Fase
           </v-btn>
 
-          <!-- Modal para criação de fases -->
-          <CreatePipelinePhaseModal
-            v-model:show="showPhaseModal"
-            :pipeline="selectedPipeline"
-          />
+          <!-- Modal para criação de Fase -->
+          <v-dialog v-model="showPhaseModal" max-width="500">
+            <v-card>
+              <v-card-title>Cadastrar Fase</v-card-title>
+              <v-card-text>
+                <v-text-field
+                  v-model="phaseName"
+                  label="Nome da Fase"
+                  required
+                ></v-text-field>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" @click="createPhase">Salvar</v-btn>
+                <v-btn color="grey" @click="closePhaseModal">Cancelar</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
 
-          <!-- Lista de fases da pipeline selecionada -->
+          <!-- Lista de Fases -->
           <v-list v-if="filteredPhases.length > 0" class="mt-4">
             <v-subheader>Fases da Pipeline Selecionada</v-subheader>
             <v-list-item v-for="(phase, index) in filteredPhases" :key="index">
@@ -81,110 +97,92 @@
 import { usePipelineStore } from "@/store/pipeline";
 import { usePipelinePhaseStore } from "@/store/pipelinesPhases";
 import { computed, onMounted, ref } from "vue";
-import CreatePipelinePhaseModal from "../components/CreatePipelinePhaseModal.vue";
 
 export default {
-  components: {
-    CreatePipelinePhaseModal,
-  },
   setup() {
     const drawer = ref(false);
     const showPipelineModal = ref(false);
     const showPhaseModal = ref(false);
     const pipelineName = ref("");
+    const phaseName = ref("");
     const selectedPipeline = ref(null);
 
     const pipelineStore = usePipelineStore();
     const pipelinePhaseStore = usePipelinePhaseStore();
 
-    const pipelines = computed(() => {
-      console.log("Pipelines carregadas no store:", pipelineStore.pipeline);
-      return pipelineStore.pipeline;
-    });
+    const pipelines = computed(() => pipelineStore.pipeline);
 
     const filteredPhases = computed(() => {
-      if (!selectedPipeline.value) {
-        console.log("Nenhuma pipeline selecionada. Sem fases filtradas.");
+      if (!selectedPipeline.value || !Array.isArray(pipelinePhaseStore.phases))
         return [];
-      }
-
-      console.log("ID da pipeline selecionada:", selectedPipeline.value.id);
-      console.log("Pipeline phases no store:", pipelinePhaseStore.phases);
-
-      const phases = pipelinePhaseStore.phases.filter(
-        (phase) => phase.pipeline_id === selectedPipeline.value.id
+      return pipelinePhaseStore.phases.filter(
+        (phase) => phase?.pipeline_id === selectedPipeline.value.id
       );
-
-      console.log(
-        `Fases filtradas para a pipeline ${selectedPipeline.value.name}:`,
-        phases
-      );
-
-      return phases;
     });
+
     const createPipeline = async () => {
       if (pipelineName.value) {
-        try {
-          console.log("Criando pipeline com nome:", pipelineName.value);
-          await pipelineStore.createPipeline({ name: pipelineName.value });
-          console.log("Pipeline criada com sucesso!");
-          pipelineName.value = "";
-          showPipelineModal.value = false;
-        } catch (error) {
-          console.error("Erro ao criar pipeline:", error);
-        }
-      } else {
-        console.warn("Nome da pipeline está vazio. Operação abortada.");
+        await pipelineStore.createPipeline({ name: pipelineName.value });
+        pipelineName.value = "";
+        showPipelineModal.value = false;
+      }
+    };
+
+    const createPhase = async () => {
+      if (!selectedPipeline.value || !phaseName.value) return;
+
+      try {
+        await pipelinePhaseStore.createPipelinePhase({
+          name: phaseName.value,
+          pipeline_id: selectedPipeline.value.id,
+        });
+        phaseName.value = "";
+        showPhaseModal.value = false;
+      } catch (error) {
+        console.error("Erro ao criar fase:", error);
       }
     };
 
     const cancelPipelineModal = () => {
-      console.log("Cancelando modal de criação de pipeline.");
       pipelineName.value = "";
       showPipelineModal.value = false;
     };
 
+    const closePhaseModal = () => {
+      phaseName.value = "";
+      showPhaseModal.value = false;
+    };
+
     const selectPipeline = (pipeline) => {
-      console.log("Selecionando pipeline:", pipeline);
-      drawer.value = false;
       selectedPipeline.value = pipeline;
     };
 
     const openPhaseModal = () => {
       if (!selectedPipeline.value) {
-        console.warn("Nenhuma pipeline selecionada. Operação abortada.");
         alert("Por favor, selecione um pipeline primeiro.");
         return;
       }
-      console.log(
-        "Abrindo modal para criação de fase na pipeline:",
-        selectedPipeline.value
-      );
       showPhaseModal.value = true;
     };
 
     onMounted(async () => {
-      try {
-        console.log("Carregando pipelines e fases...");
-        await pipelineStore.fetchPipelines();
-        console.log("Pipelines carregadas:", pipelineStore.pipeline);
-
-        await pipelinePhaseStore.fetchPipelinePhases();
-        console.log("Fases carregadas:", pipelinePhaseStore.phases);
-      } catch (error) {
-        console.error("Erro ao carregar dados:", error);
-      }
+      await pipelineStore.fetchPipelines();
+      await pipelinePhaseStore.fetchPipelinePhases();
     });
+
     return {
       drawer,
       showPipelineModal,
       showPhaseModal,
       pipelineName,
+      phaseName,
       selectedPipeline,
       pipelines,
       filteredPhases,
       createPipeline,
+      createPhase,
       cancelPipelineModal,
+      closePhaseModal,
       selectPipeline,
       openPhaseModal,
     };

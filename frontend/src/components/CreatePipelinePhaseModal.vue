@@ -43,7 +43,7 @@ export default {
         try {
           await pipelinePhaseStore.createPipelinePhase({
             name: phaseName.value,
-            pipelineId: props.pipeline.id,
+            pipeline_id: props.pipeline.id,
           });
           phaseName.value = "";
           closeModal();
