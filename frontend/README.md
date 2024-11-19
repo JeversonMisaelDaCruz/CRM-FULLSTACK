@@ -1,79 +1,269 @@
-# Vuetify (Default)
 
-This is the official scaffolding tool for Vuetify, designed to give you a head start in building your new Vuetify application. It sets up a base template with all the necessary configurations and standard directory structure, enabling you to begin development without the hassle of setting up the project from scratch.
+---
 
-## ❗️ Important Links
+# **Documentação**
 
-- 📄 [Docs](https://vuetifyjs.com/)
-- 🚨 [Issues](https://issues.vuetifyjs.com/)
-- 🏬 [Store](https://store.vuetifyjs.com/)
-- 🎮 [Playground](https://play.vuetifyjs.com/)
-- 💬 [Discord](https://community.vuetifyjs.com)
+## **Índice**
 
-## 💿 Install
+1. [Descrição do Projeto](#descrição-do-projeto)
+2. [Tecnologias Utilizadas](#tecnologias-utilizadas)
+3. [Estrutura de Diretórios](#estrutura-de-diretórios)
+4. [Funcionalidades Implementadas](#funcionalidades-implementadas)
+5. [Fluxo de Trabalho](#fluxo-de-trabalho)
+6. [Guia de Instalação](#guia-de-instalação)
+7. [Componentes Principais](#componentes-principais)
+8. [APIs e Integração com Backend](#apis-e-integração-com-backend)
+9. [Próximos Passos](#próximos-passos)
 
-Set up your project using your preferred package manager. Use the corresponding command to install the dependencies:
+---
 
-| Package Manager                                                | Command        |
-|---------------------------------------------------------------|----------------|
-| [yarn](https://yarnpkg.com/getting-started)                   | `yarn install` |
-| [npm](https://docs.npmjs.com/cli/v7/commands/npm-install)     | `npm install`  |
-| [pnpm](https://pnpm.io/installation)                          | `pnpm install` |
-| [bun](https://bun.sh/#getting-started)                        | `bun install`  |
+## **Descrição do Projeto**
 
-After completing the installation, your environment is ready for Vuetify development.
+Este projeto é um sistema de gerenciamento de relacionamento com clientes (CRM) com funcionalidade Kanban. Ele permite que os usuários:
 
-## ✨ Features
+- Criem e gerenciem pipelines.
+- Adicionem fases (quadros) dinamicamente dentro dos pipelines.
+- Gerenciem leads vinculados a cada fase de um pipeline.
 
-- 🖼️ **Optimized Front-End Stack**: Leverage the latest Vue 3 and Vuetify 3 for a modern, reactive UI development experience. [Vue 3](https://v3.vuejs.org/) | [Vuetify 3](https://vuetifyjs.com/en/)
-- 🗃️ **State Management**: Integrated with [Pinia](https://pinia.vuejs.org/), the intuitive, modular state management solution for Vue.
-- 🚦 **Routing and Layouts**: Utilizes Vue Router for SPA navigation and vite-plugin-vue-layouts for organizing Vue file layouts. [Vue Router](https://router.vuejs.org/) | [vite-plugin-vue-layouts](https://github.com/JohnCampionJr/vite-plugin-vue-layouts)
-- ⚡ **Next-Gen Tooling**: Powered by Vite, experience fast cold starts and instant HMR (Hot Module Replacement). [Vite](https://vitejs.dev/)
-- 🧩 **Automated Component Importing**: Streamline your workflow with unplugin-vue-components, automatically importing components as you use them. [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)
+O backend foi desenvolvido utilizando **NestJS** com **Prisma ORM** para interações com o banco de dados e **Jest** para testes automatizados.
 
-These features are curated to provide a seamless development experience from setup to deployment, ensuring that your Vuetify application is both powerful and maintainable.
+---
 
-## 💡 Usage
+## **Tecnologias Utilizadas**
 
-This section covers how to start the development server and build your project for production.
+### **Frontend**
 
-### Starting the Development Server
+- **Framework**: Vue.js
+- **Biblioteca de Componentes**: Vuetify
+- **Gerenciamento de Estado**: Pinia
+- **Requisições HTTP**: Axios
 
-To start the development server with hot-reload, run the following command. The server will be accessible at [http://localhost:3000](http://localhost:3000):
+### **Backend**
 
-```bash
-yarn dev
+- **Framework**: NestJS
+- **ORM**: Prisma
+- **Banco de Dados**: PostgreSQL
+- **Autenticação**: JWT
+- **Testes**: Jest
+
+---
+
+## **Estrutura de Diretórios**
+
+### **Frontend**
+
+```
+.
+├── src
+│   ├── components
+│   │   ├── CreatePipelineModal.vue
+│   │   ├── CreatePipelinePhaseModal.vue
+│   │   └── LeadCard.vue
+│   ├── views
+│   │   └── Kanban.vue
+│   ├── store
+│   │   ├── pipeline.js
+│   │   ├── pipelinesPhases.js
+│   ├── services
+│   │   ├── Http.js
+│   │   ├── Pipeline.js
+│   │   ├── PipelinePhase.js
+│   │   └── API.js
+│   ├── App.vue
+│   ├── main.js
+│   └── router.js
 ```
 
-(Repeat for npm, pnpm, and bun with respective commands.)
+### **Backend**
 
-> Add NODE_OPTIONS='--no-warnings' to suppress the JSON import warnings that happen as part of the Vuetify import mapping. If you are on Node [v21.3.0](https://nodejs.org/en/blog/release/v21.3.0) or higher, you can change this to NODE_OPTIONS='--disable-warning=5401'. If you don't mind the warning, you can remove this from your package.json dev script.
-
-### Building for Production
-
-To build your project for production, use:
-
-```bash
-yarn build
+```
+.
+├── src
+│   ├── modules
+│   │   ├── pipeline
+│   │   │   ├── pipeline.controller.ts
+│   │   │   ├── pipeline.service.ts
+│   │   │   ├── pipeline.module.ts
+│   │   │   └── dto
+│   │   │       ├── create-pipeline.dto.ts
+│   │   │       └── update-pipeline.dto.ts
+│   │   ├── pipeline-phase
+│   │   │   ├── pipeline-phase.controller.ts
+│   │   │   ├── pipeline-phase.service.ts
+│   │   │   ├── pipeline-phase.module.ts
+│   │   │   └── dto
+│   │   │       ├── create-pipeline-phase.dto.ts
+│   │   │       └── update-pipeline-phase.dto.ts
+│   ├── prisma
+│   │   ├── prisma.module.ts
+│   │   └── prisma.service.ts
+│   ├── auth
+│   │   ├── auth.module.ts
+│   │   ├── auth.service.ts
+│   │   ├── auth.controller.ts
+│   │   └── strategies
+│   │       └── jwt.strategy.ts
+│   └── tests
+│       ├── e2e
+│       │   ├── pipeline.e2e-spec.ts
+│       │   ├── pipeline-phase.e2e-spec.ts
+│       └── unit
+│           ├── pipeline.service.spec.ts
+│           └── pipeline-phase.service.spec.ts
+├── prisma
+│   ├── schema.prisma
+│   ├── migrations
+├── .env
+├── package.json
 ```
 
-(Repeat for npm, pnpm, and bun with respective commands.)
+---
 
-Once the build process is completed, your application will be ready for deployment in a production environment.
+## **Funcionalidades Implementadas**
 
-## 💪 Support Vuetify Development
+### 1. **Gerenciamento de Pipelines**
 
-This project is built with [Vuetify](https://vuetifyjs.com/en/), a UI Library with a comprehensive collection of Vue components. Vuetify is an MIT licensed Open Source project that has been made possible due to the generous contributions by our [sponsors and backers](https://vuetifyjs.com/introduction/sponsors-and-backers/). If you are interested in supporting this project, please consider:
+- Criação de pipelines.
+- Visualização de pipelines na lista lateral.
+- Seleção de um pipeline para exibir suas fases e leads associados.
 
-- [Requesting Enterprise Support](https://support.vuetifyjs.com/)
-- [Sponsoring John on Github](https://github.com/users/johnleider/sponsorship)
-- [Sponsoring Kael on Github](https://github.com/users/kaelwd/sponsorship)
-- [Supporting the team on Open Collective](https://opencollective.com/vuetify)
-- [Becoming a sponsor on Patreon](https://www.patreon.com/vuetify)
-- [Becoming a subscriber on Tidelift](https://tidelift.com/subscription/npm/vuetify)
-- [Making a one-time donation with Paypal](https://paypal.me/vuetify)
+### 2. **Cadastro de Fases (Pipeline Phases)**
 
-## 📑 License
-[MIT](http://opensource.org/licenses/MIT)
+- Criação dinâmica de fases dentro de um pipeline.
+- Visualização das fases em um layout Kanban.
 
-Copyright (c) 2016-present Vuetify, LLC
+### 3. **Filtragem de Fases**
+
+- As fases exibidas são filtradas automaticamente com base no pipeline selecionado.
+
+### 4. **Modal de Cadastro**
+
+- Modais para criar pipelines e fases, com validação de entrada.
+
+### 5. **Testes Automatizados**
+
+- **Unitários**: Testam a lógica dos serviços.
+- **E2E**: Validam as integrações entre controladores e banco de dados.
+
+---
+
+## **Fluxo de Trabalho**
+
+1. O usuário seleciona um pipeline na lista lateral.
+2. As fases associadas ao pipeline selecionado são exibidas.
+3. O botão "Criar Fase" só é exibido após a seleção de um pipeline.
+4. Leads podem ser associados e visualizados em fases específicas.
+
+---
+
+## **Guia de Instalação**
+
+### **Pré-requisitos**
+
+- Node.js v16 ou superior.
+- PostgreSQL.
+- Gerenciador de pacotes (npm ou yarn).
+
+### **Passos**
+
+#### **Backend**
+
+1. Clone o repositório:
+
+   ```bash
+   git clone <seu-repositorio-url>
+   cd <diretorio-do-backend>
+   ```
+
+2. Instale as dependências:
+
+   ```bash
+   npm install
+   ```
+
+3. Configure o arquivo `.env`:
+
+   ```
+   DATABASE_URL=postgresql://<user>:<password>@localhost:5432/<database>
+   JWT_SECRET=your-secret-key
+   ```
+
+4. Execute as migrações do banco de dados:
+
+   ```bash
+   npx prisma migrate dev
+   ```
+
+5. Inicie o servidor:
+   ```bash
+   npm run start:dev
+   ```
+
+#### **Frontend**
+
+1. Entre no diretório do frontend:
+
+   ```bash
+   cd <diretorio-do-frontend>
+   ```
+
+2. Instale as dependências:
+
+   ```bash
+   npm install
+   ```
+
+3. Inicie o servidor de desenvolvimento:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Acesse a aplicação em `http://localhost:3000`.
+
+---
+
+## **Componentes Principais**
+
+### **Frontend**
+
+1. **CreatePipelineModal.vue**: Modal para criar pipelines.
+2. **CreatePipelinePhaseModal.vue**: Modal para criar fases (quadros) dentro de um pipeline.
+3. **Kanban.vue**: Página principal do Kanban, com botões para gerenciar pipelines e fases.
+
+### **Backend**
+
+1. **Pipeline Module**: Gerencia pipelines.
+2. **Pipeline Phase Module**: Gerencia fases de pipelines.
+3. **Auth Module**: Gerencia autenticação e autorização.
+
+---
+
+## **APIs e Integração com Backend**
+
+### **Endpoints Principais**
+
+#### **Pipeline**
+
+- **GET** `/pipeline`: Retorna todos os pipelines.
+- **POST** `/pipeline`: Cria um novo pipeline.
+- **PATCH** `/pipeline/:id`: Atualiza um pipeline existente.
+- **DELETE** `/pipeline/:id`: Exclui um pipeline.
+
+#### **Pipeline Phase**
+
+- **GET** `/pipeline-phase`: Retorna todas as fases.
+- **POST** `/pipeline-phase`: Cria uma nova fase.
+- **PATCH** `/pipeline-phase/:id`: Atualiza uma fase existente.
+- **DELETE** `/pipeline-phase/:id`: Exclui uma fase.
+
+---
+
+## **Próximos Passos**
+
+1. Implementar cadastro e visualização de leads em fases específicas.
+2. Adicionar testes E2E para validar a funcionalidade de leads.
+3. Otimizar a UI para melhor experiência do usuário.
+
+---
+
