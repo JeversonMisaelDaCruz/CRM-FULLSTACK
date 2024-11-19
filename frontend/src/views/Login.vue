@@ -88,7 +88,7 @@ export default {
           inputPassword.value
         );
         if (response) {
-          router.push("/leads");
+          router.push("/kanban");
         }
       } catch (error) {
         throw error;

@@ -1,7 +1,6 @@
 <template>
   <v-card>
     <v-layout>
-      <!-- Barra de Navegação -->
       <v-app-bar color="primary" prominent>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
         <v-toolbar-title>CRM</v-toolbar-title>
@@ -17,9 +16,9 @@
             :key="index"
             @click="selectPipeline(pipeline)"
           >
-            <v-list-item-title>{{
-              pipeline.name.toUpperCase()
-            }}</v-list-item-title>
+            <v-list-item-title>
+              {{ pipeline.name.toUpperCase() }}
+            </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
@@ -27,10 +26,20 @@
       <!-- Conteúdo Principal -->
       <v-main style="height: 100vh">
         <v-container>
-          <!-- Botão para abrir o modal de criação de Pipeline -->
-          <v-btn @click="showPipelineModal = true" color="primary">
-            Criar Pipeline
-          </v-btn>
+          <v-row>
+            <v-col class="text-left">
+              <!-- Botão para abrir o modal de criação de Pipeline -->
+              <v-btn @click="showPipelineModal = true" color="primary">
+                Criar Pipeline
+              </v-btn>
+            </v-col>
+            <v-col class="text-right">
+              <!-- Botão para abrir o modal de criação de Fase -->
+              <v-btn @click="openPhaseModal" color="secondary">
+                Criar Fase
+              </v-btn>
+            </v-col>
+          </v-row>
 
           <!-- Modal para criação de Pipeline -->
           <v-dialog v-model="showPipelineModal" max-width="500">
@@ -52,11 +61,6 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-
-          <!-- Botão para abrir o modal de criação de Fase -->
-          <v-btn @click="openPhaseModal" color="secondary" class="mt-4">
-            Criar Fase
-          </v-btn>
 
           <!-- Modal para criação de Fase -->
           <v-dialog v-model="showPhaseModal" max-width="500">
@@ -106,10 +110,8 @@ export default {
     const pipelineName = ref("");
     const phaseName = ref("");
     const selectedPipeline = ref(null);
-
     const pipelineStore = usePipelineStore();
     const pipelinePhaseStore = usePipelinePhaseStore();
-
     const pipelines = computed(() => pipelineStore.pipeline);
 
     const filteredPhases = computed(() => {
