@@ -35,7 +35,11 @@
             </v-col>
             <v-col class="text-right">
               <!-- Botão para abrir o modal de criação de Fase -->
-              <v-btn @click="openPhaseModal" color="secondary">
+              <v-btn
+                v-if="selectedPipeline"
+                @click="openPhaseModal"
+                color="secondary"
+              >
                 Criar Fase
               </v-btn>
             </v-col>
