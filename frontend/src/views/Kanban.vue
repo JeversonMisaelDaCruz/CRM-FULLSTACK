@@ -21,11 +21,12 @@
                 </v-btn>
               </div>
             </v-list-item>
-            <v-divider class="my-2"/>
+            <v-divider class="my-2" />
           </template>
         </v-list>
       </v-navigation-drawer>
-      <!-- Modal de Confirmação -->
+
+      <!-- Modal de Confirmação de delete -->
       <v-dialog v-model="showConfirm" max-width="400">
         <v-card>
           <v-card-title class="text-h6">Deletar Pipeline</v-card-title>
@@ -46,13 +47,11 @@
         <v-container>
           <v-row>
             <v-col class="text-left">
-              <v-btn icon="mdi-arrow-left"></v-btn>
               <v-btn @click="showPipelineModal = true" color="primary">
                 Criar Pipeline
               </v-btn>
             </v-col>
             <v-col class="text-right">
-              <!-- Botão para abrir o modal de criação de Fase -->
               <v-btn
                 v-if="selectedPipeline"
                 @click="openPhaseModal"
@@ -130,19 +129,21 @@ export default {
     Header,
   },
   setup() {
+    // Reactive variables
     const drawer = ref(false);
     const showPipelineModal = ref(false);
     const showPhaseModal = ref(false);
     const showConfirm = ref(false);
     const pipelineToDelete = ref(null);
-
     const pipelineName = ref("");
     const phaseName = ref("");
     const selectedPipeline = ref(null);
 
+    // Stores
     const pipelineStore = usePipelineStore();
     const pipelinePhaseStore = usePipelinePhaseStore();
 
+    // Computed properties
     const pipelines = computed(() =>
       Array.isArray(pipelineStore.pipeline) ? pipelineStore.pipeline : []
     );
@@ -155,6 +156,7 @@ export default {
       );
     });
 
+    // Methods
     const confirmDelete = (pipeline) => {
       pipelineToDelete.value = pipeline;
       showConfirm.value = true;
@@ -227,6 +229,7 @@ export default {
     });
 
     return {
+      // Reactive variables
       drawer,
       showPipelineModal,
       showPhaseModal,
@@ -235,8 +238,12 @@ export default {
       pipelineName,
       phaseName,
       selectedPipeline,
+
+      // Computed properties
       pipelines,
       filteredPhases,
+
+      // Methods
       confirmDelete,
       deletePipeline,
       closeConfirm,

@@ -81,6 +81,7 @@ export default {
     const toggleVisibility = () => {
       visible.value = !visible.value;
     };
+
     async function login() {
       try {
         const response = await authStore.login(
@@ -91,7 +92,7 @@ export default {
           router.push("/kanban");
         }
       } catch (error) {
-        throw error;
+        alert("Credenciais inválidas. Tente novamente.");
       }
     }
 
