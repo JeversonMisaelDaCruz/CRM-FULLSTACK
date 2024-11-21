@@ -1,6 +1,4 @@
-
 ---
-
 # **Documentação**
 
 ## **Índice**
@@ -14,7 +12,6 @@
 7. [Componentes Principais](#componentes-principais)
 8. [APIs e Integração com Backend](#apis-e-integração-com-backend)
 9. [Próximos Passos](#próximos-passos)
-
 ---
 
 ## **Descrição do Projeto**
@@ -266,4 +263,3 @@ O backend foi desenvolvido utilizando **NestJS** com **Prisma ORM** para intera�
 3. Otimizar a UI para melhor experiência do usuário.
 
 ---
-
