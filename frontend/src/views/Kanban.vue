@@ -1,7 +1,6 @@
 <template>
   <v-card>
     <v-layout>
-      <!-- Cabeçalho usando o componente Header -->
       <Header
         :selectedPipeline="selectedPipeline"
         @toggleDrawer="drawer = !drawer"
@@ -10,24 +9,44 @@
       <!-- Menu Lateral -->
       <v-navigation-drawer v-model="drawer" temporary>
         <v-list>
-          <v-list-item
-            v-for="(pipeline, index) in pipelines"
-            :key="index"
-            @click="selectPipeline(pipeline)"
-          >
-            <v-list-item-title>
-              {{ pipeline.name.toUpperCase() }}
-            </v-list-item-title>
-          </v-list-item>
+          <template v-for="(pipeline, index) in pipelines" :key="index">
+            <!-- Pipeline -->
+            <v-list-item @click="selectPipeline(pipeline)">
+              <div class="d-flex align-center justify-space-between w-100">
+                <v-list-item-title>
+                  {{ pipeline ? pipeline.name.toUpperCase() : "" }}
+                </v-list-item-title>
+                <v-btn icon @click.stop="confirmDelete(pipeline)" size="medium">
+                  <v-icon color="red">mdi-delete</v-icon>
+                </v-btn>
+              </div>
+            </v-list-item>
+            <v-divider class="my-2"/>
+          </template>
         </v-list>
       </v-navigation-drawer>
+      <!-- Modal de Confirmação -->
+      <v-dialog v-model="showConfirm" max-width="400">
+        <v-card>
+          <v-card-title class="text-h6">Deletar Pipeline</v-card-title>
+          <v-card-text>
+            Deseja realmente deletar a pipeline
+            <strong>{{ pipelineToDelete ? pipelineToDelete.name : "" }}</strong>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="red" @click="deletePipeline">Sim</v-btn>
+            <v-btn color="grey" @click="closeConfirm">Cancelar</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
 
       <!-- Conteúdo Principal -->
       <v-main style="height: 100vh">
         <v-container>
           <v-row>
             <v-col class="text-left">
-              <!-- Botão para abrir o modal de criação de Pipeline -->
+              <v-btn icon="mdi-arrow-left"></v-btn>
               <v-btn @click="showPipelineModal = true" color="primary">
                 Criar Pipeline
               </v-btn>
@@ -37,9 +56,9 @@
               <v-btn
                 v-if="selectedPipeline"
                 @click="openPhaseModal"
-                color="secondary"
+                color="primary"
               >
-                Criar Fase
+                Criar Quadro
               </v-btn>
             </v-col>
           </v-row>
@@ -68,11 +87,11 @@
           <!-- Modal para criação de Fase -->
           <v-dialog v-model="showPhaseModal" max-width="500">
             <v-card>
-              <v-card-title>Cadastrar Fase</v-card-title>
+              <v-card-title>Cadastrar Quadro</v-card-title>
               <v-card-text>
                 <v-text-field
                   v-model="phaseName"
-                  label="Nome da Fase"
+                  label="Nome da quadro"
                   required
                 ></v-text-field>
               </v-card-text>
@@ -88,7 +107,7 @@
           <v-list v-if="filteredPhases.length > 0" class="mt-4">
             <v-subheader>Fases da Pipeline Selecionada</v-subheader>
             <v-list-item v-for="(phase, index) in filteredPhases" :key="index">
-              <v-list-item-title>{{ phase.name }}</v-list-item-title>
+              <v-list-item-title>{{ phase?.name || "" }}</v-list-item-title>
             </v-list-item>
           </v-list>
           <v-alert v-else type="info" class="mt-4">
@@ -114,12 +133,19 @@ export default {
     const drawer = ref(false);
     const showPipelineModal = ref(false);
     const showPhaseModal = ref(false);
+    const showConfirm = ref(false);
+    const pipelineToDelete = ref(null);
+
     const pipelineName = ref("");
     const phaseName = ref("");
     const selectedPipeline = ref(null);
+
     const pipelineStore = usePipelineStore();
     const pipelinePhaseStore = usePipelinePhaseStore();
-    const pipelines = computed(() => pipelineStore.pipeline);
+
+    const pipelines = computed(() =>
+      Array.isArray(pipelineStore.pipeline) ? pipelineStore.pipeline : []
+    );
 
     const filteredPhases = computed(() => {
       if (!selectedPipeline.value || !Array.isArray(pipelinePhaseStore.phases))
@@ -128,6 +154,27 @@ export default {
         (phase) => phase?.pipeline_id === selectedPipeline.value.id
       );
     });
+
+    const confirmDelete = (pipeline) => {
+      pipelineToDelete.value = pipeline;
+      showConfirm.value = true;
+    };
+
+    const deletePipeline = async () => {
+      if (pipelineToDelete.value) {
+        try {
+          await pipelineStore.deletePipeline(pipelineToDelete.value.id);
+          pipelineToDelete.value = null;
+          showConfirm.value = false;
+        } catch (error) {
+          console.error("Erro ao deletar pipeline:", error);
+        }
+      }
+    };
+
+    const closeConfirm = () => {
+      showConfirm.value = false;
+    };
 
     const createPipeline = async () => {
       if (pipelineName.value) {
@@ -183,11 +230,16 @@ export default {
       drawer,
       showPipelineModal,
       showPhaseModal,
+      showConfirm,
+      pipelineToDelete,
       pipelineName,
       phaseName,
       selectedPipeline,
       pipelines,
       filteredPhases,
+      confirmDelete,
+      deletePipeline,
+      closeConfirm,
       createPipeline,
       createPhase,
       cancelPipelineModal,

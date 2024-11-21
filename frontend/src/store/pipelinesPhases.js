@@ -37,6 +37,6 @@ export const usePipelinePhaseStore = defineStore("pipelinePhase", {
         throw error;
       }
     },
-    //parte logica de deletar pipeline phase feita falta somente a parte visual.
+    
   },
 });

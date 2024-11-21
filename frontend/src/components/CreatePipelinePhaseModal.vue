@@ -1,11 +1,11 @@
 <template>
   <v-dialog :value="show" max-width="500" @input="updateShow">
     <v-card>
-      <v-card-title>Cadastrar Fase</v-card-title>
+      <v-card-title>Cadastrar Quadro</v-card-title>
       <v-card-text>
         <v-text-field
           v-model="phaseName"
-          label="Nome da Fase"
+          label="Nome do quadro"
           required
         ></v-text-field>
       </v-card-text>
