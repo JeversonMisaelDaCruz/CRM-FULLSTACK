@@ -1,18 +1,11 @@
 <template>
   <v-card>
     <v-layout>
-      <v-app-bar color="primary" prominent>
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-        <v-toolbar-title v-if="selectedPipeline">
-          CRM | {{ selectedPipeline.name }}
-        </v-toolbar-title>
-        <v-toolbar-title v-else>
-          CRM | 
-        </v-toolbar-title>
-
-        <v-spacer />
-        <v-btn icon="mdi-dots-vertical" variant="text" />
-      </v-app-bar>
+      <!-- Cabeçalho usando o componente Header -->
+      <Header
+        :selectedPipeline="selectedPipeline"
+        @toggleDrawer="drawer = !drawer"
+      />
 
       <!-- Menu Lateral -->
       <v-navigation-drawer v-model="drawer" temporary>
@@ -111,8 +104,12 @@
 import { usePipelineStore } from "@/store/pipeline";
 import { usePipelinePhaseStore } from "@/store/pipelinesPhases";
 import { computed, onMounted, ref } from "vue";
+import Header from "@/components/Header.vue";
 
 export default {
+  components: {
+    Header,
+  },
   setup() {
     const drawer = ref(false);
     const showPipelineModal = ref(false);
