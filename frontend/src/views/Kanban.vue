@@ -3,7 +3,13 @@
     <v-layout>
       <v-app-bar color="primary" prominent>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-        <v-toolbar-title>CRM</v-toolbar-title>
+        <v-toolbar-title v-if="selectedPipeline">
+          CRM | {{ selectedPipeline.name }}
+        </v-toolbar-title>
+        <v-toolbar-title v-else>
+          CRM | 
+        </v-toolbar-title>
+
         <v-spacer />
         <v-btn icon="mdi-dots-vertical" variant="text" />
       </v-app-bar>
