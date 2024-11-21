@@ -46,16 +46,21 @@
       <v-main style="height: 100vh">
         <v-container>
           <v-row>
-            <v-col class="text-left">
-              <v-btn @click="showPipelineModal = true" color="primary">
+            <v-col cols="12" class="d-flex justify-start">
+              <!-- Botão para abrir o modal de criação de Pipeline -->
+              <v-btn
+                v-if="!selectedPipeline"
+                @click="showPipelineModal = true"
+                color="primary"
+              >
                 Criar Pipeline
               </v-btn>
-            </v-col>
-            <v-col class="text-right">
+              <!-- Botão para abrir o modal de criação de Fase -->
               <v-btn
                 v-if="selectedPipeline"
                 @click="openPhaseModal"
                 color="primary"
+                class="ml-4"
               >
                 Criar Quadro
               </v-btn>
