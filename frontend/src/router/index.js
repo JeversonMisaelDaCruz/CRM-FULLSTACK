@@ -1,47 +1,49 @@
-import Kanban from "@/views/kanban.vue";
-import Leads from "@/views/Leads.vue";
-import Login from "@/views/Login.vue";
-import { setupLayouts } from "virtual:generated-layouts";
 import { createRouter, createWebHistory } from "vue-router";
+import { useAuthStore } from "../store/auth/User";
 
-const manualRoutes = [
+// Páginas
+import Login from "@/views/Login.vue";
+import Kanban from "@/views/Kanban.vue";
+import Leads from "@/views/Leads.vue";
+
+const routes = [
   {
     path: "/",
+    name: "Login",
     component: Login,
   },
   {
-    path: "/leads",
-    component: Leads,
+    path: "/kanban",
+    name: "Kanban",
+    component: Kanban,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
-    path: "/kanban",
-    component: Kanban,
+    path: "/leads",
+    name: "Leads",
+    component: Leads,
+    meta: {
+      requiresAuth: true,
+    },
   },
 ];
-
-const routes = setupLayouts([...manualRoutes]);
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
 
-router.onError((err, to) => {
-  if (err?.message?.includes?.("Failed to fetch dynamically imported module")) {
-    if (!localStorage.getItem("vuetify:dynamic-reload")) {
-      console.log("Reloading page to fix dynamic import error");
-      localStorage.setItem("vuetify:dynamic-reload", "true");
-      location.assign(to.fullPath);
-    } else {
-      console.error("Dynamic import error, reloading page did not fix it", err);
-    }
-  } else {
-    console.error(err);
-  }
-});
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
 
-router.isReady().then(() => {
-  localStorage.removeItem("vuetify:dynamic-reload");
+  if (to.meta.requiresAuth && !authStore.token) {
+    console.warn("Usuário não autenticado. Redirecionando para login...");
+    return next({ name: "Login" });
+  }
+
+  next();
 });
 
 export default router;
