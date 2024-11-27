@@ -22,20 +22,28 @@ let PipelineController = class PipelineController {
     constructor(pipelineService) {
         this.pipelineService = pipelineService;
     }
-    create(createPipelineDto) {
+    async create(createPipelineDto) {
         return this.pipelineService.create(createPipelineDto);
     }
-    findAll() {
-        return this.pipelineService.findAll();
+    async findAll(req) {
+        const userId = req.user.id;
+        if (!userId) {
+            throw new common_1.HttpException('Usuário não autenticado.', 401);
+        }
+        return this.pipelineService.findAll(userId);
     }
-    findOne(id) {
-        return this.pipelineService.findById(id);
+    async findOne(id, req) {
+        const userId = req.user.id;
+        if (!userId) {
+            throw new common_1.HttpException('Usuário não autenticado.', 401);
+        }
+        return this.pipelineService.findById(id, userId);
     }
-    update(id, updatePipelineDto) {
+    async update(id, updatePipelineDto) {
         return this.pipelineService.update(id, updatePipelineDto);
     }
-    remove(id) {
-        return this.pipelineService.remove(id);
+    async remove(id) {
+        return this.pipelineService.delete(id);
     }
 };
 exports.PipelineController = PipelineController;
@@ -45,22 +53,24 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_pipeline_dto_1.CreatePipelineDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], PipelineController.prototype, "create", null);
 __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
 ], PipelineController.prototype, "findAll", null);
 __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
 ], PipelineController.prototype, "findOne", null);
 __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
@@ -69,7 +79,7 @@ __decorate([
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, update_pipeline_dto_1.UpdatePipelineDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], PipelineController.prototype, "update", null);
 __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
@@ -77,7 +87,7 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], PipelineController.prototype, "remove", null);
 exports.PipelineController = PipelineController = __decorate([
     (0, common_1.Controller)('pipeline'),

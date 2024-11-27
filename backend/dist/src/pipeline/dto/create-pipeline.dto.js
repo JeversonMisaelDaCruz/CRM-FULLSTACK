@@ -21,8 +21,19 @@ __decorate([
         message: 'O nome deve ter pelo menos 2 caracteres',
     }),
     (0, class_validator_1.MaxLength)(30, {
-        message: 'O nome deve ter no maximo 30 caracteres',
+        message: 'O nome deve ter no máximo 30 caracteres',
     }),
     __metadata("design:type", String)
 ], CreatePipelineDto.prototype, "name", void 0);
+__decorate([
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.ArrayNotEmpty)({
+        message: 'A pipeline deve ser associada a pelo menos um usuário.',
+    }),
+    (0, class_validator_1.IsNotEmpty)({
+        each: true,
+        message: 'Os IDs de usuário não podem estar vazios.',
+    }),
+    __metadata("design:type", Array)
+], CreatePipelineDto.prototype, "userIds", void 0);
 //# sourceMappingURL=create-pipeline.dto.js.map

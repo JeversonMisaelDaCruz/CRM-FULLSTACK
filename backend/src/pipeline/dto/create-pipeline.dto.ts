@@ -1,4 +1,12 @@
-import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+  MinLength,
+  IsArray,
+  ArrayNotEmpty,
+} from 'class-validator';
+
 export class CreatePipelineDto {
   @IsString()
   @IsNotEmpty()
@@ -6,7 +14,17 @@ export class CreatePipelineDto {
     message: 'O nome deve ter pelo menos 2 caracteres',
   })
   @MaxLength(30, {
-    message: 'O nome deve ter no maximo 30 caracteres',
+    message: 'O nome deve ter no máximo 30 caracteres',
   })
   name: string;
+
+  @IsArray()
+  @ArrayNotEmpty({
+    message: 'A pipeline deve ser associada a pelo menos um usuário.',
+  })
+  @IsNotEmpty({
+    each: true,
+    message: 'Os IDs de usuário não podem estar vazios.',
+  })
+  userIds: string[]; 
 }

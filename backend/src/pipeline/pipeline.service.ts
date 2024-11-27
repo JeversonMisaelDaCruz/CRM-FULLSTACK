@@ -1,57 +1,66 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
+import { PipelineRepository } from './repositories/pipeline.repository';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreatePipelineDto } from './dto/create-pipeline.dto';
 import { UpdatePipelineDto } from './dto/update-pipeline.dto';
-import { PipelineRepository } from './repositories/pipeline.repository';
 
 @Injectable()
 export class PipelineService {
-  constructor(private readonly pipelineRepository: PipelineRepository) {}
+  constructor(
+    private readonly pipelineRepository: PipelineRepository,
+    private readonly prismaService: PrismaService,
+  ) {}
 
   async create(createPipelineDto: CreatePipelineDto) {
-    const response = await this.pipelineRepository.create(createPipelineDto);
-    if (!response) {
-      throw new HttpException('pipeline not created', 400);
+    const { userIds } = createPipelineDto;
+
+    // Validar se todos os usuários existem
+    const users = await this.prismaService.user.findMany({
+      where: {
+        id: { in: userIds },
+      },
+    });
+
+    if (users.length !== userIds.length) {
+      throw new HttpException(
+        'Um ou mais IDs de usuário fornecidos não existem.',
+        400,
+      );
     }
-    console.log('pipeline criado:', response);
-    return response;
+
+    return await this.pipelineRepository.create(createPipelineDto);
   }
 
-  async findAll() {
-    const response = await this.pipelineRepository.findAll();
-    if (!response) {
-      throw new HttpException('pipeline not created', 400);
+  async findAll(userId: string) {
+    const pipelines = await this.pipelineRepository.findByUser(userId);
+    if (!pipelines.length) {
+      throw new HttpException(
+        'Nenhuma pipeline encontrada para este usuário.',
+        404,
+      );
     }
-    console.log('pipeline encontrados:', response);
-    return response;
+    return pipelines;
   }
 
-  async findById(id: string) {
-    const response = await this.pipelineRepository.findById(id);
-    if (!response) {
-      throw new HttpException('pipeline not created', 400);
+  async findById(pipelineId: string, userId: string) {
+    const pipeline = await this.pipelineRepository.findByIdAndUser(
+      pipelineId,
+      userId,
+    );
+    if (!pipeline) {
+      throw new HttpException(
+        'Pipeline não encontrada ou acesso não autorizado.',
+        404,
+      );
     }
-    console.log('pipeline encontrado:', response);
-    return response;
+    return pipeline;
   }
 
   async update(id: string, updatePipelineDto: UpdatePipelineDto) {
-    const response = await this.pipelineRepository.update(
-      id,
-      updatePipelineDto,
-    );
-    if (!response) {
-      throw new HttpException('pipeline not found', 404);
-    }
-    console.log('pipeline atualizado:', response);
-    return response;
+    return await this.pipelineRepository.update(id, updatePipelineDto);
   }
 
-  async remove(id: string) {
-    const response = await this.pipelineRepository.delete(id);
-    if (!response) {
-      throw new HttpException('pipeline not created', 400);
-    }
-    console.log('pipeline deletado:', response);
-    return response;
+  async delete(id: string) {
+    return await this.pipelineRepository.delete(id);
   }
 }

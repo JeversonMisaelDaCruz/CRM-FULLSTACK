@@ -12,54 +12,49 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PipelineService = void 0;
 const common_1 = require("@nestjs/common");
 const pipeline_repository_1 = require("./repositories/pipeline.repository");
+const prisma_service_1 = require("../prisma/prisma.service");
 let PipelineService = class PipelineService {
-    constructor(pipelineRepository) {
+    constructor(pipelineRepository, prismaService) {
         this.pipelineRepository = pipelineRepository;
+        this.prismaService = prismaService;
     }
     async create(createPipelineDto) {
-        const response = await this.pipelineRepository.create(createPipelineDto);
-        if (!response) {
-            throw new common_1.HttpException('pipeline not created', 400);
+        const { userIds } = createPipelineDto;
+        const users = await this.prismaService.user.findMany({
+            where: {
+                id: { in: userIds },
+            },
+        });
+        if (users.length !== userIds.length) {
+            throw new common_1.HttpException('Um ou mais IDs de usuário fornecidos não existem.', 400);
         }
-        console.log('pipeline criado:', response);
-        return response;
+        return await this.pipelineRepository.create(createPipelineDto);
     }
-    async findAll() {
-        const response = await this.pipelineRepository.findAll();
-        if (!response) {
-            throw new common_1.HttpException('pipeline not created', 400);
+    async findAll(userId) {
+        const pipelines = await this.pipelineRepository.findByUser(userId);
+        if (!pipelines.length) {
+            throw new common_1.HttpException('Nenhuma pipeline encontrada para este usuário.', 404);
         }
-        console.log('pipeline encontrados:', response);
-        return response;
+        return pipelines;
     }
-    async findById(id) {
-        const response = await this.pipelineRepository.findById(id);
-        if (!response) {
-            throw new common_1.HttpException('pipeline not created', 400);
+    async findById(pipelineId, userId) {
+        const pipeline = await this.pipelineRepository.findByIdAndUser(pipelineId, userId);
+        if (!pipeline) {
+            throw new common_1.HttpException('Pipeline não encontrada ou acesso não autorizado.', 404);
         }
-        console.log('pipeline encontrado:', response);
-        return response;
+        return pipeline;
     }
     async update(id, updatePipelineDto) {
-        const response = await this.pipelineRepository.update(id, updatePipelineDto);
-        if (!response) {
-            throw new common_1.HttpException('pipeline not found', 404);
-        }
-        console.log('pipeline atualizado:', response);
-        return response;
+        return await this.pipelineRepository.update(id, updatePipelineDto);
     }
-    async remove(id) {
-        const response = await this.pipelineRepository.delete(id);
-        if (!response) {
-            throw new common_1.HttpException('pipeline not created', 400);
-        }
-        console.log('pipeline deletado:', response);
-        return response;
+    async delete(id) {
+        return await this.pipelineRepository.delete(id);
     }
 };
 exports.PipelineService = PipelineService;
 exports.PipelineService = PipelineService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [pipeline_repository_1.PipelineRepository])
+    __metadata("design:paramtypes", [pipeline_repository_1.PipelineRepository,
+        prisma_service_1.PrismaService])
 ], PipelineService);
 //# sourceMappingURL=pipeline.service.js.map

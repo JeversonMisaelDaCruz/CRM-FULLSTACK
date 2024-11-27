@@ -12,48 +12,84 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PipelineRepository = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../prisma/prisma.service");
-const class_validator_1 = require("class-validator");
 let PipelineRepository = class PipelineRepository {
     constructor(prismaService) {
         this.prismaService = prismaService;
     }
     async create(createPipelineDto) {
-        return await this.prismaService.pipeline.create({
-            data: createPipelineDto,
+        const { name, userIds } = createPipelineDto;
+        const pipeline = await this.prismaService.pipeline.create({
+            data: { name },
         });
-    }
-    async findAll() {
-        const response = await this.prismaService.pipeline.findMany();
-        console.log('pipeline encontrados:', response);
-        return response;
+        const associations = userIds.map((userId) => ({
+            pipeline_id: pipeline.id,
+            user_id: userId,
+        }));
+        await this.prismaService.pipeline_User.createMany({
+            data: associations,
+        });
+        return pipeline;
     }
     async findById(id) {
-        const response = await this.prismaService.pipeline.findUnique({
-            where: { id: id },
+        return await this.prismaService.pipeline.findUnique({
+            where: { id },
         });
-        console.log('pipeline encontrado:', response);
-        return response;
     }
-    async update(id, updatePipeline) {
-        if (!updatePipeline || Object.keys(updatePipeline).length === 0) {
-            throw new common_1.HttpException('Não permitido campo vazio', 400);
-        }
-        if (!id || !(0, class_validator_1.isUUID)(id)) {
-            throw new common_1.HttpException('Lead não encontrado', 404);
-        }
-        const response = await this.prismaService.pipeline.update({
-            where: { id: id },
-            data: updatePipeline,
+    async findByUser(userId) {
+        return await this.prismaService.pipeline.findMany({
+            where: {
+                users: {
+                    some: { user_id: userId },
+                },
+            },
+            include: {
+                users: {
+                    select: {
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                email: true,
+                            },
+                        },
+                    },
+                },
+            },
         });
-        console.log('pipeline atualizado:', response);
-        return response;
+    }
+    async findByIdAndUser(pipelineId, userId) {
+        return await this.prismaService.pipeline.findFirst({
+            where: {
+                id: pipelineId,
+                users: {
+                    some: { user_id: userId },
+                },
+            },
+            include: {
+                users: {
+                    select: {
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                email: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+    }
+    async update(id, updatePipelineDto) {
+        return await this.prismaService.pipeline.update({
+            where: { id },
+            data: updatePipelineDto,
+        });
     }
     async delete(id) {
-        const response = await this.prismaService.pipeline.delete({
-            where: { id: id },
+        return await this.prismaService.pipeline.delete({
+            where: { id },
         });
-        console.log('pipeline deletado:', response);
-        return response;
     }
 };
 exports.PipelineRepository = PipelineRepository;

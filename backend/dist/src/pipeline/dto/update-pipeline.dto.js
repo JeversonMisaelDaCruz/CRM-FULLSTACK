@@ -16,12 +16,12 @@ class UpdatePipelineDto {
 exports.UpdatePipelineDto = UpdatePipelineDto;
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.MinLength)(2, {
         message: 'O nome deve ter pelo menos 2 caracteres',
     }),
     (0, class_validator_1.MaxLength)(30, {
-        message: 'O nome deve ter no maximo 30 caracteres',
+        message: 'O nome deve ter no máximo 30 caracteres',
     }),
     __metadata("design:type", String)
 ], UpdatePipelineDto.prototype, "name", void 0);
