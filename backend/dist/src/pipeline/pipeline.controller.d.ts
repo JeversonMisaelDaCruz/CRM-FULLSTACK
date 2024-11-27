@@ -4,9 +4,50 @@ import { UpdatePipelineDto } from './dto/update-pipeline.dto';
 export declare class PipelineController {
     private readonly pipelineService;
     constructor(pipelineService: PipelineService);
-    create(createPipelineDto: CreatePipelineDto): Promise<import("./entities/pipeline.entity").PipelineEntity>;
-    findAll(): Promise<import("./entities/pipeline.entity").PipelineEntity[]>;
-    findOne(id: string): Promise<import("./entities/pipeline.entity").PipelineEntity>;
-    update(id: string, updatePipelineDto: UpdatePipelineDto): Promise<UpdatePipelineDto>;
-    remove(id: string): Promise<import("./entities/pipeline.entity").PipelineEntity>;
+    create(createPipelineDto: CreatePipelineDto): Promise<{
+        id: string;
+        name: string;
+        created_at: Date;
+        updated_at: Date;
+    }>;
+    findAll(req: any): Promise<({
+        users: {
+            user: {
+                id: string;
+                name: string;
+                email: string;
+            };
+        }[];
+    } & {
+        id: string;
+        name: string;
+        created_at: Date;
+        updated_at: Date;
+    })[]>;
+    findOne(id: string, req: any): Promise<{
+        users: {
+            user: {
+                id: string;
+                name: string;
+                email: string;
+            };
+        }[];
+    } & {
+        id: string;
+        name: string;
+        created_at: Date;
+        updated_at: Date;
+    }>;
+    update(id: string, updatePipelineDto: UpdatePipelineDto): Promise<{
+        id: string;
+        name: string;
+        created_at: Date;
+        updated_at: Date;
+    }>;
+    remove(id: string): Promise<{
+        id: string;
+        name: string;
+        created_at: Date;
+        updated_at: Date;
+    }>;
 }
