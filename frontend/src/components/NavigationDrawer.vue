@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer temporary>
+  <v-navigation-drawer v-model="localDrawer" temporary>
     <v-list>
       <template v-for="pipeline in pipelines" :key="pipeline.id">
         <v-list-item @click="selectPipeline(pipeline)">
@@ -28,6 +28,17 @@ export default {
     drawer: {
       type: Boolean,
       required: true,
+    },
+  },
+  emits: ["update:drawer", "select-pipeline", "confirm-delete"],
+  computed: {
+    localDrawer: {
+      get() {
+        return this.drawer;
+      },
+      set(value) {
+        this.$emit("update:drawer", value);
+      },
     },
   },
   methods: {
