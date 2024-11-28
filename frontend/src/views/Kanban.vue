@@ -7,24 +7,13 @@
       />
 
       <!-- Menu Lateral -->
-      <v-navigation-drawer v-model="drawer" temporary>
-        <v-list>
-          <template v-for="(pipeline, index) in pipelines" :key="index">
-            <!-- Pipeline -->
-            <v-list-item @click="selectPipeline(pipeline)">
-              <div class="d-flex align-center justify-space-between w-100">
-                <v-list-item-title>
-                  {{ pipeline ? pipeline.name.toUpperCase() : "" }}
-                </v-list-item-title>
-                <v-btn icon @click.stop="confirmDelete(pipeline)" size="medium">
-                  <v-icon color="red">mdi-delete</v-icon>
-                </v-btn>
-              </div>
-            </v-list-item>
-            <v-divider class="my-2" />
-          </template>
-        </v-list>
-      </v-navigation-drawer>
+      <NavigationDrawer
+        :pipelines="pipelines"
+        :drawer="drawer"
+        @closeDrawer="drawer = false"
+        @selectPipeline="selectPipeline"
+        @confirmDelete="confirmDelete"
+      />
 
       <!-- Modal de Confirmação de delete -->
       <v-dialog v-model="showConfirm" max-width="400">
@@ -109,7 +98,7 @@
 
           <!-- Lista de Fases -->
           <v-list v-if="filteredPhases.length > 0" class="mt-4">
-            <v-subheader>Fases da Pipeline Selecionada</v-subheader>
+            <h2>Fases da Pipeline Selecionada</h2>
             <v-list-item v-for="(phase, index) in filteredPhases" :key="index">
               <v-list-item-title>{{ phase?.name || "" }}</v-list-item-title>
             </v-list-item>
@@ -128,10 +117,12 @@ import { usePipelineStore } from "@/store/pipeline";
 import { usePipelinePhaseStore } from "@/store/pipelinesPhases";
 import { computed, onMounted, ref } from "vue";
 import Header from "@/components/Header.vue";
+import NavigationDrawer from "@/components/NavigationDrawer.vue";
 
 export default {
   components: {
     Header,
+    NavigationDrawer,
   },
   setup() {
     // Reactive variables
