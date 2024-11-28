@@ -19,7 +19,14 @@ export const usePipelineStore = defineStore("pipeline", {
 
     async createPipeline(data) {
       try {
-        const response = await API.pipeline.createPipeline(data);
+        const token = localStorage.getItem("@crm.access_token");
+        const userId = JSON.parse(atob(token.split(".")[1])).id;
+        const payload = {
+          ...data,
+          userIds: [...(data.userIds || []), userId],
+        };
+
+        const response = await API.pipeline.createPipeline(payload);
         console.log("Pipeline criada com sucesso", response);
         this.pipeline.push(response);
       } catch (error) {

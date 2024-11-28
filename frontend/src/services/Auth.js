@@ -13,6 +13,9 @@ export class Auth extends Http {
   async profile() {
     try {
       const response = await this.get("/profile");
+      const UserId = localStorage.setItem("UserId", response.id);
+      console.log("UserId:", UserId);
+      console.log("Perfil carregado:", response);
       return response;
     } catch (error) {
       console.error("Erro no serviço de perfil:", error);

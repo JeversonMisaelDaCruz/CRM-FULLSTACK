@@ -8,8 +8,14 @@ export declare class AuthService {
     constructor(prisma: PrismaService, userRepository: UserRepository, jwtService: JwtService);
     login(email: string, password: string): Promise<{
         access_token: string;
+        user: {
+            id: any;
+            name: any;
+            email: any;
+        };
     }>;
     getProfile(id: string): Promise<{
+        id: string;
         created_at: Date;
         updated_at: Date;
         name: string;
