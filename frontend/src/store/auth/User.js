@@ -30,7 +30,6 @@ export const useAuthStore = defineStore("auth", {
     },
 
     logout() {
-      
       this.setToken(null);
       this.user = null;
       console.log("Logout realizado com sucesso!");

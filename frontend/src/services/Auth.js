@@ -13,8 +13,6 @@ export class Auth extends Http {
   async profile() {
     try {
       const response = await this.get("/profile");
-      const UserId = localStorage.setItem("UserId", response.id);
-      console.log("UserId:", UserId);
       console.log("Perfil carregado:", response);
       return response;
     } catch (error) {
@@ -26,7 +24,6 @@ export class Auth extends Http {
   async logout() {
     try {
       await this.post("logout", {});
-      localStorage.removeItem("UserId");
       localStorage.removeItem("@crm.access_token");
       delete axios.defaults.headers.Authorization;
     } catch (error) {
