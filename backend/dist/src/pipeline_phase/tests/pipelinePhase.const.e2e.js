@@ -8,6 +8,6 @@ exports.updatePipelinePhaseData = {
     name: 'Perdido',
 };
 exports.pipelinePhaseWrongData = {
-    teste: 'darth plagueis',
+    teste: 'Bernard teste',
 };
 //# sourceMappingURL=pipelinePhase.const.e2e.js.map

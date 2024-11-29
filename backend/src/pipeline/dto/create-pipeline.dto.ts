@@ -26,5 +26,5 @@ export class CreatePipelineDto {
     each: true,
     message: 'Os IDs de usuário não podem estar vazios.',
   })
-  userIds: string[]; 
+  userIds: string[];
 }

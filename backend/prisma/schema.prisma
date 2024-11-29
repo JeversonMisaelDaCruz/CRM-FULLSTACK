@@ -41,7 +41,7 @@ model Pipeline {
   created_at DateTime         @default(now())
   updated_at DateTime         @default(now()) @updatedAt
   phases     Pipeline_Phase[]
-  users      Pipeline_User[] 
+  users      Pipeline_User[]
 
   @@map("pipelines")
 }

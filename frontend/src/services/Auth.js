@@ -26,6 +26,7 @@ export class Auth extends Http {
   async logout() {
     try {
       await this.post("logout", {});
+      localStorage.removeItem("UserId");
       localStorage.removeItem("@crm.access_token");
       delete axios.defaults.headers.Authorization;
     } catch (error) {

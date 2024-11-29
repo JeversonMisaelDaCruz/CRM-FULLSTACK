@@ -14,7 +14,6 @@ export class PipelineService {
   async create(createPipelineDto: CreatePipelineDto) {
     const { userIds } = createPipelineDto;
 
-    // Validar se todos os usuários existem
     const users = await this.prismaService.user.findMany({
       where: {
         id: { in: userIds },

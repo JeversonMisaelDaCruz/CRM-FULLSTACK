@@ -42,6 +42,7 @@ export default {
     },
   },
   methods: {
+    
     selectPipeline(pipeline) {
       this.$emit("select-pipeline", pipeline);
     },

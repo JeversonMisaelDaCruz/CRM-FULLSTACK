@@ -28,21 +28,21 @@ export class PipelineController {
   @UseGuards(AuthGuard)
   @Get()
   async findAll(@Req() req: any) {
-    const userId = req.user.id; // Pegando o userId do token
-    if (!userId) {
+    const GetuserId = req.user.id;
+    if (!GetuserId) {
       throw new HttpException('Usuário não autenticado.', 401);
     }
-    return this.pipelineService.findAll(userId);
+    return this.pipelineService.findAll(GetuserId);
   }
 
   @UseGuards(AuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string, @Req() req: any) {
-    const userId = req.user.id; // Pegando o userId do token
-    if (!userId) {
+    const GetuserId = req.user.id;
+    if (!GetuserId) {
       throw new HttpException('Usuário não autenticado.', 401);
     }
-    return this.pipelineService.findById(id, userId);
+    return this.pipelineService.findById(id, GetuserId);
   }
 
   @UseGuards(AuthGuard)
