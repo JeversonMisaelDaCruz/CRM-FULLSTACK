@@ -1,16 +1,17 @@
 <template>
   <v-card>
     <v-layout>
-      <v-navigation-drawer v-model="drawer" :rail="rail" permanent>
+      <v-navigation-drawer v-model="drawer" :rail="rail" permanent color="#B8AD90">
         <v-divider />
         <v-list density="compact" nav>
           <v-list-item
-            prepend-icon="mdi-view-kanban"
-            title="Kanban"
+            prepend-icon="mdi-view-dashboard-outline"
+            title="Dashboard"
             @click="navigateTo('Kanban')"
           ></v-list-item>
+
           <v-list-item
-            prepend-icon="mdi-account-group-outline"
+            prepend-icon="mdi-account-multiple-outline"
             title="Leads"
             @click="navigateTo('Leads')"
           ></v-list-item>

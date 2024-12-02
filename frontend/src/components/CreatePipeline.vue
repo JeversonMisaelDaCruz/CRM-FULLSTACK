@@ -14,7 +14,7 @@
         ></v-text-field>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer/>
         <v-btn color="primary" @click="handleCreatePipeline">Salvar</v-btn>
         <v-btn color="grey" @click="handleCancelPipelineModal">
           Cancelar
@@ -33,7 +33,8 @@ export default {
     },
     pipelineName: {
       type: String,
-      required: true,
+      required: false,
+      default: "",
     },
   },
   emits: ["update:showPipelineModal", "createPipeline", "cancelPipelineModal"],

@@ -1,13 +1,11 @@
 <template>
-  <v-card>
+  <v-card style="background-color: #faf3e0">
     <v-layout>
-      <!-- Cabeçalho -->
       <Header
         :selectedPipeline="selectedPipeline"
         @toggleDrawer="drawer = !drawer"
       />
 
-      <!-- Menu Lateral -->
       <NavigationDrawer
         :pipelines="pipelines"
         :drawer="drawer"
@@ -16,7 +14,6 @@
         @confirmDelete="confirmDelete"
       />
 
-      <!-- Modal de Confirmação de Delete -->
       <v-dialog v-model="showConfirm" max-width="400">
         <v-card>
           <v-card-title class="text-h6">Deletar Pipeline</v-card-title>
@@ -32,24 +29,22 @@
         </v-card>
       </v-dialog>
 
-      <!-- Conteúdo Principal -->
       <v-main style="height: 100vh">
         <v-container>
           <v-row>
             <v-col cols="12" class="d-flex justify-start">
-              <!-- Botão para abrir o modal de criação de Pipeline -->
               <v-btn
                 v-if="!selectedPipeline"
                 @click="showPipelineModal = true"
-                color="primary"
+                color="#B8AD90"
               >
                 Criar Pipeline
               </v-btn>
-              <!-- Botão para abrir o modal de criação de Fase -->
+
               <v-btn
                 v-if="selectedPipeline"
                 @click="openPhaseModal"
-                color="primary"
+                color="#B8AD90"
                 class="ml-4"
               >
                 Criar Quadro
@@ -57,14 +52,13 @@
             </v-col>
           </v-row>
 
-          <!-- Modal para criação de Pipeline -->
           <CreatePipeline
             :showPipelineModal="showPipelineModal"
+            :pipelineName="pipelineName"
             @createPipeline="handleCreatePipeline"
             @cancelPipelineModal="cancelPipelineModal"
           />
 
-          <!-- Modal para criação de Fase -->
           <v-dialog v-model="showPhaseModal" max-width="500">
             <v-card>
               <v-card-title>Cadastrar Quadro</v-card-title>
@@ -83,14 +77,13 @@
             </v-card>
           </v-dialog>
 
-          <!-- Lista de Fases -->
           <v-list v-if="filteredPhases.length > 0" class="mt-4">
             <h2>Fases da Pipeline Selecionada</h2>
             <v-list-item v-for="(phase, index) in filteredPhases" :key="index">
               <v-list-item-title>{{ phase?.name || "" }}</v-list-item-title>
             </v-list-item>
           </v-list>
-          <v-alert v-else type="info" class="mt-4">
+          <v-alert v-else type="info" class="mt-4" color="#B8AD90">
             Selecione uma pipeline para visualizar as fases.
           </v-alert>
         </v-container>
@@ -117,7 +110,7 @@ export default {
   setup() {
     const router = useRouter();
     const route = useRoute();
-
+    const pipelineName = ref("");
     const drawer = ref(false);
     const showPipelineModal = ref(false);
     const showPhaseModal = ref(false);
@@ -164,7 +157,6 @@ export default {
 
     const handleCreatePipeline = async (pipelineName) => {
       try {
-        const userId = localStorage.getItem("userId");
         await pipelineStore.createPipeline({
           name: pipelineName,
           userIds: [userId],
@@ -201,10 +193,9 @@ export default {
 
     const selectPipeline = (pipeline) => {
       selectedPipeline.value = pipeline;
-      router.push({ path: "/kanban", query: { pipelineId: pipeline.id } }); // Atualiza a URL
+      router.push({ path: "/kanban", query: { pipelineId: pipeline.id } });
     };
 
-    // Monitora mudanças nos query params para selecionar a pipeline correta
     watch(
       () => route.query.pipelineId,
       (newPipelineId) => {
@@ -220,7 +211,6 @@ export default {
       await pipelineStore.fetchPipelines();
       await pipelinePhaseStore.fetchPipelinePhases();
 
-      // Seleciona a pipeline inicial baseada nos query params
       const pipelineId = route.query.pipelineId;
       if (pipelineId) {
         selectedPipeline.value = pipelines.value.find(
@@ -242,6 +232,7 @@ export default {
       confirmDelete,
       deletePipeline,
       closeConfirm,
+      pipelineName,
       handleCreatePipeline,
       cancelPipelineModal,
       createPhase,

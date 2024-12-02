@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar color="primary" prominent>
+  <v-app-bar color="#B8AD90" prominent>
     <v-app-bar-nav-icon @click.stop="$emit('toggleDrawer')" />
     <v-toolbar-title v-if="selectedPipeline">
       CRM | {{ selectedPipeline.name }}

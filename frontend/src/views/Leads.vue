@@ -1,7 +1,10 @@
 <template>
-  <v-app>
+  <v-app style="background-color: #faf3e0">
+    <Header
+      :selectedPipeline="selectedPipeline"
+      @toggleDrawer="drawer = !drawer"
+    />
     <v-container>
-      <h1 class="text-h4 mb-4">Gerenciar Leads</h1>
       <modal
         v-model="dialog"
         :leadToEdit="selectedLead"

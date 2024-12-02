@@ -7,14 +7,17 @@
       absolute
       app
       appear
-      color="green"
+      color="#B8AD90"
       size="large"
       @click="dialog = true"
     />
 
-    <v-dialog v-model="dialog" max-width="900">
+    <v-dialog v-model="dialog" max-width="900" color="#B8AD90">
       <v-card>
-        <v-card-title class="d-flex justify-space-between align-center">
+        <v-card-title
+          style="background-color: #b8ad90"
+          class="d-flex justify-space-between align-center"
+        >
           <span class="headline">Cadastrar Leads</span>
         </v-card-title>
 
@@ -71,12 +74,12 @@
             </v-row>
             <v-card-actions style="display: flex; justify-content: end">
               <v-btn
-                color="primary"
+                color="white"
                 style="
                   font-weight: bold;
                   color: white;
                   margin-right: 16px;
-                  background-color: gainsboro;
+                  background-color: red;
                 "
                 @click="closeDialog"
               >
@@ -88,7 +91,7 @@
                   font-weight: bold;
                   color: white;
                   margin-right: 16px;
-                  background-color: green;
+                  background-color: #b8ad90;
                 "
                 @click="createLead"
               >

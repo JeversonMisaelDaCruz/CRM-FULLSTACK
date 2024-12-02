@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="localDrawer" temporary>
+  <v-navigation-drawer class="blur-effect" v-model="localDrawer" temporary>
     <v-list>
       <template v-for="pipeline in pipelines" :key="pipeline.id">
         <v-list-item @click="selectPipeline(pipeline)">
@@ -7,8 +7,12 @@
             <v-list-item-title>
               {{ pipeline?.name ? pipeline.name.toUpperCase() : "" }}
             </v-list-item-title>
-            <v-btn icon @click.stop="confirmDelete(pipeline)">
-              <v-icon color="red">mdi-delete</v-icon>
+            <v-btn
+              icon
+              @click.stop="confirmDelete(pipeline)"
+              style="background-color: white"
+            >
+              <v-icon color="black">mdi-delete</v-icon>
             </v-btn>
           </div>
         </v-list-item>
@@ -17,6 +21,14 @@
     </v-list>
   </v-navigation-drawer>
 </template>
+
+<style scoped>
+.blur-effect {
+  background-color: rgba(184, 173, 144, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+</style>
 
 <script>
 import { useRouter } from "vue-router";
@@ -47,7 +59,7 @@ export default {
     const router = useRouter();
 
     const selectPipeline = (pipeline) => {
-      router.push({ path: "/kanban", query: { pipelineId: pipeline.id } }); // Redireciona ao selecionar
+      router.push({ path: "/kanban", query: { pipelineId: pipeline.id } });
     };
 
     return {
