@@ -12,13 +12,20 @@
         @lead-saved="handleCreateLead"
         @lead-updated="handleUpdateLead"
       />
-      <v-data-table :headers="headers" :items="leads" class="elevation-1 mt-4">
+      <v-data-table
+        :headers="headers"
+        :items="leads"
+        class="elevation-1 mt-4"
+        item-value-color="black"
+        header-value-color="black"
+        style="background-color: #dfd8c3; color: black"
+      >
         <template #item.actions="{ item }">
           <v-btn icon @click="openModal(item)">
-            <v-icon color="white">mdi-pencil</v-icon>
+            <v-icon color="black">mdi-pencil</v-icon>
           </v-btn>
           <v-btn icon @click="handleDeleteLead(item.id)">
-            <v-icon color="white">mdi-delete</v-icon>
+            <v-icon color="black">mdi-delete</v-icon>
           </v-btn>
         </template>
       </v-data-table>
@@ -33,12 +40,14 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useLeadsStore } from "@/store/leads";
+import { usePipelinePhaseStore } from "../store/pipelinesPhases";
 import modal from "@/components/modal.vue";
 
 const dialog = ref(false);
 const selectedLead = ref(null);
 const snackbar = ref(false);
 const snackbarMessage = ref("");
+const drawer = ref(false);
 
 const headers = [
   { text: "Nome", value: "name" },
@@ -49,9 +58,10 @@ const headers = [
 ];
 
 const leadsStore = useLeadsStore();
+const pipelinePhaseStore = usePipelinePhaseStore();
 
-const leads = computed(() => leadsStore.leads);
-const pipelinePhases = computed(() => leadsStore.PipelinePhase || []);
+const leads = computed(() => leadsStore.leads || []);
+const pipelinePhases = computed(() => pipelinePhaseStore.phases || []);
 
 const openModal = (lead = null) => {
   selectedLead.value = lead;
@@ -97,18 +107,16 @@ const handleDeleteLead = async (id) => {
 };
 
 onMounted(async () => {
-  await Promise.all([
-    leadsStore.fetchLeads(),
-    leadsStore.fetchPipelinePhases(),
-  ]);
+  try {
+    await Promise.all([
+      leadsStore.fetchLeads(),
+      pipelinePhaseStore.fetchPipelinePhases(),
+    ]);
+    console.log("Leads e Pipeline Phases carregados.");
+  } catch (error) {
+    console.error("Erro ao carregar dados iniciais:", error);
+    snackbarMessage.value = "Erro ao carregar dados iniciais.";
+    snackbar.value = true;
+  }
 });
-</script>
-
-<script>
-export default {
-  name: "Leads",
-  components: {
-    modal,
-  },
-};
 </script>

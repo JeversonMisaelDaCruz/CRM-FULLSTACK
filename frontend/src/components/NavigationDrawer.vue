@@ -11,6 +11,7 @@
               icon
               @click.stop="confirmDelete(pipeline)"
               style="background-color: white"
+              class="blur-effect"
             >
               <v-icon color="black">mdi-delete</v-icon>
             </v-btn>
