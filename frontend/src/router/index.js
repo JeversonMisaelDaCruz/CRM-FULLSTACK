@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "../store/auth/User";
 
-// Páginas
 import Login from "@/views/Login.vue";
 import Kanban from "@/views/Kanban.vue";
 import Leads from "@/views/Leads.vue";
+import MainLayout from "@/components/MainLayout.vue";
 
 const routes = [
   {
@@ -13,20 +13,21 @@ const routes = [
     component: Login,
   },
   {
-    path: "/kanban",
-    name: "Kanban",
-    component: Kanban,
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: "/leads",
-    name: "Leads",
-    component: Leads,
-    meta: {
-      requiresAuth: true,
-    },
+    path: "/",
+    component: MainLayout,
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: "kanban",
+        name: "Kanban",
+        component: Kanban,
+      },
+      {
+        path: "leads",
+        name: "Leads",
+        component: Leads,
+      },
+    ],
   },
 ];
 
@@ -35,6 +36,7 @@ const router = createRouter({
   routes,
 });
 
+// Proteção de rotas
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
 
