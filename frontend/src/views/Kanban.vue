@@ -102,7 +102,8 @@
 <script>
 import { usePipelineStore } from "@/store/pipeline";
 import { usePipelinePhaseStore } from "@/store/pipelinesPhases";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import Header from "@/components/Header.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import CreatePipeline from "@/components/CreatePipeline.vue";
@@ -114,7 +115,9 @@ export default {
     CreatePipeline,
   },
   setup() {
-    // Reactive variables
+    const router = useRouter();
+    const route = useRoute();
+
     const drawer = ref(false);
     const showPipelineModal = ref(false);
     const showPhaseModal = ref(false);
@@ -123,11 +126,9 @@ export default {
     const phaseName = ref("");
     const selectedPipeline = ref(null);
 
-    // Stores
     const pipelineStore = usePipelineStore();
     const pipelinePhaseStore = usePipelinePhaseStore();
 
-    // Computed properties
     const pipelines = computed(() =>
       Array.isArray(pipelineStore.pipeline) ? pipelineStore.pipeline : []
     );
@@ -140,7 +141,6 @@ export default {
       );
     });
 
-    // Methods
     const confirmDelete = (pipeline) => {
       pipelineToDelete.value = pipeline;
       showConfirm.value = true;
@@ -165,7 +165,6 @@ export default {
     const handleCreatePipeline = async (pipelineName) => {
       try {
         const userId = localStorage.getItem("userId");
-        console.log("userId", userId);
         await pipelineStore.createPipeline({
           name: pipelineName,
           userIds: [userId],
@@ -202,19 +201,32 @@ export default {
 
     const selectPipeline = (pipeline) => {
       selectedPipeline.value = pipeline;
+      router.push({ path: "/kanban", query: { pipelineId: pipeline.id } }); // Atualiza a URL
     };
 
-    const openPhaseModal = () => {
-      if (!selectedPipeline.value) {
-        alert("Por favor, selecione uma pipeline primeiro.");
-        return;
+    // Monitora mudanças nos query params para selecionar a pipeline correta
+    watch(
+      () => route.query.pipelineId,
+      (newPipelineId) => {
+        if (newPipelineId) {
+          selectedPipeline.value = pipelines.value.find(
+            (pipeline) => pipeline.id === newPipelineId
+          );
+        }
       }
-      showPhaseModal.value = true;
-    };
+    );
 
     onMounted(async () => {
       await pipelineStore.fetchPipelines();
       await pipelinePhaseStore.fetchPipelinePhases();
+
+      // Seleciona a pipeline inicial baseada nos query params
+      const pipelineId = route.query.pipelineId;
+      if (pipelineId) {
+        selectedPipeline.value = pipelines.value.find(
+          (pipeline) => pipeline.id === pipelineId
+        );
+      }
     });
 
     return {
@@ -235,7 +247,6 @@ export default {
       createPhase,
       closePhaseModal,
       selectPipeline,
-      openPhaseModal,
     };
   },
 };

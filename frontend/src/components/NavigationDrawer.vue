@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import { useRouter } from "vue-router";
+
 export default {
   props: {
     pipelines: {
@@ -41,10 +43,18 @@ export default {
       },
     },
   },
+  setup() {
+    const router = useRouter();
+
+    const selectPipeline = (pipeline) => {
+      router.push({ path: "/kanban", query: { pipelineId: pipeline.id } }); // Redireciona ao selecionar
+    };
+
+    return {
+      selectPipeline,
+    };
+  },
   methods: {
-    selectPipeline(pipeline) {
-      this.$emit("select-pipeline", pipeline);
-    },
     confirmDelete(pipeline) {
       this.$emit("confirm-delete", pipeline);
     },

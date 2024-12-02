@@ -17,7 +17,6 @@
         </v-list>
       </v-navigation-drawer>
 
-      <!-- Main Content -->
       <v-main>
         <router-view />
       </v-main>
