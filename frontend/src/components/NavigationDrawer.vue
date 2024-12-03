@@ -7,10 +7,20 @@
     v-model="localDrawer"
   >
     <v-list>
+      <v-list-item>
+        <v-list-item-title
+          class="text-h6"
+          style="font-weight: bold; color: black"
+        >
+          Pipelines
+        </v-list-item-title>
+      </v-list-item>
+      <v-divider class="mb-2" />
+
       <template v-for="pipeline in pipelines" :key="pipeline.id">
         <v-list-item @click="selectPipeline(pipeline)">
           <div class="d-flex align-center justify-space-between w-100">
-            <v-list-item-title>
+            <v-list-item-title style="color: black">
               {{ pipeline?.name ? pipeline.name.toUpperCase() : "" }}
             </v-list-item-title>
             <v-btn
