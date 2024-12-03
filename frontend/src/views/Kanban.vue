@@ -13,7 +13,6 @@
         @selectPipeline="selectPipeline"
         @confirmDelete="confirmDelete"
       />
-
       <v-dialog v-model="showConfirm" max-width="400">
         <v-card>
           <v-card-title class="text-h6">Deletar Pipeline</v-card-title>
@@ -29,10 +28,16 @@
         </v-card>
       </v-dialog>
 
-      <v-main style="height: 100vh">
-        <v-container>
+      <v-main
+        :style="{
+          marginLeft: drawer ? '250px' : '0px',
+          transition: 'margin-left 0.3s ease',
+        }"
+        style="height: 100vh"
+      >
+        <div class="d-flex flex-column" style="margin: 40px 0px 0px 40px">
           <v-row>
-            <v-col cols="12" class="d-flex justify-start">
+            <v-col>
               <v-btn
                 v-if="!selectedPipeline"
                 @click="showPipelineModal = true"
@@ -40,7 +45,11 @@
               >
                 Criar Pipeline
               </v-btn>
+            </v-col>
+          </v-row>
 
+          <v-row class="d-flex flex-column">
+            <v-col>
               <v-btn
                 v-if="selectedPipeline"
                 @click="openPhaseModal"
@@ -50,43 +59,54 @@
                 Criar Quadro
               </v-btn>
             </v-col>
+
+            <v-col>
+              <v-list
+                v-if="filteredPhases.length > 0"
+                class="mt-4"
+                style="
+                  background-color: #b8ad90;
+                  border-radius: 6px;
+                  padding: 10px;
+                "
+              >
+                <h2>Fases da Pipeline Selecionada</h2>
+                <v-list-item
+                  v-for="(phase, index) in filteredPhases"
+                  :key="index"
+                >
+                  <v-list-item-title>{{ phase?.name || "" }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+              <Warn v-else />
+            </v-col>
           </v-row>
+        </div>
 
-          <CreatePipeline
-            :showPipelineModal="showPipelineModal"
-            :pipelineName="pipelineName"
-            @createPipeline="handleCreatePipeline"
-            @cancelPipelineModal="cancelPipelineModal"
-          />
+        <CreatePipeline
+          :showPipelineModal="showPipelineModal"
+          :pipelineName="pipelineName"
+          @createPipeline="handleCreatePipeline"
+          @cancelPipelineModal="cancelPipelineModal"
+        />
 
-          <v-dialog v-model="showPhaseModal" max-width="500">
-            <v-card>
-              <v-card-title>Cadastrar Quadro</v-card-title>
-              <v-card-text>
-                <v-text-field
-                  v-model="phaseName"
-                  label="Nome da Quadro"
-                  required
-                />
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <v-btn color="primary" @click="createPhase">Salvar</v-btn>
-                <v-btn color="grey" @click="closePhaseModal">Cancelar</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-
-          <v-list v-if="filteredPhases.length > 0" class="mt-4">
-            <h2>Fases da Pipeline Selecionada</h2>
-            <v-list-item v-for="(phase, index) in filteredPhases" :key="index">
-              <v-list-item-title>{{ phase?.name || "" }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-          <v-alert v-else type="info" class="mt-4" color="#B8AD90">
-            Selecione uma pipeline para visualizar as fases.
-          </v-alert>
-        </v-container>
+        <v-dialog v-model="showPhaseModal" max-width="500">
+          <v-card>
+            <v-card-title>Cadastrar Quadro</v-card-title>
+            <v-card-text>
+              <v-text-field
+                v-model="phaseName"
+                label="Nome da Quadro"
+                required
+              />
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn color="primary" @click="createPhase">Salvar</v-btn>
+              <v-btn color="grey" @click="closePhaseModal">Cancelar</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-main>
     </v-layout>
   </v-card>
@@ -100,6 +120,7 @@ import { useRouter, useRoute } from "vue-router";
 import Header from "@/components/Header.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import CreatePipeline from "@/components/CreatePipeline.vue";
+import Warn from "@/components/warn/warn.vue";
 
 export default {
   components: {

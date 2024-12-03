@@ -15,7 +15,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer/>
-        <v-btn color="primary" @click="handleCreatePipeline">Salvar</v-btn>
+        <v-btn color="#B8AD90" @click="handleCreatePipeline">Salvar</v-btn>
         <v-btn color="grey" @click="handleCancelPipelineModal">
           Cancelar
         </v-btn>

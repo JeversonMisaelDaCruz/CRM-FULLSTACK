@@ -1,5 +1,11 @@
 <template>
-  <v-navigation-drawer class="blur-effect" v-model="localDrawer" temporary>
+  <v-navigation-drawer
+    app
+    clipped
+    min-variant-expand-on-hover
+    class="blur-effect"
+    v-model="localDrawer"
+  >
     <v-list>
       <template v-for="pipeline in pipelines" :key="pipeline.id">
         <v-list-item @click="selectPipeline(pipeline)">

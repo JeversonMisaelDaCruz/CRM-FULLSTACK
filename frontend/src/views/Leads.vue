@@ -41,7 +41,7 @@
 import { ref, onMounted, computed } from "vue";
 import { useLeadsStore } from "@/store/leads";
 import { usePipelinePhaseStore } from "../store/pipelinesPhases";
-import modal from "@/components/modal.vue";
+import modal from "@/components/Modals/modal.vue";
 
 const dialog = ref(false);
 const selectedLead = ref(null);
