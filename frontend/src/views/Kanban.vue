@@ -13,6 +13,7 @@
         @selectPipeline="selectPipeline"
         @confirmDelete="confirmDelete"
       />
+
       <v-dialog v-model="showConfirm" max-width="400">
         <v-card>
           <v-card-title class="text-h6">Deletar Pipeline</v-card-title>
@@ -36,17 +37,10 @@
         style="height: 100vh"
       >
         <div class="d-flex flex-column" style="margin: 40px 0px 0px 40px">
-          <v-row>
-            <v-col>
-              <v-btn
-                v-if="!selectedPipeline"
-                @click="showPipelineModal = true"
-                color="#B8AD90"
-              >
-                Criar Pipeline
-              </v-btn>
-            </v-col>
-          </v-row>
+          <CreatePipelineButton
+            :selectedPipeline="selectedPipeline"
+            @create-pipeline="showPipelineModal = true"
+          />
 
           <v-row class="d-flex flex-column">
             <v-col>
@@ -121,12 +115,15 @@ import Header from "@/components/Header.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import CreatePipeline from "@/components/CreatePipeline.vue";
 import Warn from "@/components/warn/warn.vue";
+import CreatePipelineButton from "@/components/buttons/CreatePipelineButton.vue";
 
 export default {
   components: {
     Header,
     NavigationDrawer,
     CreatePipeline,
+    Warn,
+    CreatePipelineButton,
   },
   setup() {
     const router = useRouter();
