@@ -36,7 +36,6 @@ const router = createRouter({
   routes,
 });
 
-// Proteção de rotas
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
 

@@ -39,7 +39,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import Modal from "@/components/Modals/modal.vue";
+import Modal from "@/components/Modals/Leadmodal.vue";
 import { useLeadsStore } from "@/store/leads";
 import { usePipelinePhaseStore } from "@/store/pipelinesPhases";
 

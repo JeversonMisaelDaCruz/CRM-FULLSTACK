@@ -6,15 +6,10 @@
   >
     <v-card>
       <v-card-title>Nova Pipeline</v-card-title>
-      <div
-        style="
-          display: flex;
-          align-items: center;
-          justify-content: space-evenly;
-        "
-      >
+
+      <div class="option-container">
         <div
-          :style="getButtonStyle('pipeline')"
+          :class="['option-button', { active: selectedOption === 'pipeline' }]"
           @click="selectOption('pipeline')"
         >
           <v-icon icon="mdi-alert-circle" size="32" class="mb-2">
@@ -22,31 +17,62 @@
           </v-icon>
           <div>Pipeline</div>
         </div>
+
         <v-divider vertical class="mx-2" />
-        <div :style="getButtonStyle('etapas')" @click="selectOption('etapas')">
-          <v-icon icon="md:widgets" size="32" class="mb-2"> mdi-filter </v-icon>
+
+        <div
+          :class="['option-button', { active: selectedOption === 'etapas' }]"
+          @click="selectOption('etapas')"
+        >
+          <v-icon icon="mdi-widgets" size="32" class="mb-2">mdi-filter</v-icon>
           <div>Etapas</div>
         </div>
       </div>
+
       <v-card-text>
-        <v-text-field
-          v-model="localPipelineName"
-          label="Nome:"
-          required
-        ></v-text-field>
+        <template v-if="selectedOption === 'pipeline'">
+          <v-text-field
+            v-model="localPipelineName"
+            label="Nome:"
+            required
+          ></v-text-field>
+        </template>
+
+        <template v-else-if="selectedOption === 'etapas'">
+          <div>
+            <h3>Etapas Predefinidas</h3>
+            <v-list>
+              <v-list-item v-for="(step, index) in steps" :key="index">
+                <v-list-item-title>{{ step }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+            <v-text-field
+              v-model="newStep"
+              label="Nova Etapa"
+              placeholder="Adicionar nova etapa"
+              class="mt-4"
+            ></v-text-field>
+            <v-btn color="#B8AD90" class="mt-2" @click="addStep">
+              Adicionar Etapa
+            </v-btn>
+          </div>
+        </template>
       </v-card-text>
+
       <v-card-actions>
         <v-spacer />
-        <v-btn color="white" @click="handleCancelPipelineModal">
-          Cancelar
-        </v-btn>
-        <v-btn color="white" @click="handleCreatePipeline">Salvar</v-btn>
+        <v-btn color="white" @click="cancelPipelineModal">Cancelar</v-btn>
+        <v-btn color="white" @click="savePipeline">Salvar</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import * as jwtDecode from "jwt-decode";
+import { usePipelineStore } from "@/store/pipeline";
+import { usePipelinePhaseStore } from "@/store/pipelinesPhases";
+
 export default {
   props: {
     showPipelineModal: {
@@ -55,7 +81,6 @@ export default {
     },
     pipelineName: {
       type: String,
-      required: false,
       default: "",
     },
   },
@@ -64,40 +89,93 @@ export default {
     return {
       localPipelineName: this.pipelineName,
       selectedOption: "pipeline",
+      steps: ["Test"], // Default step
+      newStep: "",
     };
   },
   methods: {
     updateShowPipelineModal(value) {
       this.$emit("update:showPipelineModal", value);
     },
-    handleCancelPipelineModal() {
+    cancelPipelineModal() {
       this.$emit("cancelPipelineModal");
     },
-    handleCreatePipeline() {
+    async savePipeline() {
       if (!this.localPipelineName) {
         console.error("O nome da pipeline não pode estar vazio.");
         return;
       }
-      console.log(
-        "Emitindo evento createPipeline com:",
-        this.localPipelineName
-      );
-      this.$emit("createPipeline", this.localPipelineName);
-      this.updateShowPipelineModal(false);
+
+      try {
+        console.log("Iniciando a criação da pipeline...");
+
+        // Recuperar e decodificar o token JWT
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("Token JWT não encontrado.");
+          return;
+        }
+
+        const decoded = jwtDecode(token);
+        const userId = decoded?.id;
+        if (!userId) {
+          console.error("ID do usuário não encontrado no token.");
+          return;
+        }
+
+        console.log("ID do usuário recuperado do token:", userId);
+
+        const pipelineStore = usePipelineStore();
+        const pipelinePhaseStore = usePipelinePhaseStore();
+
+        // 1. Criar a Pipeline usando a store
+        const pipeline = await pipelineStore.createPipeline({
+          name: this.localPipelineName,
+          userIds: [userId],
+        });
+
+        if (!pipeline || !pipeline.id) {
+          console.error("Erro ao criar a pipeline.");
+          return;
+        }
+
+        console.log("Pipeline criada com sucesso:", pipeline.id);
+
+        // 2. Criar as Fases associadas à pipeline
+        if (this.steps.length > 0) {
+          for (const step of this.steps) {
+            console.log(`Criando fase para a pipeline ${pipeline.id}:`, step);
+            const phase = await pipelinePhaseStore.createPipelinePhase({
+              name: step,
+              pipeline_id: pipeline.id,
+            });
+            console.log("Resposta da criação da fase:", phase);
+          }
+          console.log("Fases criadas com sucesso!");
+        }
+
+        // Fechar o modal e emitir evento
+        this.$emit("createPipeline", {
+          id: pipeline.id,
+          name: this.localPipelineName,
+          steps: this.steps,
+        });
+        this.updateShowPipelineModal(false);
+      } catch (error) {
+        console.error("Erro ao salvar pipeline ou fases:", error.message);
+      }
     },
     selectOption(option) {
       this.selectedOption = option;
     },
-    getButtonStyle(option) {
-      return {
-        textAlign: "center",
-        cursor: "pointer",
-        backgroundColor:
-          this.selectedOption === option ? "#B8AD90" : "transparent",
-        borderRadius: "8px",
-        padding: "10px",
-        transition: "background-color 0.3s",
-      };
+    addStep() {
+      const stepName = this.newStep.trim();
+      if (!stepName) {
+        console.error("O nome da etapa não pode estar vazio.");
+        return;
+      }
+      this.steps.push(stepName);
+      this.newStep = "";
     },
   },
   watch: {
@@ -108,9 +186,30 @@ export default {
 };
 </script>
 
-<style>
-.text-center {
+<style scoped>
+.option-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.option-button {
   text-align: center;
-  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 10px;
+  transition: background-color 0.3s;
+}
+
+.option-button.active {
+  background-color: #b8ad90;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
 }
 </style>

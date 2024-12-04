@@ -1,7 +1,7 @@
 <template>
   <v-card style="background-color: #faf3e0">
     <v-layout>
-      
+
       <Header
         :selectedPipeline="selectedPipeline"
         @toggleDrawer="drawer = !drawer"
