@@ -2,12 +2,12 @@
   <v-app-bar color="#B8AD90" prominent>
     <v-app-bar-nav-icon @click.stop="$emit('toggleDrawer')" />
     <v-toolbar-title v-if="selectedPipeline">
-      CRM | {{ selectedPipeline.name }}
+      {{ selectedPipeline.name }} | CRM
     </v-toolbar-title>
     <v-toolbar-title v-else-if="currentRoute === '/leads'">
-      CRM | Leads
+      Leads | CRM
     </v-toolbar-title>
-    <v-toolbar-title v-else> CRM | </v-toolbar-title>
+    <v-toolbar-title v-else>Home | CRM</v-toolbar-title>
     <v-spacer />
     <v-btn icon="mdi-logout" variant="text" @click="logout" />
   </v-app-bar>

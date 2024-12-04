@@ -1,6 +1,7 @@
 <template>
   <v-card style="background-color: #faf3e0">
     <v-layout>
+      
       <Header
         :selectedPipeline="selectedPipeline"
         @toggleDrawer="drawer = !drawer"
@@ -15,6 +16,7 @@
       />
 
       <v-dialog v-model="showConfirm" max-width="400">
+
         <v-card>
           <v-card-title class="text-h6">Deletar Pipeline</v-card-title>
           <v-card-text>
