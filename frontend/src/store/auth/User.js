@@ -12,6 +12,7 @@ export const useAuthStore = defineStore("auth", {
       try {
         const response = await API.auth.login({ email, password });
         this.setToken(response.access_token);
+        this.user = response.user;
         await this.fetchUserProfile();
         return this.user;
       } catch (error) {

@@ -69,9 +69,9 @@
 </template>
 
 <script>
-import * as jwtDecode from "jwt-decode";
 import { usePipelineStore } from "@/store/pipeline";
 import { usePipelinePhaseStore } from "@/store/pipelinesPhases";
+import { useAuthStore } from "@/store/auth/User";
 
 export default {
   props: {
@@ -89,7 +89,7 @@ export default {
     return {
       localPipelineName: this.pipelineName,
       selectedOption: "pipeline",
-      steps: ["Test"], // Default step
+      steps: ["Test"],
       newStep: "",
     };
   },
@@ -109,37 +109,26 @@ export default {
       try {
         console.log("Iniciando a criação da pipeline...");
 
-        // Recuperar e decodificar o token JWT
-        const token = localStorage.getItem("token");
-        if (!token) {
-          console.error("Token JWT não encontrado.");
+        const authstore = useAuthStore();
+        const userId = authstore.user.id;
+        
+        if (!userId || userId.length !== 36) {
+          console.error("ID do usuário inválido:", userId);
           return;
         }
 
-        const decoded = jwtDecode(token);
-        const userId = decoded?.id;
-        if (!userId) {
-          console.error("ID do usuário não encontrado no token.");
-          return;
-        }
-
-        console.log("ID do usuário recuperado do token:", userId);
+        console.log("ID do usuário recuperado :", userId);
 
         const pipelineStore = usePipelineStore();
         const pipelinePhaseStore = usePipelinePhaseStore();
+        const pipelinePayload = {
+          name: this.localPipelineName,
+          userIds: [userId], // Certifique-se de que `userId` é um UUID válido
+        };
 
         // 1. Criar a Pipeline usando a store
-        const pipeline = await pipelineStore.createPipeline({
-          name: this.localPipelineName,
-          userIds: [userId],
-        });
-
-        if (!pipeline || !pipeline.id) {
-          console.error("Erro ao criar a pipeline.");
-          return;
-        }
-
-        console.log("Pipeline criada com sucesso:", pipeline.id);
+        const pipeline = await pipelineStore.createPipeline(pipelinePayload);
+        console.log("Pipeline criada com sucesso:", pipelinePayload);
 
         // 2. Criar as Fases associadas à pipeline
         if (this.steps.length > 0) {
