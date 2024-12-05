@@ -109,36 +109,32 @@ export default {
       try {
         console.log("Iniciando a criação da pipeline...");
 
-        const authstore = useAuthStore();
-        const userId = authstore.user.id;
+        const authStore = useAuthStore();
+        const userId = authStore.user.id;
 
-        console.log("ID do usuário recuperado :", userId);
+        if (!userId) {
+          console.error("Usuário não autenticado.");
+          return;
+        }
 
         const pipelineStore = usePipelineStore();
-        const pipelinePhaseStore = usePipelinePhaseStore();
         const pipelinePayload = {
           name: this.localPipelineName,
           userIds: [userId],
+          phases: this.steps, // Passa as fases diretamente
         };
 
-        // 1. Criar a Pipeline usando a store
+        // Criar pipeline e fases
         const pipeline = await pipelineStore.createPipeline(pipelinePayload);
-        console.log("Pipeline criada com sucesso:", pipelinePayload);
 
-        // 2. Criar as Fases associadas à pipeline
-        if (this.steps.length > 0) {
-          for (const step of this.steps) {
-            console.log(`Criando fase para a pipeline ${pipeline.id}:`, step);
-            const phase = await pipelinePhaseStore.createPipelinePhase({
-              name: step,
-              pipeline_id: pipeline.id,
-            });
-            console.log("Resposta da criação da fase:", phase);
-          }
-          console.log("Fases criadas com sucesso!");
+        if (!pipeline || !pipeline.id) {
+          console.error("Erro ao criar pipeline.");
+          return;
         }
 
-        // Fechar o modal e emitir evento
+        console.log("Pipeline e fases criadas com sucesso:", pipeline);
+
+        // Fechar modal e emitir evento
         this.$emit("createPipeline", {
           id: pipeline.id,
           name: this.localPipelineName,
