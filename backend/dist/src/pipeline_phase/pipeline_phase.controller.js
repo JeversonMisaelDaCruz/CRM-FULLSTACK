@@ -24,6 +24,7 @@ let PipelinePhaseController = class PipelinePhaseController {
     }
     create(createPipelinePhaseDto) {
         const response = this.pipelinePhaseService.create(createPipelinePhaseDto);
+        console.log("Response no controller", response);
         if (!response) {
             throw new Error('pipelinePhase not created');
         }

@@ -111,11 +111,6 @@ export default {
 
         const authstore = useAuthStore();
         const userId = authstore.user.id;
-        
-        if (!userId || userId.length !== 36) {
-          console.error("ID do usuário inválido:", userId);
-          return;
-        }
 
         console.log("ID do usuário recuperado :", userId);
 
@@ -123,7 +118,7 @@ export default {
         const pipelinePhaseStore = usePipelinePhaseStore();
         const pipelinePayload = {
           name: this.localPipelineName,
-          userIds: [userId], // Certifique-se de que `userId` é um UUID válido
+          userIds: [userId],
         };
 
         // 1. Criar a Pipeline usando a store

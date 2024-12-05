@@ -17,11 +17,6 @@ export class CreatePipelineDto {
     message: 'O nome deve ter no máximo 30 caracteres',
   })
   name: string;
-
-  @IsArray()
-  @ArrayNotEmpty({
-    message: 'A pipeline deve ser associada a pelo menos um usuário.',
-  })
   @IsNotEmpty({
     each: true,
     message: 'Os IDs de usuário não podem estar vazios.',

@@ -1,5 +1,6 @@
 import API from "@/services/module/API";
 import { defineStore } from "pinia";
+import { useAuthStore } from "@/store/auth/User";
 
 export const usePipelineStore = defineStore("pipeline", {
   state: () => ({
@@ -19,15 +20,34 @@ export const usePipelineStore = defineStore("pipeline", {
 
     async createPipeline(data) {
       try {
-        const token = localStorage.getItem("@crm.access_token");
-        const userId = JSON.parse(atob(token.split(".")[1])).id;
+        // Obter o token e o userId da store de autenticação
+        const authStore = useAuthStore(); // Certifique-se de ter importado
+        const userId = authStore.user.id;
+
+        if (!userId) {
+          console.error("Usuário não autenticado ou ID inválido.");
+          return;
+        }
+
+        // Garantir que o payload tenha IDs únicos
         const payload = {
-          ...data,
-          userIds: [...(data.userIds || []), userId],
+          name: data.name, // O nome da pipeline
+          userIds: [...new Set([...(data.userIds || []), userId])], // IDs únicos
         };
 
+        console.log("Payload enviado para o backend:", payload);
+
+        // Enviar a requisição ao backend
         const response = await API.pipeline.createPipeline(payload);
-        console.log("Pipeline criada com sucesso", response);
+
+        if (!response || !response.id) {
+          console.error("Resposta inválida do backend:", response);
+          return;
+        }
+
+        console.log("Pipeline criada com sucesso:", response);
+
+        // Atualizar o estado da store com a nova pipeline
         this.pipeline.push(response);
       } catch (error) {
         console.error("Erro ao criar pipeline:", error);
