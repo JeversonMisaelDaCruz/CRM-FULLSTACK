@@ -11,6 +11,7 @@ export const usePipelinePhaseStore = defineStore("pipelinePhase", {
       try {
         const response = await API.PipelinePhase.getPipelinePhase();
         this.phases = response;
+        console.log("Phases carregadas no store", response);
       } catch (error) {
         console.error("Erro ao buscar pipeline phases:", error);
       }
@@ -20,6 +21,7 @@ export const usePipelinePhaseStore = defineStore("pipelinePhase", {
       try {
         const response = await API.PipelinePhase.createPipelinePhase(data);
         this.phases.push(response);
+        console.log("Pipeline phase criada no store", response);
       } catch (error) {
         console.error("Erro ao criar pipeline phase:", error);
       }
@@ -37,6 +39,5 @@ export const usePipelinePhaseStore = defineStore("pipelinePhase", {
         throw error;
       }
     },
-    
   },
 });

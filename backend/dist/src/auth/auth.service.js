@@ -39,12 +39,18 @@ let AuthService = class AuthService {
         });
         return {
             access_token: accessToken,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+            },
         };
     }
     async getProfile(id) {
         return await this.prisma.user.findFirst({
             where: { id: id },
             select: {
+                id: true,
                 name: true,
                 identifier: true,
                 email: true,

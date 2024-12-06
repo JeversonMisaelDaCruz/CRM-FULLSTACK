@@ -1,5 +1,3 @@
-// pipelinePhase.e2e-spec.ts
-
 import * as request from 'supertest';
 import { app, authToken } from '../../global.e2e-spec';
 import {
@@ -8,7 +6,6 @@ import {
   updatePipelinePhaseData,
 } from './pipelinePhase.const.e2e';
 
-// Testes de criação
 it('Criando uma Pipeline Phase faltando autenticação', async () => {
   return await request(app.getHttpServer())
     .post('/pipeline-phase')
@@ -40,7 +37,6 @@ it('Criando uma Pipeline Phase', async () => {
     .expect(201);
 });
 
-// Testes de listagem
 it('Listando todas as Pipeline Phases', async () => {
   return await request(app.getHttpServer())
     .get('/pipeline-phase')
@@ -78,7 +74,6 @@ it('Listando uma Pipeline Phase pelo ID', async () => {
     .expect(200);
 });
 
-// Testes de atualização
 it('Atualizando uma Pipeline Phase sem autenticação', async () => {
   const response = await request(app.getHttpServer())
     .get('/pipeline-phase')
@@ -129,7 +124,6 @@ it('Atualizando uma Pipeline Phase com sucesso', async () => {
     .expect(200);
 });
 
-// Testes de exclusão
 it('Deletando uma Pipeline Phase sem autenticação', async () => {
   const response = await request(app.getHttpServer())
     .get('/pipeline-phase')

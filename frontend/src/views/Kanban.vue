@@ -1,123 +1,108 @@
 <template>
-  <v-card>
+  <v-card style="background-color: #faf3e0">
     <v-layout>
+
       <Header
         :selectedPipeline="selectedPipeline"
         @toggleDrawer="drawer = !drawer"
       />
 
-      <!-- Menu Lateral -->
-      <v-navigation-drawer v-model="drawer" temporary>
-        <v-list>
-          <template v-for="(pipeline, index) in pipelines" :key="index">
-            <!-- Pipeline -->
-            <v-list-item @click="selectPipeline(pipeline)">
-              <div class="d-flex align-center justify-space-between w-100">
-                <v-list-item-title>
-                  {{ pipeline ? pipeline.name.toUpperCase() : "" }}
-                </v-list-item-title>
-                <v-btn icon @click.stop="confirmDelete(pipeline)" size="medium">
-                  <v-icon color="red">mdi-delete</v-icon>
-                </v-btn>
-              </div>
-            </v-list-item>
-            <v-divider class="my-2" />
-          </template>
-        </v-list>
-      </v-navigation-drawer>
+      <NavigationDrawer
+        :pipelines="pipelines"
+        :drawer="drawer"
+        @closeDrawer="drawer = false"
+        @selectPipeline="selectPipeline"
+        @confirmDelete="confirmDelete"
+      />
 
-      <!-- Modal de Confirmação de delete -->
       <v-dialog v-model="showConfirm" max-width="400">
+
         <v-card>
           <v-card-title class="text-h6">Deletar Pipeline</v-card-title>
           <v-card-text>
             Deseja realmente deletar a pipeline
-            <strong>{{ pipelineToDelete ? pipelineToDelete.name : "" }}</strong>
+            <strong>{{ pipelineToDelete?.name || "" }}</strong>
           </v-card-text>
           <v-card-actions>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-btn color="red" @click="deletePipeline">Sim</v-btn>
             <v-btn color="grey" @click="closeConfirm">Cancelar</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
 
-      <!-- Conteúdo Principal -->
-      <v-main style="height: 100vh">
-        <v-container>
-          <v-row>
-            <v-col cols="12" class="d-flex justify-start">
-              <!-- Botão para abrir o modal de criação de Pipeline -->
-              <v-btn
-                v-if="!selectedPipeline"
-                @click="showPipelineModal = true"
-                color="primary"
-              >
-                Criar Pipeline
-              </v-btn>
-              <!-- Botão para abrir o modal de criação de Fase -->
+      <v-main
+        :style="{
+          marginLeft: drawer ? '250px' : '0px',
+          transition: 'margin-left 0.3s ease',
+        }"
+        style="height: 100vh"
+      >
+        <div class="d-flex flex-column" style="margin: 40px 0px 0px 40px">
+          <CreatePipelineButton
+            :selectedPipeline="selectedPipeline"
+            @create-pipeline="showPipelineModal = true"
+          />
+
+          <v-row class="d-flex flex-column">
+            <v-col>
               <v-btn
                 v-if="selectedPipeline"
                 @click="openPhaseModal"
-                color="primary"
+                color="#B8AD90"
                 class="ml-4"
               >
                 Criar Quadro
               </v-btn>
             </v-col>
+
+            <v-col>
+              <v-list
+                v-if="filteredPhases.length > 0"
+                class="mt-4"
+                style="
+                  background-color: #b8ad90;
+                  border-radius: 6px;
+                  padding: 10px;
+                "
+              >
+                <h2>Fases da Pipeline Selecionada</h2>
+                <v-list-item
+                  v-for="(phase, index) in filteredPhases"
+                  :key="index"
+                >
+                  <v-list-item-title>{{ phase?.name || "" }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+              <Warn v-else />
+            </v-col>
           </v-row>
+        </div>
 
-          <!-- Modal para criação de Pipeline -->
-          <v-dialog v-model="showPipelineModal" max-width="500">
-            <v-card>
-              <v-card-title>Cadastrar Pipeline</v-card-title>
-              <v-card-text>
-                <v-text-field
-                  v-model="pipelineName"
-                  label="Nome:"
-                  required
-                ></v-text-field>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="primary" @click="createPipeline">Salvar</v-btn>
-                <v-btn color="grey" @click="cancelPipelineModal">
-                  Cancelar
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
+        <CreatePipeline
+          :showPipelineModal="showPipelineModal"
+          :pipelineName="pipelineName"
+          @createPipeline="handleCreatePipeline"
+          @cancelPipelineModal="cancelPipelineModal"
+        />
 
-          <!-- Modal para criação de Fase -->
-          <v-dialog v-model="showPhaseModal" max-width="500">
-            <v-card>
-              <v-card-title>Cadastrar Quadro</v-card-title>
-              <v-card-text>
-                <v-text-field
-                  v-model="phaseName"
-                  label="Nome da quadro"
-                  required
-                ></v-text-field>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="primary" @click="createPhase">Salvar</v-btn>
-                <v-btn color="grey" @click="closePhaseModal">Cancelar</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-
-          <!-- Lista de Fases -->
-          <v-list v-if="filteredPhases.length > 0" class="mt-4">
-            <v-subheader>Fases da Pipeline Selecionada</v-subheader>
-            <v-list-item v-for="(phase, index) in filteredPhases" :key="index">
-              <v-list-item-title>{{ phase?.name || "" }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-          <v-alert v-else type="info" class="mt-4">
-            Selecione uma pipeline para visualizar as fases.
-          </v-alert>
-        </v-container>
+        <v-dialog v-model="showPhaseModal" max-width="500">
+          <v-card>
+            <v-card-title>Cadastrar Quadro</v-card-title>
+            <v-card-text>
+              <v-text-field
+                v-model="phaseName"
+                label="Nome da Quadro"
+                required
+              />
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn color="primary" @click="createPhase">Salvar</v-btn>
+              <v-btn color="grey" @click="closePhaseModal">Cancelar</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-main>
     </v-layout>
   </v-card>
@@ -126,29 +111,37 @@
 <script>
 import { usePipelineStore } from "@/store/pipeline";
 import { usePipelinePhaseStore } from "@/store/pipelinesPhases";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import Header from "@/components/Header.vue";
+import NavigationDrawer from "@/components/NavigationDrawer.vue";
+import CreatePipeline from "@/components/CreatePipeline.vue";
+import Warn from "@/components/warn/warn.vue";
+import CreatePipelineButton from "@/components/buttons/CreatePipelineButton.vue";
 
 export default {
   components: {
     Header,
+    NavigationDrawer,
+    CreatePipeline,
+    Warn,
+    CreatePipelineButton,
   },
   setup() {
-    // Reactive variables
+    const router = useRouter();
+    const route = useRoute();
+    const pipelineName = ref("");
     const drawer = ref(false);
     const showPipelineModal = ref(false);
     const showPhaseModal = ref(false);
     const showConfirm = ref(false);
     const pipelineToDelete = ref(null);
-    const pipelineName = ref("");
     const phaseName = ref("");
     const selectedPipeline = ref(null);
 
-    // Stores
     const pipelineStore = usePipelineStore();
     const pipelinePhaseStore = usePipelinePhaseStore();
 
-    // Computed properties
     const pipelines = computed(() =>
       Array.isArray(pipelineStore.pipeline) ? pipelineStore.pipeline : []
     );
@@ -161,7 +154,6 @@ export default {
       );
     });
 
-    // Methods
     const confirmDelete = (pipeline) => {
       pipelineToDelete.value = pipeline;
       showConfirm.value = true;
@@ -183,12 +175,20 @@ export default {
       showConfirm.value = false;
     };
 
-    const createPipeline = async () => {
-      if (pipelineName.value) {
-        await pipelineStore.createPipeline({ name: pipelineName.value });
-        pipelineName.value = "";
+    const handleCreatePipeline = async (pipelineName) => {
+      try {
+        await pipelineStore.createPipeline({
+          name: pipelineName,
+          userIds: [userId],
+        });
         showPipelineModal.value = false;
+      } catch (error) {
+        console.error("Erro ao criar pipeline:", error);
       }
+    };
+
+    const cancelPipelineModal = () => {
+      showPipelineModal.value = false;
     };
 
     const createPhase = async () => {
@@ -206,11 +206,6 @@ export default {
       }
     };
 
-    const cancelPipelineModal = () => {
-      pipelineName.value = "";
-      showPipelineModal.value = false;
-    };
-
     const closePhaseModal = () => {
       phaseName.value = "";
       showPhaseModal.value = false;
@@ -218,46 +213,51 @@ export default {
 
     const selectPipeline = (pipeline) => {
       selectedPipeline.value = pipeline;
+      router.push({ path: "/kanban", query: { pipelineId: pipeline.id } });
     };
 
-    const openPhaseModal = () => {
-      if (!selectedPipeline.value) {
-        alert("Por favor, selecione um pipeline primeiro.");
-        return;
+    watch(
+      () => route.query.pipelineId,
+      (newPipelineId) => {
+        if (newPipelineId) {
+          selectedPipeline.value = pipelines.value.find(
+            (pipeline) => pipeline.id === newPipelineId
+          );
+        }
       }
-      showPhaseModal.value = true;
-    };
+    );
 
     onMounted(async () => {
       await pipelineStore.fetchPipelines();
       await pipelinePhaseStore.fetchPipelinePhases();
+
+      const pipelineId = route.query.pipelineId;
+      if (pipelineId) {
+        selectedPipeline.value = pipelines.value.find(
+          (pipeline) => pipeline.id === pipelineId
+        );
+      }
     });
 
     return {
-      // Reactive variables
       drawer,
       showPipelineModal,
       showPhaseModal,
       showConfirm,
       pipelineToDelete,
-      pipelineName,
       phaseName,
       selectedPipeline,
-
-      // Computed properties
       pipelines,
       filteredPhases,
-
-      // Methods
       confirmDelete,
       deletePipeline,
       closeConfirm,
-      createPipeline,
-      createPhase,
+      pipelineName,
+      handleCreatePipeline,
       cancelPipelineModal,
+      createPhase,
       closePhaseModal,
       selectPipeline,
-      openPhaseModal,
     };
   },
 };

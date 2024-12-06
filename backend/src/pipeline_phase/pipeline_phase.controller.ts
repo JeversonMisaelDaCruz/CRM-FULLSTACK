@@ -20,6 +20,7 @@ export class PipelinePhaseController {
   @Post()
   create(@Body() createPipelinePhaseDto: CreatePipelinePhaseDto) {
     const response = this.pipelinePhaseService.create(createPipelinePhaseDto);
+    console.log("Response no controller",response)
     if (!response) {
       throw new Error('pipelinePhase not created');
     }

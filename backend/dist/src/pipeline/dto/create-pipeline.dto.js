@@ -26,10 +26,6 @@ __decorate([
     __metadata("design:type", String)
 ], CreatePipelineDto.prototype, "name", void 0);
 __decorate([
-    (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.ArrayNotEmpty)({
-        message: 'A pipeline deve ser associada a pelo menos um usuário.',
-    }),
     (0, class_validator_1.IsNotEmpty)({
         each: true,
         message: 'Os IDs de usuário não podem estar vazios.',

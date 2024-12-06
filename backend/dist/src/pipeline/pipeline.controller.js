@@ -26,18 +26,18 @@ let PipelineController = class PipelineController {
         return this.pipelineService.create(createPipelineDto);
     }
     async findAll(req) {
-        const userId = req.user.id;
-        if (!userId) {
+        const GetuserId = req.user.id;
+        if (!GetuserId) {
             throw new common_1.HttpException('Usuário não autenticado.', 401);
         }
-        return this.pipelineService.findAll(userId);
+        return this.pipelineService.findAll(GetuserId);
     }
     async findOne(id, req) {
-        const userId = req.user.id;
-        if (!userId) {
+        const GetuserId = req.user.id;
+        if (!GetuserId) {
             throw new common_1.HttpException('Usuário não autenticado.', 401);
         }
-        return this.pipelineService.findById(id, userId);
+        return this.pipelineService.findById(id, GetuserId);
     }
     async update(id, updatePipelineDto) {
         return this.pipelineService.update(id, updatePipelineDto);

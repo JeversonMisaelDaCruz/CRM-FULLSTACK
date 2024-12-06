@@ -1,4 +1,3 @@
-
 export const newPipelinePhase = {
   name: 'Ganho',
 };
@@ -8,5 +7,5 @@ export const updatePipelinePhaseData = {
 };
 
 export const pipelinePhaseWrongData = {
-  teste: 'darth plagueis',
+  teste: 'Bernard teste',
 };

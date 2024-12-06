@@ -33,6 +33,11 @@ export class AuthService {
 
     return {
       access_token: accessToken,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
     };
   }
 
@@ -40,6 +45,7 @@ export class AuthService {
     return await this.prisma.user.findFirst({
       where: { id: id },
       select: {
+        id: true,
         name: true,
         identifier: true,
         email: true,

@@ -7,8 +7,9 @@ export class Pipeline extends Http {
 
   async createPipeline(data) {
     try {
+      console.log("Enviando payload para o backend:", data);
       const response = await this.post("", data);
-      console.log("Pipeline criada", response);
+      console.log("Resposta do backend", response);
       return response;
     } catch (error) {
       console.log("Erro ao criar pipeline", error);

@@ -14,23 +14,21 @@ export class PipelineService {
   async create(createPipelineDto: CreatePipelineDto) {
     const { userIds } = createPipelineDto;
 
-    // Validar se todos os usuários existem
-    const users = await this.prismaService.user.findMany({
-      where: {
-        id: { in: userIds },
-      },
-    });
 
-    if (users.length !== userIds.length) {
-      throw new HttpException(
-        'Um ou mais IDs de usuário fornecidos não existem.',
-        400,
-      );
+
+    for (const id of userIds) {
+      const user = await this.prismaService.user.findUnique({
+        where: { id },
+      });
+
+      if (!user) {
+        throw new HttpException(`Usuário com ID ${id} não encontrado.`, 404);
+      }
     }
 
+    console.log('createPipelineDto: dentro do service', createPipelineDto);
     return await this.pipelineRepository.create(createPipelineDto);
   }
-
   async findAll(userId: string) {
     const pipelines = await this.pipelineRepository.findByUser(userId);
     if (!pipelines.length) {

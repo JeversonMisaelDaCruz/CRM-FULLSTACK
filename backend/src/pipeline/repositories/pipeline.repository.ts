@@ -9,21 +9,21 @@ export class PipelineRepository {
 
   async create(createPipelineDto: CreatePipelineDto) {
     const { name, userIds } = createPipelineDto;
-
-    // Criar a pipeline
+    console.log('createPipelineDto no repository:', createPipelineDto);
     const pipeline = await this.prismaService.pipeline.create({
       data: { name },
     });
 
-    // Associar os usuários à pipeline
-    const associations = userIds.map((userId) => ({
+    console.log('pipeline criado:', pipeline);
+    const associationsIdWithPipeline = userIds.map((userId) => ({
       pipeline_id: pipeline.id,
       user_id: userId,
     }));
 
     await this.prismaService.pipeline_User.createMany({
-      data: associations,
+      data: associationsIdWithPipeline,
     });
+    console.log('associationsIdWithPipeline:', associationsIdWithPipeline);
 
     return pipeline;
   }

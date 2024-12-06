@@ -13,6 +13,7 @@ export class Auth extends Http {
   async profile() {
     try {
       const response = await this.get("/profile");
+      console.log("Perfil carregado:", response);
       return response;
     } catch (error) {
       console.error("Erro no serviço de perfil:", error);
