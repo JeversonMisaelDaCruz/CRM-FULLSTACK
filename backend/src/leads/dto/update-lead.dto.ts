@@ -16,7 +16,6 @@ export class UpdateLeadDto {
   @MaxLength(100)
   name?: string;
 
-
   @IsNotEmpty({
     message: 'O e-mail deve ser informado',
   })
@@ -51,7 +50,6 @@ export class UpdateLeadDto {
       'O Telefone deve ter no maximo 17 aracteres. Por favor, tente novamente.',
   })
   phone?: string;
-
 
   @IsString()
   @IsOptional()

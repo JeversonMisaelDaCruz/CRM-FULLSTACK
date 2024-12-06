@@ -40,10 +40,19 @@
 
         <template v-else-if="selectedOption === 'etapas'">
           <div>
-            <h3>Etapas Predefinidas</h3>
+            <h3>ETAPAS:</h3>
             <v-list>
               <v-list-item v-for="(step, index) in steps" :key="index">
-                <v-list-item-title>{{ step }}</v-list-item-title>
+                <v-row align="center" class="w-100">
+                  <v-col>
+                    <v-list-item-title>{{ step }}</v-list-item-title>
+                  </v-col>
+                  <v-col class="d-flex justify-end" cols="auto">
+                    <v-icon color="red" @click="deleteStep(index)">
+                      mdi-delete
+                    </v-icon>
+                  </v-col>
+                </v-row>
               </v-list-item>
             </v-list>
             <v-text-field
@@ -89,7 +98,7 @@ export default {
     return {
       localPipelineName: this.pipelineName,
       selectedOption: "pipeline",
-      steps: ["Test"],
+      steps: ["Prospeção"],
       newStep: "",
     };
   },
@@ -121,20 +130,13 @@ export default {
         const pipelinePayload = {
           name: this.localPipelineName,
           userIds: [userId],
-          phases: this.steps, // Passa as fases diretamente
+          phases: this.steps,
         };
 
-        // Criar pipeline e fases
         const pipeline = await pipelineStore.createPipeline(pipelinePayload);
-
-        if (!pipeline || !pipeline.id) {
-          console.error("Erro ao criar pipeline.");
-          return;
-        }
 
         console.log("Pipeline e fases criadas com sucesso:", pipeline);
 
-        // Fechar modal e emitir evento
         this.$emit("createPipeline", {
           id: pipeline.id,
           name: this.localPipelineName,
@@ -147,6 +149,10 @@ export default {
     },
     selectOption(option) {
       this.selectedOption = option;
+    },
+    deleteStep(index) {
+      this.steps.splice(index, 1);
+      console.log(`'step deletado com sucesso no index ${index}`);
     },
     addStep() {
       const stepName = this.newStep.trim();

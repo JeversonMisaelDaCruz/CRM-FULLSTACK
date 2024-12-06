@@ -7,48 +7,48 @@ export declare class PipelineService {
     private readonly prismaService;
     constructor(pipelineRepository: PipelineRepository, prismaService: PrismaService);
     create(createPipelineDto: CreatePipelineDto): Promise<{
-        id: string;
         name: string;
+        id: string;
         created_at: Date;
         updated_at: Date;
     }>;
     findAll(userId: string): Promise<({
         users: {
             user: {
-                id: string;
                 name: string;
                 email: string;
+                id: string;
             };
         }[];
     } & {
-        id: string;
         name: string;
+        id: string;
         created_at: Date;
         updated_at: Date;
     })[]>;
     findById(pipelineId: string, userId: string): Promise<{
         users: {
             user: {
-                id: string;
                 name: string;
                 email: string;
+                id: string;
             };
         }[];
     } & {
-        id: string;
         name: string;
+        id: string;
         created_at: Date;
         updated_at: Date;
     }>;
     update(id: string, updatePipelineDto: UpdatePipelineDto): Promise<{
-        id: string;
         name: string;
+        id: string;
         created_at: Date;
         updated_at: Date;
     }>;
     delete(id: string): Promise<{
-        id: string;
         name: string;
+        id: string;
         created_at: Date;
         updated_at: Date;
     }>;

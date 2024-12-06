@@ -8,6 +8,16 @@ export const usePipelineStore = defineStore("pipeline", {
   }),
 
   actions: {
+    async fetchPipelines() {
+      try {
+        const response = await API.pipeline.getPipeline();
+        console.log("fetchPipeline log:", response);
+        this.pipeline = response;
+      } catch (error) {
+        console.error("Erro ao buscar pipelines:", error);
+      }
+    },
+
     async createPipeline(data) {
       try {
         const authStore = useAuthStore();

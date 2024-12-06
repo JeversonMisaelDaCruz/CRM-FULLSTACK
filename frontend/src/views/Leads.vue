@@ -16,14 +16,15 @@
         style="background-color: #dfd8c3; color: black"
       >
         <template #item.actions="{ item }">
-
-          <v-btn color="#B8AD90" icon @click="openEditModal(item)">
-
-            <v-icon color="black">mdi-pencil</v-icon>
-          </v-btn>
-          <v-btn color="#B8AD90" icon @click="handleDeleteLead(item.id)">
-            <v-icon color="black">mdi-delete</v-icon>
-          </v-btn>
+          <div class="d-flex ga-4">
+            <v-icon color="blue" @click="openEditModal(item)" size="25"
+              >mdi-pencil
+              <!-- <v-icon color="blue">mdi-pencil</v-icon> -->
+            </v-icon>
+            <v-icon color="error" @click="handleDeleteLead(item.id)" size="25"
+              >mdi-trash-can
+            </v-icon>
+          </div>
         </template>
       </v-data-table>
       <v-btn class="mt-4" color="#B8AD90" @click="openCreateModal">
@@ -80,9 +81,11 @@ const handleSaveLead = async (leadData) => {
   try {
     if (selectedLead.value) {
       await leadsStore.updateLead({ ...selectedLead.value, ...leadData });
+      console.log("caiu no log do if leadData", leadData);
       snackbarMessage.value = "Lead atualizado com sucesso!";
     } else {
       await leadsStore.createLead(leadData);
+      consolelog("caiu no log do else leadData", leadData);
       snackbarMessage.value = "Lead criado com sucesso!";
     }
     snackbar.value = true;

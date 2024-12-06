@@ -15,64 +15,63 @@
       <v-card-text>
         <v-card class="elevation-4" style="padding: 16px">
           <div color="">
-
             <v-row>
               <v-col>
                 <v-text-field
-                v-model="leadData.name"
-                label="Nome"
-                outlined
-                dense
-                hide-details
+                  v-model="leadData.name"
+                  label="Nome"
+                  outlined
+                  dense
+                  hide-details
                 />
               </v-col>
               <v-col>
                 <v-text-field
-                v-model="leadData.email"
-                label="E-mail"
-                outlined
-                dense
-                hide-details
+                  v-model="leadData.email"
+                  label="E-mail"
+                  outlined
+                  dense
+                  hide-details
                 />
               </v-col>
             </v-row>
             <v-row>
               <v-col>
                 <v-text-field
-                v-model="leadData.phone"
-                label="Telefone"
-                outlined
-                dense
-                hide-details
+                  v-model="leadData.phone"
+                  label="Telefone"
+                  outlined
+                  dense
+                  hide-details
                 />
               </v-col>
               <v-col>
                 <v-select
-                v-model="leadData.pipeline_phase_id"
-                :items="pipelinePhases"
-                item-title="name"
-                item-value="id"
-                label="Pipeline Phase"
-                :rules="[rules.requiredPipelinePhase]"
-                outlined
-                dense
-                hide-details
+                  v-model="leadData.pipeline_phase_id"
+                  :items="pipelinePhases"
+                  item-title="name"
+                  item-value="id"
+                  label="Pipeline Phase"
+                  :rules="[rules.requiredPipelinePhase]"
+                  outlined
+                  dense
+                  hide-details
                 />
               </v-col>
             </v-row>
           </div>
-          </v-card>
-        </v-card-text>
-        <v-card-actions class="d-flex justify-end">
-          <v-btn
+        </v-card>
+      </v-card-text>
+      <v-card-actions class="d-flex justify-end">
+        <v-btn
           color="white"
           style="background-color: red; font-weight: bold; color: white"
           @click="closeModal"
-          >
+        >
           Cancelar
         </v-btn>
         <v-btn
-        color="white"
+          color="white"
           style="background-color: #b8ad90; font-weight: bold; color: white"
           @click="confirmAction"
         >
