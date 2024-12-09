@@ -5,49 +5,49 @@ export declare class PipelineController {
     private readonly pipelineService;
     constructor(pipelineService: PipelineService);
     create(createPipelineDto: CreatePipelineDto): Promise<{
-        name: string;
         id: string;
         created_at: Date;
         updated_at: Date;
+        name: string;
     }>;
     findAll(req: any): Promise<({
         users: {
             user: {
+                id: string;
                 name: string;
                 email: string;
-                id: string;
             };
         }[];
     } & {
-        name: string;
         id: string;
         created_at: Date;
         updated_at: Date;
+        name: string;
     })[]>;
     findOne(id: string, req: any): Promise<{
         users: {
             user: {
+                id: string;
                 name: string;
                 email: string;
-                id: string;
             };
         }[];
     } & {
-        name: string;
         id: string;
         created_at: Date;
         updated_at: Date;
+        name: string;
     }>;
     update(id: string, updatePipelineDto: UpdatePipelineDto): Promise<{
-        name: string;
         id: string;
         created_at: Date;
         updated_at: Date;
+        name: string;
     }>;
     remove(id: string): Promise<{
-        name: string;
         id: string;
         created_at: Date;
         updated_at: Date;
+        name: string;
     }>;
 }

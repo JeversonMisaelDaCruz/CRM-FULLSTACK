@@ -7,8 +7,8 @@ import { LeadsRepository } from './repositories/leads.repository';
 export class LeadsService {
   constructor(private readonly leadsRepository: LeadsRepository) {}
 
-  async create(createLeadDto: CreateLeadDto,) {
-    const leadData = { ...createLeadDto};
+  async create(createLeadDto: CreateLeadDto) {
+    const leadData = { ...createLeadDto };
     console.log('leadData:', leadData);
     return await this.leadsRepository.create(leadData);
   }

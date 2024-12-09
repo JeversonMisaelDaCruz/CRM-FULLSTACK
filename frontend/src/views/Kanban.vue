@@ -37,18 +37,15 @@
         style="height: 100vh"
       >
         <div class="d-flex flex-column" style="margin: 40px 0px 0px 40px">
-          <CreatePipelineButton
-            :selectedPipeline="selectedPipeline"
-            @create-pipeline="showPipelineModal = true"
-          />
+          <CreatePipelineButton @create-pipeline="showPipelineModal = true" />
 
           <v-row class="d-flex flex-column">
             <v-col>
               <v-btn
                 v-if="selectedPipeline"
-                @click="openPhaseModal"
+                @click="showPipelineModal"
                 color="#B8AD90"
-                class="ml-4"
+                class="ga-1"
               >
                 Criar Quadro
               </v-btn>

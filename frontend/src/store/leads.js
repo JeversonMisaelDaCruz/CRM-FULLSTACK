@@ -29,9 +29,11 @@ export const useLeadsStore = defineStore("leads", {
       }
     },
 
-    async updateLead(leadData) {
+    async updateLead(id, leadData) {
       try {
-        const response = await API.leads.updateLead(leadData);
+        const response = await API.leads.updateLead(id, leadData);
+        console.log("Lead atualizado:", response);
+
         const index = this.leads.findIndex((lead) => lead.id === response.id);
         if (index !== -1) {
           this.leads.splice(index, 1, response);

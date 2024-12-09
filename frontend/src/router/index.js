@@ -18,11 +18,13 @@ const routes = [
     meta: { requiresAuth: true },
     children: [
       {
+        meta: { title: "Kanban" },
         path: "kanban",
         name: "Kanban",
         component: Kanban,
       },
       {
+        meta: { title: "Leads" },
         path: "leads",
         name: "Leads",
         component: Leads,
@@ -32,12 +34,14 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes,
 });
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
+
+  document.title = to.meta.title || "CRM APP";
 
   if (to.meta.requiresAuth && !authStore.token) {
     console.warn("Usuário não autenticado. Redirecionando para login...");

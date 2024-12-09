@@ -18,6 +18,8 @@ export const usePipelineStore = defineStore("pipeline", {
       }
     },
 
+
+
     async createPipeline(data) {
       try {
         const authStore = useAuthStore();

@@ -17,11 +17,10 @@
       >
         <template #item.actions="{ item }">
           <div class="d-flex ga-4">
-            <v-icon color="blue" @click="openEditModal(item)" size="25"
-              >mdi-pencil
-              <!-- <v-icon color="blue">mdi-pencil</v-icon> -->
-            </v-icon>
-            <v-icon color="error" @click="handleDeleteLead(item.id)" size="25"
+            <v-icon color="blue" @click="openEditModal(item)" size="23"
+              >mdi-pencil</v-icon
+            >
+            <v-icon color="error" @click="handleDeleteLead(item.id)" size="23"
               >mdi-trash-can
             </v-icon>
           </div>
@@ -71,23 +70,39 @@ const openCreateModal = () => {
 };
 
 const openEditModal = (lead) => {
-  selectedLead.value = { ...lead };
+  const filteredLead = {
+    id: lead.id,
+    name: lead.name,
+    email: lead.email,
+    phone: lead.phone,
+    pipeline_phase_id: lead.pipeline_phase_id,
+  };
+
+  selectedLead.value = { ...filteredLead };
+  console.log("Editando lead:", filteredLead);
   modalTitle.value = "Editar Lead";
   modalButtonText.value = "Salvar";
   dialog.value = true;
 };
-
 const handleSaveLead = async (leadData) => {
   try {
-    if (selectedLead.value) {
-      await leadsStore.updateLead({ ...selectedLead.value, ...leadData });
-      console.log("caiu no log do if leadData", leadData);
-      snackbarMessage.value = "Lead atualizado com sucesso!";
-    } else {
-      await leadsStore.createLead(leadData);
-      consolelog("caiu no log do else leadData", leadData);
-      snackbarMessage.value = "Lead criado com sucesso!";
-    }
+    const isUpdating = !!selectedLead.value;
+    const { id, ...payload } = isUpdating
+      ? { ...selectedLead.value, ...leadData }
+      : leadData;
+
+    const response = isUpdating
+      ? await leadsStore.updateLead(id, payload)
+      : await leadsStore.createLead(payload);
+
+    console.log(
+      isUpdating ? "Lead atualizado com sucesso!" : "Lead criado com sucesso!",
+      response
+    );
+
+    snackbarMessage.value = isUpdating
+      ? "Lead atualizado com sucesso!"
+      : "Lead criado com sucesso!";
     snackbar.value = true;
     dialog.value = false;
   } catch (error) {

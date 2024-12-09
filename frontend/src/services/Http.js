@@ -17,7 +17,6 @@ class Http {
         Authorization: token ? `Bearer ${token}` : "",
       },
     };
-    console.log(token);
   }
 
   handleSessionExpired() {
