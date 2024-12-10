@@ -11,7 +11,7 @@
       />
       <v-data-table
         :headers="headers"
-        :items="leads"
+        :items="leads"d
         class="elevation-1 mt-4"
         style="background-color: #dfd8c3; color: black"
       >
