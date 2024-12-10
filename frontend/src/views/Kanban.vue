@@ -51,26 +51,47 @@
               </v-btn>
             </v-col>
 
-            <v-col>
-              <v-list
+            <v-row>
+              <div
                 v-if="filteredPhases.length > 0"
-                class="mt-4"
-                style="
-                  background-color: #b8ad90;
-                  border-radius: 6px;
-                  padding: 10px;
-                "
+                class="flex overflow-x-scroll py-12"
               >
-                <h2>Fases da Pipeline Selecionada</h2>
-                <v-list-item
-                  v-for="(phase, index) in filteredPhases"
-                  :key="index"
+                <!-- Colunas do Kanban -->
+                <div
+                  v-for="phase in filteredPhases"
+                  :key="phase.id"
+                  class="bg-gray-100 rounded-lg px-3 py-3 column-width rounded mr-4"
                 >
-                  <v-list-item-title>{{ phase?.name || "" }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
+                  <!-- Nome da fase -->
+                  <p class="text-gray-700 font-semibold">
+                    {{ phase.name }}
+                  </p>
+
+                  <!-- Leads dentro da fase -->
+                  <div v-if="getLeadsByPhase(phase.id).length > 0">
+                    <v-card
+                      v-for="lead in getLeadsByPhase(phase.id)"
+                      :key="lead.id"
+                      class="mt-2"
+                    >
+                      <v-card-title>{{ lead.name }}</v-card-title>
+                      <v-card-text>
+                        <v-select
+                          :items="statusOptions"
+                          v-model="lead.pipeline_phase_id"
+                          label="Alterar Fase"
+                          @change="
+                            updateLeadStatus(lead.id, lead.pipeline_phase_id)
+                          "
+                        ></v-select>
+                      </v-card-text>
+                    </v-card>
+                  </div>
+                  <p v-else>Nenhum lead nesta fase.</p>
+                </div>
+              </div>
               <Warn v-else />
-            </v-col>
+            </v-row>
           </v-row>
         </div>
 
@@ -106,6 +127,7 @@
 <script>
 import { usePipelineStore } from "@/store/pipeline";
 import { usePipelinePhaseStore } from "@/store/pipelinesPhases";
+import { useLeadsStore } from "@/store/leads"; // Importação corrigida
 import { computed, onMounted, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import Header from "@/components/Header.vue";
@@ -136,6 +158,7 @@ export default {
 
     const pipelineStore = usePipelineStore();
     const pipelinePhaseStore = usePipelinePhaseStore();
+    const leadsStore = useLeadsStore();
 
     const pipelines = computed(() =>
       Array.isArray(pipelineStore.pipeline) ? pipelineStore.pipeline : []
@@ -211,6 +234,28 @@ export default {
       router.push({ path: "/kanban", query: { pipelineId: pipeline.id } });
     };
 
+    const getLeadsByPhase = (phaseId) => {
+      return leadsStore.leads.filter(
+        (lead) => lead.pipeline_phase_id === phaseId
+      );
+    };
+
+    const statusOptions = computed(() =>
+      filteredPhases.value.map((phase) => ({
+        text: phase.name,
+        value: phase.id,
+      }))
+    );
+
+    const updateLeadStatus = async (leadId, newPhaseId) => {
+      try {
+        await leadsStore.updateLead(leadId, { pipeline_phase_id: newPhaseId });
+        console.log("Lead atualizado com sucesso!");
+      } catch (error) {
+        console.error("Erro ao atualizar o lead:", error);
+      }
+    };
+
     watch(
       () => route.query.pipelineId,
       (newPipelineId) => {
@@ -225,6 +270,7 @@ export default {
     onMounted(async () => {
       await pipelineStore.fetchPipelines();
       await pipelinePhaseStore.fetchPipelinePhases();
+      await leadsStore.fetchLeads();
 
       const pipelineId = route.query.pipelineId;
       if (pipelineId) {
@@ -253,7 +299,16 @@ export default {
       createPhase,
       closePhaseModal,
       selectPipeline,
+      getLeadsByPhase,
+      statusOptions,
+      updateLeadStatus,
     };
   },
 };
 </script>
+<style>
+.column-width {
+  min-width: 320px;
+  width: 320px;
+}
+</style>

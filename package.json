@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "draggable": "^4.2.0",
+    "vuedraggable": "^2.24.3"
+  }
+}
