@@ -42,6 +42,7 @@ export class PipelineRepository {
         },
       },
       include: {
+        phases: true,
         users: {
           select: {
             user: {

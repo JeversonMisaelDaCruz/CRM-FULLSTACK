@@ -11,7 +11,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="#B8AD90" @click="createPhase">Salvar</v-btn>
+        <v-btn color="primary" @click="createPhase">Salvar</v-btn>
         <v-btn color="grey" @click="closeModal">Cancelar</v-btn>
       </v-card-actions>
     </v-card>

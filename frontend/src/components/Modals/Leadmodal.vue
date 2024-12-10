@@ -6,7 +6,7 @@
   >
     <v-card>
       <v-card-title
-        style="background-color: #b8ad90"
+        style="background-color: primary"
         class="d-flex justify-space-between align-center"
       >
         <span class="headline">{{ title }}</span>
@@ -72,7 +72,7 @@
         </v-btn>
         <v-btn
           color="white"
-          style="background-color: #b8ad90; font-weight: bold; color: white"
+          style="background-color: primary; font-weight: bold; color: white"
           @click="confirmAction"
         >
           {{ confirmButtonText }}

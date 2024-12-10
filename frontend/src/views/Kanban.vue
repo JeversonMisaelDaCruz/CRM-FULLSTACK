@@ -1,19 +1,6 @@
 <template>
   <v-card style="background-color: #faf3e0">
     <v-layout>
-      <Header
-        :selectedPipeline="selectedPipeline"
-        @toggleDrawer="drawer = !drawer"
-      />
-
-      <NavigationDrawer
-        :pipelines="pipelines"
-        :drawer="drawer"
-        @closeDrawer="drawer = false"
-        @selectPipeline="selectPipeline"
-        @confirmDelete="confirmDelete"
-      />
-
       <v-dialog v-model="showConfirm" max-width="400">
         <v-card>
           <v-card-title class="text-h6">Deletar Pipeline</v-card-title>
@@ -44,53 +31,41 @@
               <v-btn
                 v-if="selectedPipeline"
                 @click="showPipelineModal"
-                color="#B8AD90"
+                color="primary"
                 class="ga-1"
               >
                 Criar Quadro
               </v-btn>
             </v-col>
 
-            <v-row>
+            <v-row class="kanban-container">
               <div
-                v-if="filteredPhases.length > 0"
-                class="flex overflow-x-scroll py-12"
+                v-for="phase in filteredPhases"
+                :key="phase.id"
+                class="kanban-column"
               >
-                <!-- Colunas do Kanban -->
-                <div
-                  v-for="phase in filteredPhases"
-                  :key="phase.id"
-                  class="bg-gray-100 rounded-lg px-3 py-3 column-width rounded mr-4"
-                >
-                  <!-- Nome da fase -->
-                  <p class="text-gray-700 font-semibold">
-                    {{ phase.name }}
-                  </p>
-
-                  <!-- Leads dentro da fase -->
-                  <div v-if="getLeadsByPhase(phase.id).length > 0">
-                    <v-card
-                      v-for="lead in getLeadsByPhase(phase.id)"
-                      :key="lead.id"
-                      class="mt-2"
-                    >
-                      <v-card-title>{{ lead.name }}</v-card-title>
-                      <v-card-text>
-                        <v-select
-                          :items="statusOptions"
-                          v-model="lead.pipeline_phase_id"
-                          label="Alterar Fase"
-                          @change="
-                            updateLeadStatus(lead.id, lead.pipeline_phase_id)
-                          "
-                        ></v-select>
-                      </v-card-text>
-                    </v-card>
-                  </div>
-                  <p v-else>Nenhum lead nesta fase.</p>
+                <p class="phase-name">{{ phase.name }}</p>
+                <div v-if="getLeadsByPhase(phase.id).length > 0">
+                  <v-card
+                    v-for="lead in getLeadsByPhase(phase.id)"
+                    :key="lead.id"
+                    class="lead-card"
+                  >
+                    <v-card-title>{{ lead.name }}</v-card-title>
+                    <v-card-text>
+                      <v-select
+                        :items="statusOptions"
+                        v-model="lead.pipeline_phase_id"
+                        label="Alterar Fase"
+                        @change="
+                          updateLeadStatus(lead.id, lead.pipeline_phase_id)
+                        "
+                      ></v-select>
+                    </v-card-text>
+                  </v-card>
                 </div>
+                <p v-else>Nenhum lead nesta fase.</p>
               </div>
-              <Warn v-else />
             </v-row>
           </v-row>
         </div>
@@ -127,10 +102,9 @@
 <script>
 import { usePipelineStore } from "@/store/pipeline";
 import { usePipelinePhaseStore } from "@/store/pipelinesPhases";
-import { useLeadsStore } from "@/store/leads"; // Importação corrigida
+import { useLeadsStore } from "@/store/leads";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import Header from "@/components/Header.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import CreatePipeline from "@/components/CreatePipeline.vue";
 import Warn from "@/components/warn/warn.vue";
@@ -138,7 +112,6 @@ import CreatePipelineButton from "@/components/buttons/CreatePipelineButton.vue"
 
 export default {
   components: {
-    Header,
     NavigationDrawer,
     CreatePipeline,
     Warn,
@@ -310,5 +283,30 @@ export default {
 .column-width {
   min-width: 320px;
   width: 320px;
+}
+.kanban-container {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 16px;
+  padding: 16px;
+}
+
+.kanban-column {
+  min-width: 320px;
+  background-color: black;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.phase-name {
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.lead-card {
+  margin-top: 8px;
 }
 </style>

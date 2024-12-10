@@ -1,41 +1,37 @@
 <template>
-  <v-app style="background-color: #faf3e0">
-    <Header @toggleDrawer="drawer = !drawer" />
-    <v-container>
-      <Modal
-        v-model="dialog"
-        :pipelinePhases="pipelinePhases"
-        :title="modalTitle"
-        :confirmButtonText="modalButtonText"
-        @save-lead="handleSaveLead"
-      />
-      <v-data-table
-        :headers="headers"
-        :items="leads"
-        d
-        class="elevation-1 mt-4"
-        style="background-color: #dfd8c3; color: black"
-      >
-        <template #item.actions="{ item }">
-          <div class="d-flex ga-4">
-            <v-icon color="blue" @click="openEditModal(item)" size="23"
-              >mdi-pencil</v-icon
-            >
-            <v-icon color="error" @click="handleDeleteLead(item.id)" size="23"
-              >mdi-trash-can
-            </v-icon>
-          </div>
-        </template>
-      </v-data-table>
-      <v-btn class="mt-4" color="#B8AD90" @click="openCreateModal">
-        Cadastrar Lead
-      </v-btn>
-      <v-snackbar v-model="snackbar" :timeout="3000" top right>
-        {{ snackbarMessage }}
-        <v-btn color="red" text @click="snackbar = false">Fechar</v-btn>
-      </v-snackbar>
-    </v-container>
-  </v-app>
+  <v-container>
+    <Modal
+      v-model="dialog"
+      :pipelinePhases="pipelinePhases"
+      :title="modalTitle"
+      :confirmButtonText="modalButtonText"
+      @save-lead="handleSaveLead"
+    />
+    <v-data-table
+      :headers="headers"
+      :items="leads"
+      class="elevation-1 mt-4"
+      style="background-color: #dfd8c3; color: black"
+    >
+      <template #item.actions="{ item }">
+        <div class="d-flex ga-4">
+          <v-icon color="blue" @click="openEditModal(item)" size="23"
+            >mdi-pencil</v-icon
+          >
+          <v-icon color="error" @click="handleDeleteLead(item.id)" size="23"
+            >mdi-trash-can
+          </v-icon>
+        </div>
+      </template>
+    </v-data-table>
+    <v-btn class="mt-4" color="primary" @click="openCreateModal">
+      Cadastrar Lead
+    </v-btn>
+    <v-snackbar v-model="snackbar" :timeout="3000" top right>
+      {{ snackbarMessage }}
+      <v-btn color="red" text @click="snackbar = false">Fechar</v-btn>
+    </v-snackbar>
+  </v-container>
 </template>
 
 <script setup>

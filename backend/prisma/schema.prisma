@@ -8,16 +8,19 @@ datasource db {
 }
 
 model User {
-  id         String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
-  created_at DateTime        @default(now())
-  updated_at DateTime        @default(now()) @updatedAt
-  name       String          @db.VarChar(100)
-  identifier String          @unique @db.VarChar(12)
-  email      String          @unique @db.VarChar(60)
-  password   String          @db.VarChar(200)
-  leads      Lead[]
-  tokens     Token[]
-  pipelines  Pipeline_User[]
+  id          String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  created_at  DateTime        @default(now())
+  updated_at  DateTime        @default(now()) @updatedAt
+  name        String          @db.VarChar(100)
+  identifier  String          @unique @db.VarChar(12)
+  email       String          @unique @db.VarChar(60)
+  password    String          @db.VarChar(200)
+  leads       Lead[]
+  tokens      Token[]
+  pipelines   Pipeline_User[]
+  Deal        Deal[]
+  DealComment DealComment[]
+  DealEvent   DealEvent[]
 
   @@map("users")
 }
@@ -68,6 +71,7 @@ model Pipeline_Phase {
   pipeline    Pipeline? @relation(fields: [pipeline_id], references: [id], onDelete: SetNull)
   pipeline_id String?   @db.Uuid()
   leads       Lead[]
+  Deal        Deal[]
 
   @@map("pipeline_phases")
 }
@@ -83,6 +87,56 @@ model Lead {
   user_id           String?         @db.Uuid()
   pipeline_phase    Pipeline_Phase? @relation(fields: [pipeline_phase_id], references: [id], onDelete: SetNull)
   pipeline_phase_id String?         @db.Uuid()
+  deal              Deal[]
 
   @@map("leads")
+}
+
+// go - quando deu certo
+// nogo - quando nao deu certo
+// pending - em aberto
+
+model Deal {
+  id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  created_at        DateTime        @default(now())
+  updated_at        DateTime        @default(now()) @updatedAt
+  title             String          @db.Text()
+  description       String          @db.Text()
+  status            String          @default("pending") @db.VarChar(30)
+  archived          Boolean         @default(false)
+  due_date          DateTime?
+  user              User?           @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  user_id           String?         @db.Uuid()
+  pipeline_phase    Pipeline_Phase? @relation(fields: [pipeline_phase_id], references: [id], onDelete: SetNull)
+  pipeline_phase_id String?         @db.Uuid()
+  lead_id           String?         @db.Uuid()
+  lead              Lead?           @relation(fields: [lead_id], references: [id], onDelete: SetNull)
+  comments          DealComment[]
+  events            DealEvent[]
+
+  @@map("deals")
+}
+
+model DealEvent {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  message    String   @db.Text()
+  date       DateTime
+  done       Boolean  @default(false)
+  deal       Deal?    @relation(fields: [deal_id], references: [id], onDelete: SetNull)
+  deal_id    String?  @db.Uuid()
+  user       User?    @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  user_id    String?  @db.Uuid()
+}
+
+model DealComment {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  content    String   @db.Text()
+  user       User?    @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  user_id    String?  @db.Uuid()
+  deal       Deal?    @relation(fields: [deal_id], references: [id], onDelete: SetNull)
+  deal_id    String?  @db.Uuid()
 }

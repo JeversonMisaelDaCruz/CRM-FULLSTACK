@@ -61,7 +61,7 @@
               placeholder="Adicionar nova etapa"
               class="mt-4"
             ></v-text-field>
-            <v-btn color="#B8AD90" class="mt-2" @click="addStep">
+            <v-btn color="primary" class="mt-2" @click="addStep">
               Adicionar Etapa
             </v-btn>
           </div>
@@ -188,7 +188,7 @@ export default {
 }
 
 .option-button.active {
-  background-color: #b8ad90;
+  background-color: primary;
 }
 
 .mt-4 {
