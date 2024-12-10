@@ -15,51 +15,28 @@ class UpdateLeadDto {
 }
 exports.UpdateLeadDto = UpdateLeadDto;
 __decorate([
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.MinLength)(2, {
-        message: 'O nome deve ter pelo menos 2 caracteres',
-    }),
-    (0, class_validator_1.MaxLength)(100),
     __metadata("design:type", String)
 ], UpdateLeadDto.prototype, "name", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)({
-        message: 'O e-mail deve ser informado',
-    }),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.MaxLength)(90, {
-        message: 'O e-mail deve ter o maximo de 120 caracteres. Por favor, tente novamente.',
-    }),
-    (0, class_validator_1.MinLength)(6, {
-        message: 'A senha deve ter pelo menos 6 caracteres. Por favor, tente novamente.',
-    }),
-    (0, class_validator_1.IsEmail)({}, {
-        message: 'E-mail inválido. Por favor, forneça um endereço de e-mail válido.',
-    }),
     __metadata("design:type", String)
 ], UpdateLeadDto.prototype, "email", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)({
-        message: 'o Telefone deve ser informado',
-    }),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.MinLength)(2, {
-        message: 'O Telefone deve ter pelo menos 2 caracteres. Por favor, tente novamente.',
-    }),
-    (0, class_validator_1.MaxLength)(17, {
-        message: 'O Telefone deve ter no maximo 17 aracteres. Por favor, tente novamente.',
-    }),
     __metadata("design:type", String)
 ], UpdateLeadDto.prototype, "phone", void 0);
 __decorate([
-    (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], UpdateLeadDto.prototype, "user_id", void 0);
 __decorate([
-    (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], UpdateLeadDto.prototype, "pipeline_phase_id", void 0);
 //# sourceMappingURL=update-lead.dto.js.map

@@ -5,7 +5,7 @@
         v-model="drawer"
         :rail="rail"
         permanent
-        color="#B8AD90"
+        color="primary"
       >
         <v-divider />
         <v-list density="compact" nav>

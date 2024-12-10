@@ -25,17 +25,18 @@ export class Leads extends Http {
     }
   }
 
-  async updateLead(data) {
+  async updateLead(id, data) {
     try {
-      const response = await this.patch(`/${data.id}`, data);
-      console.log("Lead atualizado", response);
-      return response;
+      const response = await this.patch(`/${id}`, data);
+      console.log("Lead atualizado com sucesso:", response);
+      return response.data;
     } catch (error) {
-      console.error("Erro ao atualizar lead", error);
-      throw error;
+      console.error("Erro ao atualizar lead:", error.response?.data?.message);
+      throw new Error(
+        error.response?.data?.message || "Erro ao atualizar o lead no servidor."
+      );
     }
   }
-
   async deleteLead(id) {
     try {
       const response = await this.delete(`/${id}`);

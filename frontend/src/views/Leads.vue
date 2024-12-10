@@ -1,40 +1,37 @@
 <template>
-  <v-app style="background-color: #faf3e0">
-    <Header @toggleDrawer="drawer = !drawer" />
-    <v-container>
-      <Modal
-        v-model="dialog"
-        :pipelinePhases="pipelinePhases"
-        :title="modalTitle"
-        :confirmButtonText="modalButtonText"
-        @save-lead="handleSaveLead"
-      />
-      <v-data-table
-        :headers="headers"
-        :items="leads"
-        class="elevation-1 mt-4"
-        style="background-color: #dfd8c3; color: black"
-      >
-        <template #item.actions="{ item }">
-
-          <v-btn color="#B8AD90" icon @click="openEditModal(item)">
-
-            <v-icon color="black">mdi-pencil</v-icon>
-          </v-btn>
-          <v-btn color="#B8AD90" icon @click="handleDeleteLead(item.id)">
-            <v-icon color="black">mdi-delete</v-icon>
-          </v-btn>
-        </template>
-      </v-data-table>
-      <v-btn class="mt-4" color="#B8AD90" @click="openCreateModal">
-        Cadastrar Lead
-      </v-btn>
-      <v-snackbar v-model="snackbar" :timeout="3000" top right>
-        {{ snackbarMessage }}
-        <v-btn color="red" text @click="snackbar = false">Fechar</v-btn>
-      </v-snackbar>
-    </v-container>
-  </v-app>
+  <v-container>
+    <Modal
+      v-model="dialog"
+      :pipelinePhases="pipelinePhases"
+      :title="modalTitle"
+      :confirmButtonText="modalButtonText"
+      @save-lead="handleSaveLead"
+    />
+    <v-data-table
+      :headers="headers"
+      :items="leads"
+      class="elevation-1 mt-4"
+      style="background-color: #dfd8c3; color: black"
+    >
+      <template #item.actions="{ item }">
+        <div class="d-flex ga-4">
+          <v-icon color="blue" @click="openEditModal(item)" size="23"
+            >mdi-pencil</v-icon
+          >
+          <v-icon color="error" @click="handleDeleteLead(item.id)" size="23"
+            >mdi-trash-can
+          </v-icon>
+        </div>
+      </template>
+    </v-data-table>
+    <v-btn class="mt-4" color="primary" @click="openCreateModal">
+      Cadastrar Lead
+    </v-btn>
+    <v-snackbar v-model="snackbar" :timeout="3000" top right>
+      {{ snackbarMessage }}
+      <v-btn color="red" text @click="snackbar = false">Fechar</v-btn>
+    </v-snackbar>
+  </v-container>
 </template>
 
 <script setup>
@@ -70,21 +67,39 @@ const openCreateModal = () => {
 };
 
 const openEditModal = (lead) => {
-  selectedLead.value = { ...lead };
+  const filteredLead = {
+    id: lead.id,
+    name: lead.name,
+    email: lead.email,
+    phone: lead.phone,
+    pipeline_phase_id: lead.pipeline_phase_id,
+  };
+
+  selectedLead.value = { ...filteredLead };
+  console.log("Editando lead:", filteredLead);
   modalTitle.value = "Editar Lead";
   modalButtonText.value = "Salvar";
   dialog.value = true;
 };
-
 const handleSaveLead = async (leadData) => {
   try {
-    if (selectedLead.value) {
-      await leadsStore.updateLead({ ...selectedLead.value, ...leadData });
-      snackbarMessage.value = "Lead atualizado com sucesso!";
-    } else {
-      await leadsStore.createLead(leadData);
-      snackbarMessage.value = "Lead criado com sucesso!";
-    }
+    const isUpdating = !!selectedLead.value;
+    const { id, ...payload } = isUpdating
+      ? { ...selectedLead.value, ...leadData }
+      : leadData;
+
+    const response = isUpdating
+      ? await leadsStore.updateLead(id, payload)
+      : await leadsStore.createLead(payload);
+
+    console.log(
+      isUpdating ? "Lead atualizado com sucesso!" : "Lead criado com sucesso!",
+      response
+    );
+
+    snackbarMessage.value = isUpdating
+      ? "Lead atualizado com sucesso!"
+      : "Lead criado com sucesso!";
     snackbar.value = true;
     dialog.value = false;
   } catch (error) {

@@ -53,17 +53,24 @@ export class LeadsRepository {
     if (!updateLead || Object.keys(updateLead).length === 0) {
       throw new HttpException('Não permitido campo vazio', 400);
     }
-    if (!id || !isUUID(id)) {
-      throw new HttpException('Lead não encontrado', 404);
+
+    const RemoveNotUsedData = Object.fromEntries(
+      Object.entries(updateLead).filter(([_, value]) => value !== ''),
+    );
+
+    try {
+      return await this.prismaService.lead.update({
+        where: { id: id },
+        data: RemoveNotUsedData,
+        include: {
+          user: true,
+          pipeline_phase: true,
+        },
+      });
+    } catch (error) {
+      console.error('Erro ao atualizar lead no repositório:', error);
+      throw new HttpException('Erro ao atualizar lead', 500);
     }
-    return await this.prismaService.lead.update({
-      where: { id: id },
-      data: updateLead,
-      include: {
-        user: true,
-        pipeline_phase: true,
-      },
-    });
   }
   async findByEmail(email: string): Promise<LeadEntity> {
     return this.prismaService.lead.findFirst({

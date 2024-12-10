@@ -1,22 +1,7 @@
 <template>
   <v-card style="background-color: #faf3e0">
     <v-layout>
-
-      <Header
-        :selectedPipeline="selectedPipeline"
-        @toggleDrawer="drawer = !drawer"
-      />
-
-      <NavigationDrawer
-        :pipelines="pipelines"
-        :drawer="drawer"
-        @closeDrawer="drawer = false"
-        @selectPipeline="selectPipeline"
-        @confirmDelete="confirmDelete"
-      />
-
       <v-dialog v-model="showConfirm" max-width="400">
-
         <v-card>
           <v-card-title class="text-h6">Deletar Pipeline</v-card-title>
           <v-card-text>
@@ -39,43 +24,49 @@
         style="height: 100vh"
       >
         <div class="d-flex flex-column" style="margin: 40px 0px 0px 40px">
-          <CreatePipelineButton
-            :selectedPipeline="selectedPipeline"
-            @create-pipeline="showPipelineModal = true"
-          />
+          <CreatePipelineButton @create-pipeline="showPipelineModal = true" />
 
           <v-row class="d-flex flex-column">
             <v-col>
               <v-btn
                 v-if="selectedPipeline"
-                @click="openPhaseModal"
-                color="#B8AD90"
-                class="ml-4"
+                @click="showPipelineModal"
+                color="primary"
+                class="ga-1"
               >
                 Criar Quadro
               </v-btn>
             </v-col>
 
-            <v-col>
-              <v-list
-                v-if="filteredPhases.length > 0"
-                class="mt-4"
-                style="
-                  background-color: #b8ad90;
-                  border-radius: 6px;
-                  padding: 10px;
-                "
+            <v-row class="kanban-container">
+              <div
+                v-for="phase in filteredPhases"
+                :key="phase.id"
+                class="kanban-column"
               >
-                <h2>Fases da Pipeline Selecionada</h2>
-                <v-list-item
-                  v-for="(phase, index) in filteredPhases"
-                  :key="index"
-                >
-                  <v-list-item-title>{{ phase?.name || "" }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-              <Warn v-else />
-            </v-col>
+                <p class="phase-name">{{ phase.name }}</p>
+                <div v-if="getLeadsByPhase(phase.id).length > 0">
+                  <v-card
+                    v-for="lead in getLeadsByPhase(phase.id)"
+                    :key="lead.id"
+                    class="lead-card"
+                  >
+                    <v-card-title>{{ lead.name }}</v-card-title>
+                    <v-card-text>
+                      <v-select
+                        :items="statusOptions"
+                        v-model="lead.pipeline_phase_id"
+                        label="Alterar Fase"
+                        @change="
+                          updateLeadStatus(lead.id, lead.pipeline_phase_id)
+                        "
+                      ></v-select>
+                    </v-card-text>
+                  </v-card>
+                </div>
+                <p v-else>Nenhum lead nesta fase.</p>
+              </div>
+            </v-row>
           </v-row>
         </div>
 
@@ -111,9 +102,9 @@
 <script>
 import { usePipelineStore } from "@/store/pipeline";
 import { usePipelinePhaseStore } from "@/store/pipelinesPhases";
+import { useLeadsStore } from "@/store/leads";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import Header from "@/components/Header.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import CreatePipeline from "@/components/CreatePipeline.vue";
 import Warn from "@/components/warn/warn.vue";
@@ -121,7 +112,6 @@ import CreatePipelineButton from "@/components/buttons/CreatePipelineButton.vue"
 
 export default {
   components: {
-    Header,
     NavigationDrawer,
     CreatePipeline,
     Warn,
@@ -141,6 +131,7 @@ export default {
 
     const pipelineStore = usePipelineStore();
     const pipelinePhaseStore = usePipelinePhaseStore();
+    const leadsStore = useLeadsStore();
 
     const pipelines = computed(() =>
       Array.isArray(pipelineStore.pipeline) ? pipelineStore.pipeline : []
@@ -216,6 +207,28 @@ export default {
       router.push({ path: "/kanban", query: { pipelineId: pipeline.id } });
     };
 
+    const getLeadsByPhase = (phaseId) => {
+      return leadsStore.leads.filter(
+        (lead) => lead.pipeline_phase_id === phaseId
+      );
+    };
+
+    const statusOptions = computed(() =>
+      filteredPhases.value.map((phase) => ({
+        text: phase.name,
+        value: phase.id,
+      }))
+    );
+
+    const updateLeadStatus = async (leadId, newPhaseId) => {
+      try {
+        await leadsStore.updateLead(leadId, { pipeline_phase_id: newPhaseId });
+        console.log("Lead atualizado com sucesso!");
+      } catch (error) {
+        console.error("Erro ao atualizar o lead:", error);
+      }
+    };
+
     watch(
       () => route.query.pipelineId,
       (newPipelineId) => {
@@ -230,6 +243,7 @@ export default {
     onMounted(async () => {
       await pipelineStore.fetchPipelines();
       await pipelinePhaseStore.fetchPipelinePhases();
+      await leadsStore.fetchLeads();
 
       const pipelineId = route.query.pipelineId;
       if (pipelineId) {
@@ -258,7 +272,41 @@ export default {
       createPhase,
       closePhaseModal,
       selectPipeline,
+      getLeadsByPhase,
+      statusOptions,
+      updateLeadStatus,
     };
   },
 };
 </script>
+<style>
+.column-width {
+  min-width: 320px;
+  width: 320px;
+}
+.kanban-container {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 16px;
+  padding: 16px;
+}
+
+.kanban-column {
+  min-width: 320px;
+  background-color: black;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.phase-name {
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.lead-card {
+  margin-top: 8px;
+}
+</style>

@@ -4,10 +4,22 @@ import { useAuthStore } from "@/store/auth/User";
 
 export const usePipelineStore = defineStore("pipeline", {
   state: () => ({
+    id: null,
     pipeline: [],
   }),
-
   actions: {
+    setId(id) {
+      this.id = id;
+    },
+    async fetchPipelines() {
+      try {
+        const response = await API.pipeline.getPipeline();
+        console.log("fetchPipeline log:", response);
+        this.pipeline = response;
+      } catch (error) {
+        console.error("Erro ao buscar pipelines:", error);
+      }
+    },
     async createPipeline(data) {
       try {
         const authStore = useAuthStore();
@@ -59,7 +71,6 @@ export const usePipelineStore = defineStore("pipeline", {
         console.error("Erro ao criar pipeline ou fases:", error);
       }
     },
-
     async updatePipeline(data) {
       try {
         const response = await API.pipeline.updatePipeline(data);

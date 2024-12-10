@@ -13,6 +13,13 @@ export declare class PipelineService {
         updated_at: Date;
     }>;
     findAll(userId: string): Promise<({
+        phases: {
+            id: string;
+            name: string;
+            created_at: Date;
+            updated_at: Date;
+            pipeline_id: string | null;
+        }[];
         users: {
             user: {
                 id: string;

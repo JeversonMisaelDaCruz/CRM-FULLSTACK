@@ -14,8 +14,6 @@ export class PipelineService {
   async create(createPipelineDto: CreatePipelineDto) {
     const { userIds } = createPipelineDto;
 
-
-
     for (const id of userIds) {
       const user = await this.prismaService.user.findUnique({
         where: { id },

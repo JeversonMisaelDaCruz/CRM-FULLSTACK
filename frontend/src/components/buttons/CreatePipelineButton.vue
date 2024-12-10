@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col>
-      <v-btn v-if="!selectedPipeline" @click="onClick" color="#B8AD90">
+      <v-btn v-if="!selectedPipeline" @click="onClick" color="primary">
         Criar Pipeline
       </v-btn>
     </v-col>

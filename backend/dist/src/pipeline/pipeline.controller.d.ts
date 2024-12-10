@@ -11,6 +11,13 @@ export declare class PipelineController {
         updated_at: Date;
     }>;
     findAll(req: any): Promise<({
+        phases: {
+            id: string;
+            name: string;
+            created_at: Date;
+            updated_at: Date;
+            pipeline_id: string | null;
+        }[];
         users: {
             user: {
                 id: string;
