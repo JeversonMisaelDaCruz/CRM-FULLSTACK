@@ -6,18 +6,11 @@ export declare class PipelineController {
     constructor(pipelineService: PipelineService);
     create(createPipelineDto: CreatePipelineDto): Promise<{
         id: string;
-        name: string;
         created_at: Date;
         updated_at: Date;
+        name: string;
     }>;
     findAll(req: any): Promise<({
-        phases: {
-            id: string;
-            name: string;
-            created_at: Date;
-            updated_at: Date;
-            pipeline_id: string | null;
-        }[];
         users: {
             user: {
                 id: string;
@@ -25,11 +18,18 @@ export declare class PipelineController {
                 email: string;
             };
         }[];
+        phases: {
+            id: string;
+            created_at: Date;
+            updated_at: Date;
+            name: string;
+            pipeline_id: string | null;
+        }[];
     } & {
         id: string;
-        name: string;
         created_at: Date;
         updated_at: Date;
+        name: string;
     })[]>;
     findOne(id: string, req: any): Promise<{
         users: {
@@ -41,20 +41,20 @@ export declare class PipelineController {
         }[];
     } & {
         id: string;
-        name: string;
         created_at: Date;
         updated_at: Date;
+        name: string;
     }>;
     update(id: string, updatePipelineDto: UpdatePipelineDto): Promise<{
         id: string;
-        name: string;
         created_at: Date;
         updated_at: Date;
+        name: string;
     }>;
     remove(id: string): Promise<{
         id: string;
-        name: string;
         created_at: Date;
         updated_at: Date;
+        name: string;
     }>;
 }
