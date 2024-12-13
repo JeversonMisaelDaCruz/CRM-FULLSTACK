@@ -92,9 +92,8 @@ model Lead {
   @@map("leads")
 }
 
-// go - quando deu certo
-// nogo - quando nao deu certo
-// pending - em aberto
+//Nos cadastramos o lead que e contato do cliente este contato pode ter n negociaçoes por isso precisamos criar uma tabela deal as sub tabelas de deal como deal event e deal comment são para: deal event: eventos associados a negociação deal
+
 
 model Deal {
   id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
@@ -102,7 +101,7 @@ model Deal {
   updated_at        DateTime        @default(now()) @updatedAt
   title             String          @db.Text()
   description       String          @db.Text()
-  status            String          @default("pending") @db.VarChar(30)
+  status            DealStatus      @default(pending)
   archived          Boolean         @default(false)
   due_date          DateTime?
   user              User?           @relation(fields: [user_id], references: [id], onDelete: SetNull)
@@ -115,6 +114,12 @@ model Deal {
   events            DealEvent[]
 
   @@map("deals")
+}
+
+enum DealStatus {
+  go
+  nogo
+  pending
 }
 
 model DealEvent {

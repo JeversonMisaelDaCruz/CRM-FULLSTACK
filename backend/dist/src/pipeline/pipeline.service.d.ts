@@ -8,18 +8,11 @@ export declare class PipelineService {
     constructor(pipelineRepository: PipelineRepository, prismaService: PrismaService);
     create(createPipelineDto: CreatePipelineDto): Promise<{
         id: string;
-        name: string;
         created_at: Date;
         updated_at: Date;
+        name: string;
     }>;
     findAll(userId: string): Promise<({
-        phases: {
-            id: string;
-            name: string;
-            created_at: Date;
-            updated_at: Date;
-            pipeline_id: string | null;
-        }[];
         users: {
             user: {
                 id: string;
@@ -27,11 +20,18 @@ export declare class PipelineService {
                 email: string;
             };
         }[];
+        phases: {
+            id: string;
+            created_at: Date;
+            updated_at: Date;
+            name: string;
+            pipeline_id: string | null;
+        }[];
     } & {
         id: string;
-        name: string;
         created_at: Date;
         updated_at: Date;
+        name: string;
     })[]>;
     findById(pipelineId: string, userId: string): Promise<{
         users: {
@@ -43,20 +43,20 @@ export declare class PipelineService {
         }[];
     } & {
         id: string;
-        name: string;
         created_at: Date;
         updated_at: Date;
+        name: string;
     }>;
     update(id: string, updatePipelineDto: UpdatePipelineDto): Promise<{
         id: string;
-        name: string;
         created_at: Date;
         updated_at: Date;
+        name: string;
     }>;
     delete(id: string): Promise<{
         id: string;
-        name: string;
         created_at: Date;
         updated_at: Date;
+        name: string;
     }>;
 }
