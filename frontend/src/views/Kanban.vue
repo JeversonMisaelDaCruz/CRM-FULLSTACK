@@ -99,185 +99,148 @@
   </v-card>
 </template>
 
-<script>
+<script setup>
 import { usePipelineStore } from "@/store/pipeline";
 import { usePipelinePhaseStore } from "@/store/pipelinesPhases";
 import { useLeadsStore } from "@/store/leads";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
-import CreatePipeline from "@/components/CreatePipeline.vue";
 import Warn from "@/components/warn/warn.vue";
 import CreatePipelineButton from "@/components/buttons/CreatePipelineButton.vue";
 
-export default {
-  components: {
-    NavigationDrawer,
-    CreatePipeline,
-    Warn,
-    CreatePipelineButton,
-  },
-  setup() {
-    const router = useRouter();
-    const route = useRoute();
-    const pipelineName = ref("");
-    const drawer = ref(false);
-    const showPipelineModal = ref(false);
-    const showPhaseModal = ref(false);
-    const showConfirm = ref(false);
-    const pipelineToDelete = ref(null);
-    const phaseName = ref("");
-    const selectedPipeline = ref(null);
+const router = useRouter();
+const route = useRoute();
+const pipelineName = ref("");
+const drawer = ref(false);
+const showPipelineModal = ref(false);
+const showPhaseModal = ref(false);
+const showConfirm = ref(false);
+const pipelineToDelete = ref(null);
+const phaseName = ref("");
+const selectedPipeline = ref(null);
 
-    const pipelineStore = usePipelineStore();
-    const pipelinePhaseStore = usePipelinePhaseStore();
-    const leadsStore = useLeadsStore();
+const pipelineStore = usePipelineStore();
+const pipelinePhaseStore = usePipelinePhaseStore();
+const leadsStore = useLeadsStore();
 
-    const pipelines = computed(() =>
-      Array.isArray(pipelineStore.pipeline) ? pipelineStore.pipeline : []
-    );
+const pipelines = computed(() =>
+  Array.isArray(pipelineStore.pipeline) ? pipelineStore.pipeline : []
+);
 
-    const filteredPhases = computed(() => {
-      if (!selectedPipeline.value || !Array.isArray(pipelinePhaseStore.phases))
-        return [];
-      return pipelinePhaseStore.phases.filter(
-        (phase) => phase?.pipeline_id === selectedPipeline.value.id
-      );
-    });
+const filteredPhases = computed(() => {
+  if (!selectedPipeline.value || !Array.isArray(pipelinePhaseStore.phases))
+    return [];
+  return pipelinePhaseStore.phases.filter(
+    (phase) => phase?.pipeline_id === selectedPipeline.value.id
+  );
+});
 
-    const confirmDelete = (pipeline) => {
-      pipelineToDelete.value = pipeline;
-      showConfirm.value = true;
-    };
-
-    const deletePipeline = async () => {
-      if (pipelineToDelete.value) {
-        try {
-          await pipelineStore.deletePipeline(pipelineToDelete.value.id);
-          pipelineToDelete.value = null;
-          showConfirm.value = false;
-        } catch (error) {
-          console.error("Erro ao deletar pipeline:", error);
-        }
-      }
-    };
-
-    const closeConfirm = () => {
-      showConfirm.value = false;
-    };
-
-    const handleCreatePipeline = async (pipelineName) => {
-      try {
-        await pipelineStore.createPipeline({
-          name: pipelineName,
-          userIds: [userId],
-        });
-        showPipelineModal.value = false;
-      } catch (error) {
-        console.error("Erro ao criar pipeline:", error);
-      }
-    };
-
-    const cancelPipelineModal = () => {
-      showPipelineModal.value = false;
-    };
-
-    const createPhase = async () => {
-      if (!selectedPipeline.value || !phaseName.value) return;
-
-      try {
-        await pipelinePhaseStore.createPipelinePhase({
-          name: phaseName.value,
-          pipeline_id: selectedPipeline.value.id,
-        });
-        phaseName.value = "";
-        showPhaseModal.value = false;
-      } catch (error) {
-        console.error("Erro ao criar fase:", error);
-      }
-    };
-
-    const closePhaseModal = () => {
-      phaseName.value = "";
-      showPhaseModal.value = false;
-    };
-
-    const selectPipeline = (pipeline) => {
-      selectedPipeline.value = pipeline;
-      router.push({ path: "/kanban", query: { pipelineId: pipeline.id } });
-    };
-
-    const getLeadsByPhase = (phaseId) => {
-      return leadsStore.leads.filter(
-        (lead) => lead.pipeline_phase_id === phaseId
-      );
-    };
-
-    const statusOptions = computed(() =>
-      filteredPhases.value.map((phase) => ({
-        text: phase.name,
-        value: phase.id,
-      }))
-    );
-
-    const updateLeadStatus = async (leadId, newPhaseId) => {
-      try {
-        await leadsStore.updateLead(leadId, { pipeline_phase_id: newPhaseId });
-        console.log("Lead atualizado com sucesso!");
-      } catch (error) {
-        console.error("Erro ao atualizar o lead:", error);
-      }
-    };
-
-    watch(
-      () => route.query.pipelineId,
-      (newPipelineId) => {
-        if (newPipelineId) {
-          selectedPipeline.value = pipelines.value.find(
-            (pipeline) => pipeline.id === newPipelineId
-          );
-        }
-      }
-    );
-
-    onMounted(async () => {
-      await pipelineStore.fetchPipelines();
-      await pipelinePhaseStore.fetchPipelinePhases();
-      await leadsStore.fetchLeads();
-
-      const pipelineId = route.query.pipelineId;
-      if (pipelineId) {
-        selectedPipeline.value = pipelines.value.find(
-          (pipeline) => pipeline.id === pipelineId
-        );
-      }
-    });
-
-    return {
-      drawer,
-      showPipelineModal,
-      showPhaseModal,
-      showConfirm,
-      pipelineToDelete,
-      phaseName,
-      selectedPipeline,
-      pipelines,
-      filteredPhases,
-      confirmDelete,
-      deletePipeline,
-      closeConfirm,
-      pipelineName,
-      handleCreatePipeline,
-      cancelPipelineModal,
-      createPhase,
-      closePhaseModal,
-      selectPipeline,
-      getLeadsByPhase,
-      statusOptions,
-      updateLeadStatus,
-    };
-  },
+const confirmDelete = (pipeline) => {
+  pipelineToDelete.value = pipeline;
+  showConfirm.value = true;
 };
+
+const deletePipeline = async () => {
+  if (pipelineToDelete.value) {
+    try {
+      await pipelineStore.deletePipeline(pipelineToDelete.value.id);
+      pipelineToDelete.value = null;
+      showConfirm.value = false;
+    } catch (error) {
+      console.error("Erro ao deletar pipeline:", error);
+    }
+  }
+};
+
+const closeConfirm = () => {
+  showConfirm.value = false;
+};
+
+const handleCreatePipeline = async (pipelineName) => {
+  try {
+    await pipelineStore.createPipeline({
+      name: pipelineName,
+      userIds: [userId],
+    });
+    showPipelineModal.value = false;
+  } catch (error) {
+    console.error("Erro ao criar pipeline:", error);
+  }
+};
+
+const cancelPipelineModal = () => {
+  showPipelineModal.value = false;
+};
+
+const createPhase = async () => {
+  if (!selectedPipeline.value || !phaseName.value) return;
+
+  try {
+    await pipelinePhaseStore.createPipelinePhase({
+      name: phaseName.value,
+      pipeline_id: selectedPipeline.value.id,
+    });
+    phaseName.value = "";
+    showPhaseModal.value = false;
+  } catch (error) {
+    console.error("Erro ao criar fase:", error);
+  }
+};
+
+const closePhaseModal = () => {
+  phaseName.value = "";
+  showPhaseModal.value = false;
+};
+
+const selectPipeline = (pipeline) => {
+  selectedPipeline.value = pipeline;
+  router.push({ path: "/kanban", query: { pipelineId: pipeline.id } });
+};
+
+const getLeadsByPhase = (phaseId) => {
+  return leadsStore.leads.filter((lead) => lead.pipeline_phase_id === phaseId);
+};
+
+const statusOptions = computed(() =>
+  filteredPhases.value.map((phase) => ({
+    text: phase.name,
+    value: phase.id,
+  }))
+);
+
+const updateLeadStatus = async (leadId, newPhaseId) => {
+  try {
+    await leadsStore.updateLead(leadId, { pipeline_phase_id: newPhaseId });
+    console.log("Lead atualizado com sucesso!");
+  } catch (error) {
+    console.error("Erro ao atualizar o lead:", error);
+  }
+};
+
+watch(
+  () => route.query.pipelineId,
+  (newPipelineId) => {
+    if (newPipelineId) {
+      selectedPipeline.value = pipelines.value.find(
+        (pipeline) => pipeline.id === newPipelineId
+      );
+    }
+  }
+);
+
+onMounted(async () => {
+  await pipelineStore.fetchPipelines();
+  await pipelinePhaseStore.fetchPipelinePhases();
+  await leadsStore.fetchLeads();
+
+  const pipelineId = route.query.pipelineId;
+  if (pipelineId) {
+    selectedPipeline.value = pipelines.value.find(
+      (pipeline) => pipeline.id === pipelineId
+    );
+  }
+});
 </script>
 <style>
 .column-width {
