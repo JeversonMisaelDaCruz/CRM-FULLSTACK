@@ -6,6 +6,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { UserModule } from './users/users.module';
 import { PipelineModule } from './pipeline/pipeline.module';
 import { PipelinePhaseModule } from './pipeline_phase/pipeline_phase.module';
+import { DealModule } from './deal/deal.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PipelinePhaseModule } from './pipeline_phase/pipeline_phase.module';
     LeadsModule,
     PipelineModule,
     PipelinePhaseModule,
+    DealModule,
   ],
   providers: [PrismaService],
 })
