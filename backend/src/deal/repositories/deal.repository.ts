@@ -2,7 +2,6 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateDealDTO } from '../dto/create-deal.dto';
 import { UpdateDealDTO } from '../dto/update-deal.dto';
-import { isUUID } from 'class-validator';
 
 @Injectable()
 export class DealRepository {

@@ -24,7 +24,7 @@ let DealRepository = class DealRepository {
             return response;
         }
         catch (error) {
-            console.error(...oo_tx(`3298082695_18_6_18_50_11`, 'Error creating deal:', error));
+            console.error(...oo_tx(`3121865691_17_6_17_50_11`, 'Error creating deal:', error));
             throw error;
         }
     }
@@ -34,7 +34,7 @@ let DealRepository = class DealRepository {
             return response;
         }
         catch (error) {
-            console.error(...oo_tx(`3298082695_28_6_28_54_11`, 'Error finding all deals:', error));
+            console.error(...oo_tx(`3121865691_27_6_27_54_11`, 'Error finding all deals:', error));
             throw error;
         }
     }
@@ -46,7 +46,7 @@ let DealRepository = class DealRepository {
             return response;
         }
         catch (error) {
-            console.error(...oo_tx(`3298082695_40_6_40_55_11`, 'Error finding deal by id:', error));
+            console.error(...oo_tx(`3121865691_39_6_39_55_11`, 'Error finding deal by id:', error));
             throw error;
         }
     }
@@ -58,7 +58,7 @@ let DealRepository = class DealRepository {
             return response;
         }
         catch (error) {
-            console.error(...oo_tx(`3298082695_52_6_52_50_11`, 'Error removing deal:', error));
+            console.error(...oo_tx(`3121865691_51_6_51_50_11`, 'Error removing deal:', error));
             throw error;
         }
     }
@@ -71,7 +71,7 @@ let DealRepository = class DealRepository {
             return response;
         }
         catch (error) {
-            console.error(...oo_tx(`3298082695_65_6_65_50_11`, 'Error updating deal:', error));
+            console.error(...oo_tx(`3121865691_64_6_64_50_11`, 'Error updating deal:', error));
             throw error;
         }
     }

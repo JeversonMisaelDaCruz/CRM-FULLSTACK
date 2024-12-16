@@ -12,40 +12,75 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DealService = void 0;
 const common_1 = require("@nestjs/common");
 const deal_repository_1 = require("./repositories/deal.repository");
-const express_1 = require("express");
 const class_validator_1 = require("class-validator");
 let DealService = class DealService {
-    constructor(DealRepository) {
-        this.DealRepository = DealRepository;
+    constructor(dealRepository) {
+        this.dealRepository = dealRepository;
     }
     async create(CreateDealDTO) {
         try {
-            const response = await this.DealRepository.create(CreateDealDTO);
-            console.log(...oo_oo(`3007743982_15_6_15_51_4`, 'response on service:', response));
+            const createdDeal = await this.dealRepository.create(CreateDealDTO);
+            console.log(...oo_oo(`4100305414_14_6_14_47_4`, 'Created deal:', createdDeal));
+            return createdDeal;
         }
         catch (error) {
-            console.error(...oo_tx(`3007743982_17_6_17_50_11`, 'Error creating deal:', error));
+            console.error(...oo_tx(`4100305414_17_6_17_50_11`, 'Error creating deal:', error));
+            throw new common_1.HttpException('Erro ao criar deal', 500);
         }
-        return express_1.response;
     }
     async findAll() {
-        return await this.DealRepository.findAll();
+        try {
+            const deals = await this.dealRepository.findAll();
+            console.log(...oo_oo(`4100305414_25_6_25_44_4`, 'Deals retrieved:', deals));
+            return deals;
+        }
+        catch (error) {
+            throw new common_1.HttpException('Nenhum deal encontrado', 404);
+        }
     }
     async findById(id) {
         try {
             if (!id || !(0, class_validator_1.isUUID)(id)) {
-                throw new common_1.HttpException('Deal nao encontrado', 404);
+                throw new common_1.HttpException('ID inválido ou deal não encontrado', 404);
             }
-            const response = await this.DealRepository.findById(id);
+            const deal = await this.dealRepository.findById(id);
+            if (!deal) {
+                throw new common_1.HttpException('Deal não encontrado', 404);
+            }
+            return deal;
         }
-        catch (error) { }
-        return express_1.response;
+        catch (error) {
+            console.error(...oo_tx(`4100305414_43_6_43_55_11`, 'Error finding deal by ID:', error));
+            throw new common_1.HttpException('Erro ao buscar deal', 500);
+        }
     }
     async update(id, UpdateDealDTO) {
-        return await this.DealRepository.update(id, UpdateDealDTO);
+        try {
+            const updatedDeal = await this.dealRepository.update(id, UpdateDealDTO);
+            if (!updatedDeal) {
+                throw new common_1.HttpException('Deal não encontrado', 404);
+            }
+            console.log(...oo_oo(`4100305414_54_6_54_47_4`, 'Updated deal:', updatedDeal));
+            return updatedDeal;
+        }
+        catch (error) {
+            console.error(...oo_tx(`4100305414_57_6_57_50_11`, 'Error updating deal:', error));
+            throw new common_1.HttpException('Erro ao atualizar deal', 500);
+        }
     }
     async remove(id) {
-        return await this.DealRepository.remove(id);
+        try {
+            const removedDeal = await this.dealRepository.remove(id);
+            if (!removedDeal) {
+                throw new common_1.HttpException('Deal não encontrado', 404);
+            }
+            console.log(...oo_oo(`4100305414_68_6_68_47_4`, 'Removed deal:', removedDeal));
+            return removedDeal;
+        }
+        catch (error) {
+            console.error(...oo_tx(`4100305414_71_6_71_50_11`, 'Error removing deal:', error));
+            throw new common_1.HttpException('Erro ao remover deal', 500);
+        }
     }
 };
 exports.DealService = DealService;
