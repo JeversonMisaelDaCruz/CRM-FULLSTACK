@@ -1,4 +1,4 @@
-export class Deal {
+export class DealEntity {
   id: string;
   createdAt: Date;
   updatedAt: Date;

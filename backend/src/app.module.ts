@@ -7,6 +7,7 @@ import { UserModule } from './users/users.module';
 import { PipelineModule } from './pipeline/pipeline.module';
 import { PipelinePhaseModule } from './pipeline_phase/pipeline_phase.module';
 import { DealModule } from './deal/deal.module';
+import { DealEventModule } from './deal_event/deal_event.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { DealModule } from './deal/deal.module';
     PipelineModule,
     PipelinePhaseModule,
     DealModule,
+    DealEventModule,
   ],
   providers: [PrismaService],
 })

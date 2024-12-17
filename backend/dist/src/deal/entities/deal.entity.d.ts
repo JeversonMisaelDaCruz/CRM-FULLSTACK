@@ -1,4 +1,4 @@
-export declare class Deal {
+export declare class DealEntity {
     id: string;
     createdAt: Date;
     updatedAt: Date;
