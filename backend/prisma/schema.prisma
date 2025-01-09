@@ -94,7 +94,6 @@ model Lead {
 
 //Nos cadastramos o lead que e contato do cliente este contato pode ter n negociaçoes por isso precisamos criar uma tabela deal as sub tabelas de deal como deal event e deal comment são para: deal event: eventos associados a negociação deal
 
-
 model Deal {
   id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
   created_at        DateTime        @default(now())

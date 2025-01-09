@@ -15,6 +15,8 @@ const prisma_service_1 = require("./prisma/prisma.service");
 const users_module_1 = require("./users/users.module");
 const pipeline_module_1 = require("./pipeline/pipeline.module");
 const pipeline_phase_module_1 = require("./pipeline_phase/pipeline_phase.module");
+const deal_module_1 = require("./deal/deal.module");
+const deal_event_module_1 = require("./deal_event/deal_event.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -28,6 +30,8 @@ exports.AppModule = AppModule = __decorate([
             leads_module_1.LeadsModule,
             pipeline_module_1.PipelineModule,
             pipeline_phase_module_1.PipelinePhaseModule,
+            deal_module_1.DealModule,
+            deal_event_module_1.DealEventModule,
         ],
         providers: [prisma_service_1.PrismaService],
     })
