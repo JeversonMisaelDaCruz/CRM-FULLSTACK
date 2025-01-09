@@ -17,7 +17,7 @@ export declare class DealRepository {
         pipeline_phase_id: string | null;
         lead_id: string | null;
     }>;
-    findAll(): Promise<{
+    findAll(): Promise<({} & {
         id: string;
         created_at: Date;
         updated_at: Date;
@@ -29,7 +29,7 @@ export declare class DealRepository {
         user_id: string | null;
         pipeline_phase_id: string | null;
         lead_id: string | null;
-    }[]>;
+    })[]>;
     findById(id: string): Promise<{
         id: string;
         created_at: Date;

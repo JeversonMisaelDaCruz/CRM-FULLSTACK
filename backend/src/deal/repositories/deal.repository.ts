@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateDealDTO } from '../dto/create-deal.dto';
 import { UpdateDealDTO } from '../dto/update-deal.dto';
+import { DealEvent } from 'src/deal_event/entities/deal_event.entity';
 
 @Injectable()
 export class DealRepository {
@@ -21,7 +22,11 @@ export class DealRepository {
 
   async findAll() {
     try {
-      const response = await this.prismaService.deal.findMany();
+      const response = await this.prismaService.deal.findMany({
+        include: {
+          //adicionar o relacionamento entre as tabelas deal event e tinha uma outra la kk
+        },
+      });
       return response;
     } catch (error) {
       console.error('Error finding all deals:', error);

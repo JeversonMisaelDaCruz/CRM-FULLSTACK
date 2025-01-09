@@ -10,13 +10,17 @@ exports.DealEventModule = void 0;
 const common_1 = require("@nestjs/common");
 const deal_event_service_1 = require("./deal_event.service");
 const deal_event_controller_1 = require("./deal_event.controller");
+const prisma_service_1 = require("../prisma/prisma.service");
+const dealevent_repository_1 = require("./repositories/dealevent.repository");
 let DealEventModule = class DealEventModule {
 };
 exports.DealEventModule = DealEventModule;
 exports.DealEventModule = DealEventModule = __decorate([
     (0, common_1.Module)({
+        imports: [],
         controllers: [deal_event_controller_1.DealEventController],
-        providers: [deal_event_service_1.DealEventService],
+        providers: [deal_event_service_1.DealEventService, prisma_service_1.PrismaService, dealevent_repository_1.DealEventRepository],
+        exports: [dealevent_repository_1.DealEventRepository],
     })
 ], DealEventModule);
 //# sourceMappingURL=deal_event.module.js.map

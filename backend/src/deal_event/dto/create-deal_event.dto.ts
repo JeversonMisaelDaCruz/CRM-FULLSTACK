@@ -13,6 +13,7 @@ export class CreateDealEventDto {
   message: string;
 
   @IsDate()
+  
   @IsNotEmpty()
   date: Date;
 

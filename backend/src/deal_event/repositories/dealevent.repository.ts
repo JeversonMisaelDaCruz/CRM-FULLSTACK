@@ -26,7 +26,7 @@ export class DealEventRepository {
       console.log('findAllEvent:', findAllEvent);
       return findAllEvent;
     } catch (error) {
-      console.error('Error finding all deal events: in repository', error);
+      console.error('Error finding alldeal events: in repository', error);
       throw error;
     }
   }
@@ -42,7 +42,7 @@ export class DealEventRepository {
       console.error('Error updating deal event: in repository', error);
       throw error;
     }
-    }
+  }
 
   async findById(id: string) {
     try {
@@ -56,5 +56,16 @@ export class DealEventRepository {
     }
   }
 
-  async delete() {}
+  async delete(id: string) {
+    try {
+      const tryDelete = await this.prismaService.dealEvent.delete({
+        where: { id },
+      });
+      console.log('sucessfuly deleted on repository', tryDelete);
+      return tryDelete;
+    } catch (error) {
+      console.error('Error deleting deal event: in repository', error);
+      throw error;
+    }
+  }
 }

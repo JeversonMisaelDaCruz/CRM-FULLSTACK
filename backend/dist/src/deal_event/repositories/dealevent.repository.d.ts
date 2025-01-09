@@ -8,41 +8,50 @@ export declare class DealEventRepository {
         id: string;
         created_at: Date;
         updated_at: Date;
-        user_id: string | null;
         message: string;
         date: Date;
         done: boolean;
         deal_id: string | null;
+        user_id: string | null;
     }>;
     findAll(): Promise<{
         id: string;
         created_at: Date;
         updated_at: Date;
-        user_id: string | null;
         message: string;
         date: Date;
         done: boolean;
         deal_id: string | null;
+        user_id: string | null;
     }[]>;
     update(id: string, UpdateDealEventDto: UpdateDealEventDto): Promise<{
         id: string;
         created_at: Date;
         updated_at: Date;
-        user_id: string | null;
         message: string;
         date: Date;
         done: boolean;
         deal_id: string | null;
+        user_id: string | null;
     }>;
     findById(id: string): Promise<{
         id: string;
         created_at: Date;
         updated_at: Date;
-        user_id: string | null;
         message: string;
         date: Date;
         done: boolean;
         deal_id: string | null;
+        user_id: string | null;
     }>;
-    delete(): Promise<void>;
+    delete(id: string): Promise<{
+        id: string;
+        created_at: Date;
+        updated_at: Date;
+        message: string;
+        date: Date;
+        done: boolean;
+        deal_id: string | null;
+        user_id: string | null;
+    }>;
 }

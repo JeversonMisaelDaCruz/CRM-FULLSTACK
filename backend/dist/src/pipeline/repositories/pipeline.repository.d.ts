@@ -17,19 +17,19 @@ export declare class PipelineRepository {
         name: string;
     }>;
     findByUser(userId: string): Promise<({
-        users: {
-            user: {
-                id: string;
-                name: string;
-                email: string;
-            };
-        }[];
         phases: {
             id: string;
             created_at: Date;
             updated_at: Date;
             name: string;
             pipeline_id: string | null;
+        }[];
+        users: {
+            user: {
+                id: string;
+                name: string;
+                email: string;
+            };
         }[];
     } & {
         id: string;
