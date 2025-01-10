@@ -21,20 +21,20 @@ let DealEventController = class DealEventController {
     constructor(dealEventService) {
         this.dealEventService = dealEventService;
     }
-    create(createDealEventDto) {
-        return this.dealEventService.create(createDealEventDto);
+    async create(createDealEventDto) {
+        const response = await this.dealEventService.create(createDealEventDto);
     }
-    findAll() {
-        return this.dealEventService.findAll();
+    async findAll() {
+        const response = await this.dealEventService.findAll();
     }
-    findOne(id) {
-        return this.dealEventService.findOne(+id);
+    async findById(id) {
+        const response = await this.dealEventService.findOne(id);
     }
-    update(id, updateDealEventDto) {
-        return this.dealEventService.update(+id, updateDealEventDto);
+    async update(id, updateDealEventDto) {
+        const response = await this.dealEventService.update(id, updateDealEventDto);
     }
-    remove(id) {
-        return this.dealEventService.remove(+id);
+    async remove(id) {
+        const response = await this.dealEventService.remove(id);
     }
 };
 exports.DealEventController = DealEventController;
@@ -43,35 +43,35 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_deal_event_dto_1.CreateDealEventDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], DealEventController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], DealEventController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], DealEventController.prototype, "findOne", null);
+    __metadata("design:returntype", Promise)
+], DealEventController.prototype, "findById", null);
 __decorate([
     (0, common_1.Patch)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, update_deal_event_dto_1.UpdateDealEventDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], DealEventController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], DealEventController.prototype, "remove", null);
 exports.DealEventController = DealEventController = __decorate([
     (0, common_1.Controller)('deal-event'),

@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDealEventDto } from './dto/create-deal_event.dto';
 import { UpdateDealEventDto } from './dto/update-deal_event.dto';
 import { DealEventRepository } from './repositories/dealevent.repository';
-import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
 
 @Injectable()
 export class DealEventService {
@@ -15,19 +14,42 @@ export class DealEventService {
     return createEvent;
   }
 
-  findAll() {
-    return `This action returns all dealEvent`;
+  async findAll() {
+    const events = await this.dealEventRepository.findAll();
+    return events;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} dealEvent`;
+  async findOne(id: string) {
+    const event = await this.dealEventRepository.findById(id);
+    if (!event) {
+      throw new NotFoundException(`DealEvent with ID ${id} not found`);
+    }
+    return event;
   }
 
-  update(id: number, updateDealEventDto: UpdateDealEventDto) {
-    return `This action updates a ${id} dealEvent`;
+  async update(id: string, updateDealEventDto: UpdateDealEventDto) {
+    const existingEvent = await this.dealEventRepository.update(
+      id,
+      updateDealEventDto,
+    );
+    if (!existingEvent) {
+      throw new NotFoundException(`DealEvent with ID ${id} not found`);
+    }
+
+    const updatedEvent = await this.dealEventRepository.update(
+      id,
+      updateDealEventDto,
+    );
+    return updatedEvent;
   }
 
-  remove(id: number) {
-    return `This action removes a ${id} dealEvent`;
+  async remove(id: string) {
+    const existingEvent = await this.dealEventRepository.findById(id);
+    if (!existingEvent) {
+      throw new NotFoundException(`DealEvent with ID ${id} not found`);
+    }
+
+    await this.dealEventRepository.delete(id);
+    return { message: `DealEvent with ID ${id} removed successfully` };
   }
 }
