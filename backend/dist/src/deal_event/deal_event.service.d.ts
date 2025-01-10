@@ -14,8 +14,37 @@ export declare class DealEventService {
         deal_id: string | null;
         user_id: string | null;
     }>;
-    findAll(): string;
-    findOne(id: number): string;
-    update(id: number, updateDealEventDto: UpdateDealEventDto): string;
-    remove(id: number): string;
+    findAll(): Promise<{
+        id: string;
+        created_at: Date;
+        updated_at: Date;
+        message: string;
+        date: Date;
+        done: boolean;
+        deal_id: string | null;
+        user_id: string | null;
+    }[]>;
+    findOne(id: string): Promise<{
+        id: string;
+        created_at: Date;
+        updated_at: Date;
+        message: string;
+        date: Date;
+        done: boolean;
+        deal_id: string | null;
+        user_id: string | null;
+    }>;
+    update(id: string, updateDealEventDto: UpdateDealEventDto): Promise<{
+        id: string;
+        created_at: Date;
+        updated_at: Date;
+        message: string;
+        date: Date;
+        done: boolean;
+        deal_id: string | null;
+        user_id: string | null;
+    }>;
+    remove(id: string): Promise<{
+        message: string;
+    }>;
 }

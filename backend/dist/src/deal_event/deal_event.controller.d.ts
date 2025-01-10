@@ -4,18 +4,9 @@ import { UpdateDealEventDto } from './dto/update-deal_event.dto';
 export declare class DealEventController {
     private readonly dealEventService;
     constructor(dealEventService: DealEventService);
-    create(createDealEventDto: CreateDealEventDto): Promise<{
-        id: string;
-        created_at: Date;
-        updated_at: Date;
-        message: string;
-        date: Date;
-        done: boolean;
-        deal_id: string | null;
-        user_id: string | null;
-    }>;
-    findAll(): string;
-    findOne(id: string): string;
-    update(id: string, updateDealEventDto: UpdateDealEventDto): string;
-    remove(id: string): string;
+    create(createDealEventDto: CreateDealEventDto): Promise<void>;
+    findAll(): Promise<void>;
+    findById(id: string): Promise<void>;
+    update(id: string, updateDealEventDto: UpdateDealEventDto): Promise<void>;
+    remove(id: string): Promise<void>;
 }

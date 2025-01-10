@@ -18,20 +18,35 @@ let DealEventService = class DealEventService {
     }
     async create(createDealEventDto) {
         const createEvent = await this.dealEventRepository.create(createDealEventDto);
-        console.log(...oo_oo(`3460704870_14_4_14_56_4`, 'create event in service:', createEvent));
+        console.log(...oo_oo(`2797754563_13_4_13_56_4`, 'create event in service:', createEvent));
         return createEvent;
     }
-    findAll() {
-        return `This action returns all dealEvent`;
+    async findAll() {
+        const events = await this.dealEventRepository.findAll();
+        return events;
     }
-    findOne(id) {
-        return `This action returns a #${id} dealEvent`;
+    async findOne(id) {
+        const event = await this.dealEventRepository.findById(id);
+        if (!event) {
+            throw new common_1.NotFoundException(`DealEvent with ID ${id} not found`);
+        }
+        return event;
     }
-    update(id, updateDealEventDto) {
-        return `This action updates a ${id} dealEvent`;
+    async update(id, updateDealEventDto) {
+        const existingEvent = await this.dealEventRepository.update(id, updateDealEventDto);
+        if (!existingEvent) {
+            throw new common_1.NotFoundException(`DealEvent with ID ${id} not found`);
+        }
+        const updatedEvent = await this.dealEventRepository.update(id, updateDealEventDto);
+        return updatedEvent;
     }
-    remove(id) {
-        return `This action removes a ${id} dealEvent`;
+    async remove(id) {
+        const existingEvent = await this.dealEventRepository.findById(id);
+        if (!existingEvent) {
+            throw new common_1.NotFoundException(`DealEvent with ID ${id} not found`);
+        }
+        await this.dealEventRepository.delete(id);
+        return { message: `DealEvent with ID ${id} removed successfully` };
     }
 };
 exports.DealEventService = DealEventService;
