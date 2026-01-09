@@ -18,8 +18,8 @@ export class PipelinePhaseController {
 
   @UseGuards(AuthGuard)
   @Post()
-  create(@Body() createPipelinePhaseDto: CreatePipelinePhaseDto) {
-    const response = this.pipelinePhaseService.create(createPipelinePhaseDto);
+  async create(@Body() createPipelinePhaseDto: CreatePipelinePhaseDto) {
+    const response = await this.pipelinePhaseService.create(createPipelinePhaseDto);
     console.log("Response no controller",response)
     if (!response) {
       throw new Error('pipelinePhase not created');
