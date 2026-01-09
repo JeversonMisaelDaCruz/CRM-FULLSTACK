@@ -24,7 +24,11 @@ export class DealRepository {
     try {
       const response = await this.prismaService.deal.findMany({
         include: {
-          //adicionar o relacionamento entre as tabelas deal event e tinha uma outra la kk
+          lead: true,
+          user: true,
+          pipeline_phase: true,
+          comments: true,
+          events: true,
         },
       });
       return response;

@@ -28,10 +28,7 @@ export class DealEventService {
   }
 
   async update(id: string, updateDealEventDto: UpdateDealEventDto) {
-    const existingEvent = await this.dealEventRepository.update(
-      id,
-      updateDealEventDto,
-    );
+    const existingEvent = await this.dealEventRepository.findById(id);
     if (!existingEvent) {
       throw new NotFoundException(`DealEvent with ID ${id} not found`);
     }

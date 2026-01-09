@@ -21,10 +21,11 @@ export class PipelinePhaseService {
   }
 
   async findOne(id: string) {
-    const response = this.phaseRepository.findById(id);
+    const response = await this.phaseRepository.findById(id);
     if (!response) {
       throw new HttpException('pipelinePhase not found', 404);
     }
+    return response;
   }
 
   async update(id: string, updatePipelinePhaseDto: UpdatePipelinePhaseDto) {

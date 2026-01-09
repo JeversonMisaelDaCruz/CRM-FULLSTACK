@@ -55,7 +55,7 @@ export class UserRepository {
       throw new HttpException('Identifier já existe', 401);
     }
 
-    if (updateUserDto) {
+    if (!updateUserDto || Object.keys(updateUserDto).length === 0) {
       throw new HttpException('não permitido campo vazio', 400);
     }
 
