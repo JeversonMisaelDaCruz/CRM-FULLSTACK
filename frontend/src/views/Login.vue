@@ -45,14 +45,7 @@
         <v-card-actions class="d-flex justify-center align-center">
           <v-btn
             @click="login"
-            color="white"
-            style="
-              background-color: green;
-              width: 100%;
-              height: 50px;
-              font-size: 16px;
-              font-weight: bold;
-            "
+            style="width: 100%; height: 50px; font-size: 16px;"
           >
             Entrar
           </v-btn>
@@ -112,6 +105,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(135deg, #6366F1 0%, #818CF8 50%, #F59E0B 100%);
 }
 
 .background-image {
@@ -120,12 +114,38 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 0.15;
 }
 
 .gradient-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, #fbbf24, #fb923c);
-  opacity: 0.6;
+  background: linear-gradient(135deg,
+    rgba(99, 102, 241, 0.8) 0%,
+    rgba(129, 140, 248, 0.7) 50%,
+    rgba(245, 158, 11, 0.8) 100%
+  );
+  opacity: 0.9;
+}
+
+.v-card {
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.v-btn {
+  background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%) !important;
+  color: white !important;
+  text-transform: none;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  transition: all 250ms ease;
+}
+
+.v-btn:hover {
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.5);
+  transform: translateY(-2px);
 }
 </style>

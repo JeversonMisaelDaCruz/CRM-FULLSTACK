@@ -10,6 +10,7 @@
       </v-toolbar-title>
       <v-toolbar-title v-else>Home | CRM</v-toolbar-title>
       <v-spacer />
+      <ThemeToggle />
       <v-btn icon="mdi-logout" variant="text" @click="logout" />
     </v-app-bar>
 
@@ -59,6 +60,7 @@
 import { computed } from 'vue';
 import router from "@/router";
 import { usePipelineStore } from "@/store/pipeline";
+import ThemeToggle from "./ThemeToggle.vue";
 
 const pipelineStore = usePipelineStore();
 
