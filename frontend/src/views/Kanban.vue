@@ -1,5 +1,13 @@
 <template>
   <v-card style="background-color: #faf3e0">
+    <v-overlay v-model="loading" class="align-center justify-center" persistent>
+      <v-progress-circular
+        color="primary"
+        indeterminate
+        size="64"
+      ></v-progress-circular>
+    </v-overlay>
+
     <v-layout>
       <v-dialog v-model="showConfirm" max-width="400">
         <v-card>
@@ -39,33 +47,15 @@
             </v-col>
 
             <v-row class="kanban-container">
-              <div
+              <KanbanColumn
                 v-for="phase in filteredPhases"
                 :key="phase.id"
-                class="kanban-column"
-              >
-                <p class="phase-name">{{ phase.name }}</p>
-                <div v-if="getLeadsByPhase(phase.id).length > 0">
-                  <v-card
-                    v-for="lead in getLeadsByPhase(phase.id)"
-                    :key="lead.id"
-                    class="lead-card"
-                  >
-                    <v-card-title>{{ lead.name }}</v-card-title>
-                    <v-card-text>
-                      <v-select
-                        :items="statusOptions"
-                        v-model="lead.pipeline_phase_id"
-                        label="Alterar Fase"
-                        @change="
-                          updateLeadStatus(lead.id, lead.pipeline_phase_id)
-                        "
-                      ></v-select>
-                    </v-card-text>
-                  </v-card>
-                </div>
-                <p v-else>Nenhum lead nesta fase.</p>
-              </div>
+                :phase="phase"
+                :leads="getLeadsByPhase(phase.id)"
+                :statusOptions="statusOptions"
+                @add-lead="openLeadModal"
+                @update-lead-status="handleUpdateLeadStatus"
+              />
             </v-row>
           </v-row>
         </div>
@@ -94,6 +84,13 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+
+        <LeadModal
+          v-model="showLeadModal"
+          :pipelinePhases="filteredPhases"
+          :preselectedPhaseId="selectedPhaseId"
+          @save-lead="handleCreateLead"
+        />
       </v-main>
     </v-layout>
   </v-card>
@@ -103,11 +100,13 @@
 import { usePipelineStore } from "@/store/pipeline";
 import { usePipelinePhaseStore } from "@/store/pipelinesPhases";
 import { useLeadsStore } from "@/store/leads";
+import { useAuthStore } from "@/store/auth/User";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import NavigationDrawer from "@/components/NavigationDrawer.vue";
-import Warn from "@/components/warn/warn.vue";
 import CreatePipelineButton from "@/components/buttons/CreatePipelineButton.vue";
+import LeadModal from "@/components/Modals/Leadmodal.vue";
+import KanbanColumn from "@/components/kanban/KanbanColumn.vue";
+import PhaseModal from "@/components/kanban/PhaseModal.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -119,10 +118,14 @@ const showConfirm = ref(false);
 const pipelineToDelete = ref(null);
 const phaseName = ref("");
 const selectedPipeline = ref(null);
+const showLeadModal = ref(false);
+const selectedPhaseId = ref(null);
+const loading = ref(false);
 
 const pipelineStore = usePipelineStore();
 const pipelinePhaseStore = usePipelinePhaseStore();
 const leadsStore = useLeadsStore();
+const authStore = useAuthStore();
 
 const pipelines = computed(() =>
   Array.isArray(pipelineStore.pipeline) ? pipelineStore.pipeline : []
@@ -159,6 +162,12 @@ const closeConfirm = () => {
 
 const handleCreatePipeline = async (pipelineName) => {
   try {
+    const userId = authStore.user?.id;
+    if (!userId) {
+      console.error("User not authenticated");
+      return;
+    }
+
     await pipelineStore.createPipeline({
       name: pipelineName,
       userIds: [userId],
@@ -181,8 +190,13 @@ const createPhase = async () => {
       name: phaseName.value,
       pipeline_id: selectedPipeline.value.id,
     });
+
+    // Força atualização imediata para renderizar nova fase
+    await pipelinePhaseStore.fetchPipelinePhases();
+
     phaseName.value = "";
     showPhaseModal.value = false;
+    console.log("Fase criada e renderizada com sucesso!");
   } catch (error) {
     console.error("Erro ao criar fase:", error);
   }
@@ -218,27 +232,76 @@ const updateLeadStatus = async (leadId, newPhaseId) => {
   }
 };
 
+const openLeadModal = (phaseId) => {
+  selectedPhaseId.value = phaseId;
+  showLeadModal.value = true;
+};
+
+const handleCreateLead = async (leadData) => {
+  try {
+    await leadsStore.createLead({
+      ...leadData,
+      user_id: authStore.user?.id,
+      pipeline_phase_id: selectedPhaseId.value,
+    });
+    showLeadModal.value = false;
+    console.log("Lead criado com sucesso!");
+  } catch (error) {
+    console.error("Erro ao criar lead:", error);
+  }
+};
+
+const loadPipelineData = async (pipelineId) => {
+  if (!pipelineId) return;
+
+  try {
+    loading.value = true;
+    await Promise.all([
+      pipelinePhaseStore.fetchPipelinePhases(),
+      leadsStore.fetchLeads()
+    ]);
+    console.log("Dados do pipeline carregados com sucesso!");
+  } catch (error) {
+    console.error("Erro ao carregar dados do pipeline:", error);
+  } finally {
+    loading.value = false;
+  }
+};
+
 watch(
   () => route.query.pipelineId,
-  (newPipelineId) => {
+  async (newPipelineId) => {
     if (newPipelineId) {
       selectedPipeline.value = pipelines.value.find(
         (pipeline) => pipeline.id === newPipelineId
       );
+      await loadPipelineData(newPipelineId);
     }
   }
 );
 
 onMounted(async () => {
-  await pipelineStore.fetchPipelines();
-  await pipelinePhaseStore.fetchPipelinePhases();
-  await leadsStore.fetchLeads();
+  loading.value = true;
+  try {
+    await pipelineStore.fetchPipelines();
 
-  const pipelineId = route.query.pipelineId;
-  if (pipelineId) {
-    selectedPipeline.value = pipelines.value.find(
-      (pipeline) => pipeline.id === pipelineId
-    );
+    const pipelineId = route.query.pipelineId;
+    if (pipelineId) {
+      selectedPipeline.value = pipelines.value.find(
+        (pipeline) => pipeline.id === pipelineId
+      );
+      await loadPipelineData(pipelineId);
+    } else {
+      // Se não há pipeline selecionado, carrega apenas os dados gerais
+      await Promise.all([
+        pipelinePhaseStore.fetchPipelinePhases(),
+        leadsStore.fetchLeads()
+      ]);
+    }
+  } catch (error) {
+    console.error("Erro ao carregar dados iniciais:", error);
+  } finally {
+    loading.value = false;
   }
 });
 </script>
