@@ -1,4 +1,5 @@
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import { useAuthStore } from "../store/auth/User";
 
 axios.defaults.timeout = 24 * 60 * 60 * 1000;
@@ -11,6 +12,32 @@ class Http {
 
   get HTTP_CONFIG() {
     const token = localStorage.getItem("@crm.access_token");
+
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+
+        if (decoded.exp && decoded.exp < currentTime) {
+          console.warn("Token expired, logging out...");
+          this.handleSessionExpired();
+          return {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          };
+        }
+      } catch (error) {
+        console.error("Invalid token:", error);
+        this.handleSessionExpired();
+        return {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+      }
+    }
+
     return {
       headers: {
         "Content-Type": "application/json",
@@ -21,7 +48,8 @@ class Http {
 
   handleSessionExpired() {
     const userStore = useAuthStore();
-    userStore.setSessionExpired(true);
+    userStore.logout();
+    window.location.href = '/login';
   }
 
   checkExpires(error) {
