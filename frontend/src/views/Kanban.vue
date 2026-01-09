@@ -1,5 +1,5 @@
 <template>
-  <v-card style="background-color: #faf3e0">
+  <v-card class="kanban-page">
     <v-overlay v-model="loading" class="align-center justify-center" persistent>
       <v-progress-circular
         color="primary"
@@ -54,7 +54,7 @@
                 :leads="getLeadsByPhase(phase.id)"
                 :statusOptions="statusOptions"
                 @add-lead="openLeadModal"
-                @update-lead-status="handleUpdateLeadStatus"
+                @update-lead-status="updateLeadStatus"
               />
             </v-row>
           </v-row>
@@ -223,12 +223,17 @@ const statusOptions = computed(() =>
   }))
 );
 
-const updateLeadStatus = async (leadId, newPhaseId) => {
+const updateLeadStatus = async ({ leadId, newPhaseId }) => {
   try {
+    loading.value = true;
     await leadsStore.updateLead(leadId, { pipeline_phase_id: newPhaseId });
-    console.log("Lead atualizado com sucesso!");
+    console.log("Lead movido com sucesso para nova fase!");
   } catch (error) {
-    console.error("Erro ao atualizar o lead:", error);
+    console.error("Erro ao mover lead:", error);
+    // Sincronizar dados em caso de erro
+    await leadsStore.fetchLeads();
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -305,34 +310,38 @@ onMounted(async () => {
   }
 });
 </script>
-<style>
-.column-width {
-  min-width: 320px;
-  width: 320px;
+
+<style scoped>
+.kanban-page {
+  background: linear-gradient(135deg, rgb(var(--v-theme-background)) 0%, rgb(var(--v-theme-surface-variant)) 100%);
+  min-height: 100vh;
 }
+
 .kanban-container {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
-  gap: 16px;
+  gap: 20px;
   padding: 16px;
 }
 
-.kanban-column {
-  min-width: 320px;
-  background-color: black;
-  border-radius: 8px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
+/* Scrollbar customizada */
+.kanban-container::-webkit-scrollbar {
+  height: 12px;
 }
 
-.phase-name {
-  font-weight: bold;
-  margin-bottom: 12px;
+.kanban-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
 }
 
-.lead-card {
-  margin-top: 8px;
+.kanban-container::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.3);
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.kanban-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.5);
 }
 </style>
