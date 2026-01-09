@@ -54,7 +54,6 @@ export class CreateLeadDto {
   @IsOptional()
   user_id?: string;
 
-  @IsNotEmpty()
   @IsString()
   @IsOptional()
   pipeline_phase_id?: string;
