@@ -29,7 +29,7 @@ export class Leads extends Http {
     try {
       const response = await this.patch(`/${id}`, data);
       console.log("Lead atualizado com sucesso:", response);
-      return response.data;
+      return response;
     } catch (error) {
       console.error("Erro ao atualizar lead:", error.response?.data?.message);
       throw new Error(

@@ -102,6 +102,10 @@ export default {
       required: true,
       default: () => [],
     },
+    preselectedPhaseId: {
+      type: String,
+      default: null,
+    },
   },
   emits: ["update:modelValue", "save-lead"],
   data() {
@@ -110,13 +114,25 @@ export default {
         name: "",
         email: "",
         phone: "",
-        pipeline_phase_id: "",
+        pipeline_phase_id: this.preselectedPhaseId || "",
       },
       rules: {
         requiredPipelinePhase: (value) =>
           !!value || "Pipeline Phase é obrigatória.",
       },
     };
+  },
+  watch: {
+    preselectedPhaseId(newVal) {
+      if (newVal) {
+        this.leadData.pipeline_phase_id = newVal;
+      }
+    },
+    modelValue(newVal) {
+      if (newVal && this.preselectedPhaseId) {
+        this.leadData.pipeline_phase_id = this.preselectedPhaseId;
+      }
+    },
   },
   methods: {
     closeModal() {
